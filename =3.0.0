@@ -1,0 +1,40 @@
+Collecting keras
+  Downloading keras-3.15.1-py3-none-any.whl.metadata (6.4 kB)
+Collecting absl-py (from keras)
+  Downloading absl_py-2.5.0-py3-none-any.whl.metadata (3.3 kB)
+Requirement already satisfied: numpy in c:\users\harsh\appdata\local\programs\python\python314\lib\site-packages (from keras) (2.4.4)
+Collecting rich (from keras)
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting namex (from keras)
+  Downloading namex-0.1.0-py3-none-any.whl.metadata (322 bytes)
+Collecting h5py (from keras)
+  Downloading h5py-3.16.0-cp314-cp314-win_amd64.whl.metadata (3.1 kB)
+Collecting optree (from keras)
+  Downloading optree-0.20.0-cp314-cp314-win_amd64.whl.metadata (33 kB)
+Collecting ml-dtypes (from keras)
+  Downloading ml_dtypes-0.6.0-cp314-cp314-win_amd64.whl.metadata (8.8 kB)
+Requirement already satisfied: packaging in c:\users\harsh\appdata\local\programs\python\python314\lib\site-packages (from keras) (26.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in c:\users\harsh\appdata\local\programs\python\python314\lib\site-packages (from optree->keras) (4.15.0)
+Collecting markdown-it-py>=2.2.0 (from rich->keras)
+  Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich->keras)
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->keras)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading keras-3.15.1-py3-none-any.whl (2.4 MB)
+   ---------------------------------------- 2.4/2.4 MB 19.5 MB/s  0:00:00
+Downloading absl_py-2.5.0-py3-none-any.whl (137 kB)
+Downloading h5py-3.16.0-cp314-cp314-win_amd64.whl (3.2 MB)
+   ---------------------------------------- 3.2/3.2 MB 15.5 MB/s  0:00:00
+Downloading ml_dtypes-0.6.0-cp314-cp314-win_amd64.whl (457 kB)
+Downloading namex-0.1.0-py3-none-any.whl (5.9 kB)
+Downloading optree-0.20.0-cp314-cp314-win_amd64.whl (581 kB)
+   ---------------------------------------- 581.4/581.4 kB 13.1 MB/s  0:00:00
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ---------------------------------------- 1.3/1.3 MB 23.4 MB/s  0:00:00
+Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: namex, pygments, optree, ml-dtypes, mdurl, h5py, absl-py, markdown-it-py, rich, keras
+
+Successfully installed absl-py-2.5.0 h5py-3.16.0 keras-3.15.1 markdown-it-py-4.2.0 mdurl-0.1.2 ml-dtypes-0.6.0 namex-0.1.0 optree-0.20.0 pygments-2.21.0 rich-15.0.0

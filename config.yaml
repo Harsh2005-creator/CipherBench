@@ -1,0 +1,55 @@
+database:
+  host: localhost
+  user: root
+  password: "Harshsj@2005"  # Configure your MySQL password
+  database: cipherbench
+  port: 3306
+
+paths:
+  data_binary: "./data/binary"
+  data_multiclass: "./data/multiclass"
+  models: "./models"
+  results: "./results"
+
+hyperparameters:
+  hknnrf:
+    n_estimators_range: [80, 90]
+    max_depth_range: [1, 10]
+    n_neighbors_range: [5, 9]
+
+  svm:
+    kernel: linear
+    gamma: 0.001
+
+  knn:
+    n_neighbors: 3
+
+  random_forest:
+    n_estimators: 20
+
+  mlp:
+    hidden_layers: [64, 32]
+    dropout_rate: 0.3
+    epochs: 100
+    batch_size: 32
+    learning_rate: 0.001
+
+  cnn:
+    filters: [32, 64]
+    kernel_size: 3
+    pool_size: 2
+    dropout_rate: 0.3
+    epochs: 100
+    batch_size: 32
+    learning_rate: 0.001
+
+algorithms:
+  names: ["AES", "3DES", "Blowfish", "CAST", "RC2"]
+  label_mapping:
+    0: "AES"
+    1: "3DES"
+    2: "Blowfish"
+    3: "CAST"
+    4: "RC2"
+
+ciphertext_sizes: ["1KB", "8KB", "64KB", "256KB", "512KB"]
