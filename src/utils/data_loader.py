@@ -13,7 +13,8 @@ import yaml
 
 def load_config():
     """Load configuration from config.yaml"""
-    config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.yaml')
+    # Get project root (two levels up from src/utils/)
+    config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'config.yaml')
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 

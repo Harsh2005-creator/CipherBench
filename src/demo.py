@@ -6,12 +6,12 @@ Trains SVM, KNN, RF, and HKNNRF on 512KB multiclass data.
 import sys
 import os
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.data_loader import load_multiclass_dataset, load_hknnrf_split, load_config
-from utils.metrics import compute_metrics, compute_confusion_matrix
-from models.baseline import get_svm_model, get_knn_model, get_random_forest_model
-from models.hknnrf import HKNNRFClassifier
+from src.utils.data_loader import load_multiclass_dataset, load_hknnrf_split, load_config
+from src.utils.metrics import compute_metrics, compute_confusion_matrix
+from src.models.baseline import get_svm_model, get_knn_model, get_random_forest_model
+from src.models.hknnrf import HKNNRFClassifier
 import time
 
 

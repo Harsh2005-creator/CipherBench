@@ -11,17 +11,17 @@ import sys
 import os
 
 # Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.data_loader import (
+from src.utils.data_loader import (
     load_binary_dataset, load_multiclass_dataset,
     load_hknnrf_split, load_binary_hknnrf_split, get_all_binary_pairs, load_config
 )
-from utils.metrics import compute_metrics, compute_confusion_matrix
-from models.baseline import get_svm_model, get_knn_model, get_random_forest_model
-from models.hknnrf import HKNNRFClassifier
-from models.mlp import MLPClassifier
-from models.cnn import CNN1DClassifier
+from src.utils.metrics import compute_metrics, compute_confusion_matrix
+from src.models.baseline import get_svm_model, get_knn_model, get_random_forest_model
+from src.models.hknnrf import HKNNRFClassifier
+from src.models.mlp import MLPClassifier
+from src.models.cnn import CNN1DClassifier
 from database.db_operations import ExperimentDB
 
 
