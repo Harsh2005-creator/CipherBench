@@ -1,204 +1,166 @@
 """
-Data loading utilities for CipherBench project.
-Handles loading binary and multiclass cryptographic algorithm datasets.
+Data loading utilities for CipherBench.
+
+The raw dataset labels are preserved. Binary labels may be 1/2 in the
+source CSVs; individual models that require 0/1 (e.g. sigmoid networks)
+perform their own internal encoding and map predictions back to the
+original labels.
 """
 
 import os
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from typing import Tuple, Optional
+from typing import Tuple
 import yaml
 
 
 def load_config():
-    """Load configuration from config.yaml"""
-    # Get project root (two levels up from src/utils/)
-    config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'config.yaml')
-    with open(config_path, 'r') as f:
+    config_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+        "config.yaml",
+    )
+    with open(config_path, "r") as f:
         return yaml.safe_load(f)
 
 
-def load_binary_dataset(algorithm_pair: str, size: str, test_size: float = 0.2,
-                        random_state: int = 0) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Load binary classification dataset for a specific algorithm pair and ciphertext size.
+def _validate_dataset(df: pd.DataFrame, expected_features: int = 10):
+    if df.shape[1] != expected_features + 1:
+        raise ValueError(
+            f"Expected {expected_features} feature columns + 1 label column, "
+            f"found {df.shape[1]} columns."
+        )
+    if df.iloc[:, :-1].isnull().any().any():
+        raise ValueError("Dataset contains NaN feature values.")
+    if not np.isfinite(df.iloc[:, :-1].to_numpy(dtype=float)).all():
+        raise ValueError("Dataset contains non-finite feature values.")
 
-    Args:
-        algorithm_pair: Algorithm pair name (e.g., "AES and 3DES")
-        size: Ciphertext size folder (e.g., "1kb", "8kb", "64kb", "256kb", "512kb")
-        test_size: Proportion of dataset to include in test split
-        random_state: Random state for reproducibility
 
-    Returns:
-        X_train, X_test, y_train, y_test
-    """
+def load_binary_dataset(
+    algorithm_pair: str,
+    size: str,
+    test_size: float = 0.2,
+    random_state: int = 0,
+):
     config = load_config()
-    base_path = config['paths']['data_binary']
-
-    # Construct file path
+    base_path = config["paths"]["data_binary"]
     file_path = os.path.join(base_path, size.lower(), f"{algorithm_pair}.csv")
 
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Dataset not found: {file_path}")
 
-    # Load dataset
     df = pd.read_csv(file_path)
+    _validate_dataset(df)
 
-    # Separate features and labels
-    X = df.iloc[:, :-1].values  # All columns except last
-    y = df.iloc[:, -1].values   # Last column (label)
+    X = df.iloc[:, :-1].to_numpy(dtype=np.float32)
+    y = df.iloc[:, -1].to_numpy()
 
-    # Split into train and test
+    classes = np.unique(y)
+    if len(classes) != 2:
+        raise ValueError(
+            f"Binary dataset {algorithm_pair} ({size}) has {len(classes)} "
+            f"classes instead of 2: {classes}"
+        )
+
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
+        X,
+        y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y,
     )
-
     return X_train, X_test, y_train, y_test
 
 
-def load_multiclass_dataset(size: str, test_size: float = 0.2,
-                            random_state: int = 0) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Load multiclass classification dataset for a specific ciphertext size.
-
-    Args:
-        size: Ciphertext size (e.g., "1KB", "8KB", "64KB", "256KB", "512KB")
-        test_size: Proportion of dataset to include in test split
-        random_state: Random state for reproducibility
-
-    Returns:
-        X_train, X_test, y_train, y_test
-    """
+def load_multiclass_dataset(
+    size: str,
+    test_size: float = 0.2,
+    random_state: int = 0,
+):
     config = load_config()
-    base_path = config['paths']['data_multiclass']
-
-    # Construct file path
+    base_path = config["paths"]["data_multiclass"]
     file_path = os.path.join(base_path, f"{size}.csv")
 
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Dataset not found: {file_path}")
 
-    # Load dataset
     df = pd.read_csv(file_path)
+    _validate_dataset(df)
 
-    # Separate features and labels
-    X = df.iloc[:, :-1].values  # All columns except last (10 NIST features)
-    y = df.iloc[:, -1].values   # Last column (label: 0-4)
+    X = df.iloc[:, :-1].to_numpy(dtype=np.float32)
+    y = df.iloc[:, -1].to_numpy()
 
-    # Split into train and test
+    classes = np.unique(y)
+    if len(classes) != 5:
+        raise ValueError(
+            f"Multiclass dataset {size} has {len(classes)} classes instead of 5: {classes}"
+        )
+
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
+        X,
+        y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y,
     )
-
     return X_train, X_test, y_train, y_test
 
 
-def load_hknnrf_split(size: str, test_size: float = 0.2,
-                      random_state: int = 0) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
-                                                       np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Load multiclass dataset with additional split for HKNNRF training.
-    Training data is split 50/50 for RF and KNN stages.
-
-    Args:
-        size: Ciphertext size (e.g., "1KB", "8KB", "64KB", "256KB", "512KB")
-        test_size: Proportion of dataset to include in test split
-        random_state: Random state for reproducibility
-
-    Returns:
-        X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test
-    """
-    # First split into train and test
-    X_train, X_test, y_train, y_test = load_multiclass_dataset(size, test_size, random_state)
-
-    # Further split training data 50/50 for RF and KNN
-    X_train_rf, X_train_knn, y_train_rf, y_train_knn = train_test_split(
-        X_train, y_train, test_size=0.5, random_state=random_state
+def load_hknnrf_split(
+    size: str,
+    test_size: float = 0.2,
+    random_state: int = 0,
+):
+    X_train, X_test, y_train, y_test = load_multiclass_dataset(
+        size, test_size, random_state
     )
-
+    X_train_rf, X_train_knn, y_train_rf, y_train_knn = train_test_split(
+        X_train,
+        y_train,
+        test_size=0.5,
+        random_state=random_state,
+        stratify=y_train,
+    )
     return X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test
 
 
 def get_all_binary_pairs():
-    """Get all available binary classification algorithm pairs."""
     config = load_config()
-    algorithms = config['algorithms']['names']
-
-    pairs = []
-    for i in range(len(algorithms)):
-        for j in range(i + 1, len(algorithms)):
-            pairs.append(f"{algorithms[i]} and {algorithms[j]}")
-
-    return pairs
-
-
-def get_algorithm_name(label: int) -> str:
-    """Convert numeric label to algorithm name."""
-    config = load_config()
-    return config['algorithms']['label_mapping'][label]
-
-
-def get_feature_names():
-    """Get NIST feature names."""
+    algorithms = config["algorithms"]["names"]
     return [
-        'aetPValue', 'custPValue', 'dtfPValue', 'fwbtPValue',
-        'lrobPValue', 'mtPValue', 'retPValue', 'revtPValue',
-        'runsPValue', 'stPValue'
+        f"{algorithms[i]} and {algorithms[j]}"
+        for i in range(len(algorithms))
+        for j in range(i + 1, len(algorithms))
     ]
 
 
-def load_binary_hknnrf_split(algorithm_pair: str, size: str, test_size: float = 0.2,
-                              random_state: int = 0) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
-                                                               np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Load binary classification dataset with additional split for HKNNRF training.
-    Training data is split 50/50 for RF and KNN stages.
+def get_algorithm_name(label: int) -> str:
+    config = load_config()
+    return config["algorithms"]["label_mapping"][label]
 
-    Args:
-        algorithm_pair: Algorithm pair name (e.g., "AES and 3DES")
-        size: Ciphertext size folder (e.g., "1kb", "8kb", "64kb", "256kb", "512kb")
-        test_size: Proportion of dataset to include in test split
-        random_state: Random state for reproducibility
 
-    Returns:
-        X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test
-    """
-    # First split into train and test
-    X_train, X_test, y_train, y_test = load_binary_dataset(algorithm_pair, size, test_size, random_state)
+def get_feature_names():
+    return [
+        "aetPValue", "custPValue", "dtfPValue", "fwbtPValue",
+        "lrobPValue", "mtPValue", "retPValue", "revtPValue",
+        "runsPValue", "stPValue",
+    ]
 
-    # Further split training data 50/50 for RF and KNN
-    X_train_rf, X_train_knn, y_train_rf, y_train_knn = train_test_split(
-        X_train, y_train, test_size=0.5, random_state=random_state
+
+def load_binary_hknnrf_split(
+    algorithm_pair: str,
+    size: str,
+    test_size: float = 0.2,
+    random_state: int = 0,
+):
+    X_train, X_test, y_train, y_test = load_binary_dataset(
+        algorithm_pair, size, test_size, random_state
     )
-
+    X_train_rf, X_train_knn, y_train_rf, y_train_knn = train_test_split(
+        X_train,
+        y_train,
+        test_size=0.5,
+        random_state=random_state,
+        stratify=y_train,
+    )
     return X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test
-
-
-if __name__ == "__main__":
-    # Test data loading
-    print("Testing data loader...")
-
-    # Test multiclass loading
-    print("\n1. Loading multiclass dataset (512KB)...")
-    X_train, X_test, y_train, y_test = load_multiclass_dataset("512KB")
-    print(f"   Train shape: {X_train.shape}, Test shape: {X_test.shape}")
-    print(f"   Unique labels: {np.unique(y_train)}")
-
-    # Test binary loading
-    print("\n2. Loading binary dataset (AES and 3DES, 1kb)...")
-    X_train, X_test, y_train, y_test = load_binary_dataset("AES and 3DES", "1kb")
-    print(f"   Train shape: {X_train.shape}, Test shape: {X_test.shape}")
-    print(f"   Unique labels: {np.unique(y_train)}")
-
-    # Test HKNNRF split
-    print("\n3. Loading HKNNRF split (512KB)...")
-    X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test = load_hknnrf_split("512KB")
-    print(f"   RF train: {X_train_rf.shape}, KNN train: {X_train_knn.shape}, Test: {X_test.shape}")
-
-    # List all binary pairs
-    print("\n4. All binary algorithm pairs:")
-    for pair in get_all_binary_pairs():
-        print(f"   - {pair}")
-
-    print("\n✓ Data loader tests completed successfully!")
