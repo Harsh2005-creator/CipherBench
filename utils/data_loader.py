@@ -147,6 +147,33 @@ def get_feature_names():
     ]
 
 
+def load_binary_hknnrf_split(algorithm_pair: str, size: str, test_size: float = 0.2,
+                              random_state: int = 0) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
+                                                               np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Load binary classification dataset with additional split for HKNNRF training.
+    Training data is split 50/50 for RF and KNN stages.
+
+    Args:
+        algorithm_pair: Algorithm pair name (e.g., "AES and 3DES")
+        size: Ciphertext size folder (e.g., "1kb", "8kb", "64kb", "256kb", "512kb")
+        test_size: Proportion of dataset to include in test split
+        random_state: Random state for reproducibility
+
+    Returns:
+        X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test
+    """
+    # First split into train and test
+    X_train, X_test, y_train, y_test = load_binary_dataset(algorithm_pair, size, test_size, random_state)
+
+    # Further split training data 50/50 for RF and KNN
+    X_train_rf, X_train_knn, y_train_rf, y_train_knn = train_test_split(
+        X_train, y_train, test_size=0.5, random_state=random_state
+    )
+
+    return X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test
+
+
 if __name__ == "__main__":
     # Test data loading
     print("Testing data loader...")

@@ -64,7 +64,7 @@ class HKNNRFClassifier:
         # Step 1: Train Random Forest
         self.rf.fit(X_train_rf, y_train_rf)
 
-        # Step 2: Get leaf indices from RF
+        # Step 2: Get leaf indices from RF (new features from decision trees)
         leaf_indices_rf = self.rf.apply(X_train_rf)
 
         # Step 3: Fit One-Hot Encoder on RF leaf indices
@@ -74,8 +74,16 @@ class HKNNRFClassifier:
         leaf_indices_knn = self.rf.apply(X_train_knn)
         X_train_knn_encoded = self.ohe.transform(leaf_indices_knn)
 
-        # Step 5: Train KNN on encoded features
-        self.knn.fit(X_train_knn_encoded, y_train_knn)
+        # Step 5: PAPER STEP 9-10: Add new features to original features
+        # "Use the trained decision trees to construct new features and add them to the original features"
+        # Concatenate original NIST features + one-hot encoded RF leaf indices
+        X_train_knn_combined = np.hstack([
+            X_train_knn,  # Original 10 NIST features
+            X_train_knn_encoded.toarray()  # RF-derived features (one-hot encoded)
+        ])
+
+        # Step 6: Train KNN on COMBINED features (original + new)
+        self.knn.fit(X_train_knn_combined, y_train_knn)
 
         self.is_fitted = True
 
@@ -84,7 +92,7 @@ class HKNNRFClassifier:
         Predict class labels for samples in X.
 
         Args:
-            X: Input samples
+            X: Input samples (original NIST features)
 
         Returns:
             Predicted class labels
@@ -92,10 +100,17 @@ class HKNNRFClassifier:
         if not self.is_fitted:
             raise ValueError("Model must be fitted before prediction")
 
-        # Transform through RF -> OHE -> KNN
+        # Transform through RF -> OHE -> Combine with original -> KNN
         leaf_indices = self.rf.apply(X)
         X_encoded = self.ohe.transform(leaf_indices)
-        predictions = self.knn.predict(X_encoded)
+
+        # PAPER STEP 9-10: Combine original features + new features
+        X_combined = np.hstack([
+            X,  # Original 10 NIST features
+            X_encoded.toarray()  # RF-derived features
+        ])
+
+        predictions = self.knn.predict(X_combined)
 
         return predictions
 
@@ -104,7 +119,7 @@ class HKNNRFClassifier:
         Predict class probabilities for samples in X.
 
         Args:
-            X: Input samples
+            X: Input samples (original NIST features)
 
         Returns:
             Predicted class probabilities
@@ -112,10 +127,17 @@ class HKNNRFClassifier:
         if not self.is_fitted:
             raise ValueError("Model must be fitted before prediction")
 
-        # Transform through RF -> OHE -> KNN
+        # Transform through RF -> OHE -> Combine with original -> KNN
         leaf_indices = self.rf.apply(X)
         X_encoded = self.ohe.transform(leaf_indices)
-        probabilities = self.knn.predict_proba(X_encoded)
+
+        # PAPER STEP 9-10: Combine original features + new features
+        X_combined = np.hstack([
+            X,  # Original 10 NIST features
+            X_encoded.toarray()  # RF-derived features
+        ])
+
+        probabilities = self.knn.predict_proba(X_combined)
 
         return probabilities
 

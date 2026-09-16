@@ -1,0 +1,109 @@
+Synopsis 
+ 
+On 
+CipherBench: A Machine Learning Framework for Block Cipher 
+Algorithm Identification 
+Submitted in the partial fulfilment of the Degree of 
+Bachelor of Technology 
+(Information Technology) 
+Submitted by 
+Sanyam Kumar (Enrollment No: 02996303123) 
+Aayush Ahuja (Enrollment No: 35496303123) 
+Harsh Ramrakhiani (Enrollment No: 35296303123) 
+Under the supervision of  
+Dr. Bharti Sharma  
+ 
+Department of Information Technology 
+Maharaja Surajmal Institute of Technology 
+Janakpuri, New Delhi. 
+ 
+1. PROJECT TITLE 
+CipherBench: A Machine Learning Framework for Block Cipher Algorithm Identification 
+Domain: Applied Cryptography · Machine Learning · Deep Learning 
+2. ABSTRACT 
+Cryptographic algorithm identification aims to determine which encryption algorithm produced a 
+ciphertext when the algorithm is unknown. The reference work by Yuan et al. proposes a hybrid 
+K-Nearest Neighbours and Random Forest (HKNNRF) framework that uses  features extracted 
+from NIST randomness tests to identify block cipher algorithms. This project first reproduces that 
+methodology using the supplied extracted -feature datasets, which contain 10 NIST -derived 
+features for AES, 3DES, Blowfish, CAST and RC2 a cross five ciphertext sizes: 1 KB, 8 KB, 64 
+KB, 256 KB and 512 KB. 
+The project evaluates the reference approach in two settings: binary identification, where every 
+pair of algorithms is classified, and five-class identification, where all five algorithms are classified 
+simultaneously. The supplied CSV files are split internally into training and testing data using the 
+experimental procedure of the reference implementation, with the training portion further divided 
+for the RF and KNN stages of HKNNRF. The reproduced pipeline provides a controlled baseline 
+for evaluating the original research results. 
+After validating the original HKNNRF implementation, the project proposes a deep -learning 
+extension using the same extracted NIST features. Two lightweight models are investigated: a 
+Multi-Layer Perceptron (MLP), suited to the tabular feature representatio n, and a 1D 
+Convolutional Neural Network (1D-CNN), used to investigate whether local relationships among 
+the ordered NIST features can improve identification. The deep -learning models are compared 
+fairly with SVM, KNN, Random Forest and HKNNRF using the sa me datasets, binary and 
+multiclass tasks, and ciphertext sizes. Results are stored in a MySQL database and presented 
+through a Flask REST API and Streamlit dashboard. 
+3. SCOPE OF THE PROJECT 
+The project is organised around five block -cipher algorithms, two identification tasks, a baseline 
+reproduction of the published HKNNRF method, and a controlled deep-learning extension. 
+Ciphers Under Test 
+● AES - a widely used block cipher included as one of the five target classes. 
+● 3DES - a Feistel-based block cipher included as a comparison class. 
+● Blowfish - a Feistel-based block cipher included in the reference study. 
+● CAST - a block cipher included in the reference five-class identification experiment. 
+● RC2 - a block cipher included in the reference five-class identification experiment. 
+ Identification and Learning Methods 
+● NIST-derived feature representation - the supplied datasets provide 10 extracted values 
+from randomness tests for each ciphertext sample. 
+● K-Nearest Neighbours (KNN) and Random Forest (RF) - classical machine-learning 
+baselines used to establish direct performance comparisons. 
+● HKNNRF - the reference hybrid method that uses Random Forest-derived features 
+together with the original features and applies KNN for final classification. 
+● MLP - a lightweight deep-learning model that learns nonlinear relationships among the 
+10 extracted NIST features. 
+● 1D Convolutional Neural Network - a lightweight deep-learning model used to 
+investigate local relationships among the ordered feature vector. 
+● Binary and multiclass evaluation - all 10 binary algorithm pairs and the five-class 
+problem are evaluated across the five available ciphertext sizes. 
+4. PROJECT WORKFLOW 
+The system is built in three phases that move from dataset preparation and reproduction of the 
+reference method through the deep-learning extension to a user-facing reporting dashboard. 
+Phase 1 - Dataset Preparation and Baseline Reproduction: the supplied binary and multiclass 
+CSV datasets are prepared for each ciphertext size. The implementation creates the 80% training 
+and 20% testing split internally, and the training portion is further divided where required by 
+HKNNRF. The original SVM, KNN, RF and HKNNRF experiments are reproduced for all 
+binary pairs and the five-class task. 
+Phase 2 - Deep-Learning Extension and Evaluation: after validating the baseline, the same 
+extracted 10-feature inputs are used to train a lightweight MLP and a 1D-CNN. Both models are 
+evaluated under the same binary and multiclass settings and compared directly with the 
+reproduced baseline models. 
+● Baseline arm: SVM, KNN, Random Forest and HKNNRF are evaluated using the 
+supplied NIST-derived features, with the results compared against the published 
+experimental outcomes. 
+● Deep-learning arm: the 10 extracted features are routed to an MLP and a 1D-CNN. The 
+models are trained and tested using the same partitions as the baseline experiments so that 
+the comparison remains fair. 
+● Analysis arm: accuracy, precision, recall, F1-score and confusion matrices are reported. 
+Multiple splits/cross-validation and cross-size experiments are considered to assess 
+stability and determine whether models generalise beyond the ciphertext size used during 
+training. 
+Phase 3 - Web Dashboard: a Flask backend exposes the experimental results through a REST 
+API, a MySQL database stores model results, and an interactive Streamlit dashboard visualises 
+comparisons across algorithms, models, tasks and ciphertext sizes. 5. TECHNOLOGIES USED 
+Layer Technologies 
+Keystream Generation Python 3.11, Pandas, NumPy, supplied binary and multiclass 
+CSV datasets 
+Statistical Testing NIST-derived 10-feature representation supplied in the datasets 
+Machine Learning scikit-learn (SVM, KNN, Random Forest), HKNNRF 
+reproduction; PyTorch (MLP, 1D-CNN) 
+Backend & API Flask, REST API 
+Database MySQL 
+Dashboard & 
+Visualisation 
+Streamlit 
+ 
+6. TEAM MEMBERS 
+S. No. Name of Student Enrollment Number 
+1. Sanyam Kumar 02996303123 
+2. Aayush Ahuja 35496303123 
+3. Harsh Ramrakhiani 35296303123 
+ 

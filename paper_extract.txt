@@ -1,0 +1,614 @@
+A block cipher algorithm identi ﬁcation
+scheme based on hybrid k-nearest neighbor
+and random forest algorithm
+Ke Yuan 1,2, Daoming Yu 1, Jingkai Feng 3, Longwei Yang 1, Chunfu Jia 4
+and Yiwang Huang 5
+1 School of Computer and Information Engineering, Henan University, Kaifeng, Henan, China
+2 Henan Key Laboratory of Big Data Analysis and Processing, Henan University, Kaifeng, Henan,
+China
+3 International Education College, Henan University, Zhengzhou, Henan, China
+4 College of Cybersecurity, Nankai University, Tianjin, Tianjin, China
+5 School of Data Science, Tongren University, Tongren, Guizhou, China
+ABSTRACT
+Cryptographic algorithm identiﬁcation, which refers to analyzing and identifying the
+encryption algorithm used in cryptographic system, is of great signi ﬁcance to
+cryptanalysis. In order to improve the accuracy of identi ﬁcation work, this article
+proposes a new ensemble learning-based model named hybrid k-nearest neighbor
+and random forest (HKNNRF), and constructs a block cipher algorithm
+identiﬁcation scheme. In the ciphertext-only scenario, we use NIST randomness test
+methods to extract ciphertext features, and carry out binary-classi ﬁcation and
+ﬁve-classiﬁcation experiments on the block cipher algorithms using proposed
+scheme. Experiments show that when the ciphertext size and other experimental
+conditions are the same, compared with the baselines, the HKNNRF model has
+higher classiﬁcation accuracy. Speci ﬁcally, the average binary-classi ﬁcation
+identiﬁcation accuracy of HKNNRF is 69.5%, which is 13%, 12.5%, and 10% higher
+than the single-layer support vector machine (SVM), k-nearest neighbor (KNN), and
+random forest (RF) respectively. The ﬁve-classiﬁcation identiﬁcation accuracy can
+reach 34%, which is higher than the 21% accuracy of KNN, the 22% accuracy of RF
+and the 23% accuracy of SVM respectively under the same experimental conditions.
+Subjects Artiﬁcial Intelligence, Cryptography, Data Mining and Machine Learning
+Keywords Cryptographic algorithm identi ﬁcation, Machine learning, Randomness test, Random
+forest algorithm, K-nearest neighbor algorithm
+INTRODUCTION
+With the widespread application of cryptographic algorithms, their security has attracted a
+lot of people ’attention. Most of the current cryptanalysis techniques are based on
+Kerckhoffs’principle, that is, under the premise that we have known the exact
+cryptographic algorithms used in the system ﬁrst, then the analysis of various
+cryptographic algorithms is carried out. However, in practical applications, researchers
+and cryptanalysts usually can only obtain ciphertexts without knowing the exact
+cryptographic algorithms, and as time goes by, more and more cryptographic algorithms
+have emerged. In this situation, researchers can only perform ciphertext-only analysis.
+Therefore, identifying the cryptographic algorithm that is used by the ciphertext in
+How to cite this article Yuan K, Yu D, Feng J, Yang L, Jia C, Huang Y. 2022. A block cipher algorithm identi ﬁcation scheme based on
+hybrid k-nearest neighbor and random forest algorithm. PeerJ Comput. Sci. 8:e1110 DOI 10.7717/peerj-cs.1110
+Submitted 11 May 2022
+Accepted 29 August 2022
+Published 10 October 2022
+Corresponding author
+Longwei Yang, ylw@henu.edu.cn
+Academic editor
+Yilun Shang
+Additional Information and
+Declarations can be found on
+page 15
+DOI 10.7717/peerj-cs.1110
+Copyright
+2022 Y uan et al.
+Distributed under
+Creative Commons CC-BY 4.0ciphertext-only scenario has become a prerequisite for cryptanalysis. Moreover, the
+research on cryptographic algorithm identi ﬁcation has very important theoretical
+signiﬁcance, practical value, and the anti-identi ﬁcation ability can also be used as an
+evaluation of the security performance of one cryptographic algorithm correspondingly.
+The existing cryptographic algorithm identi ﬁcation schemes have the following three
+characteristics:
+1. The research object is mainly the block cipher algorithms.
+2. Existing schemes mainly identify the block cipher algorithms that work in Electronic
+Code book (ECB) or Cipher Block Chaining (CBC) modes, and we can ﬁnd the
+ciphertexts obtained in ECB mode are easier to identify than in CBC mode. Zhao, Zhao
+& Liu (2018) used RF model to identify the ciphertexts generated in ECB working mode.
+3. Most of the current cryptographic algorithm identi ﬁcation schemes are based on a
+single-layer classiﬁer model. Mello & Xexéo (2016) used the single-layer SVM classi ﬁer
+model to identify cryptographic algorithms; Fan & Zhao (2019) used three classiﬁcation
+models: RF, logistic regression (LR) and SVM to carry out identi ﬁcation tasks on eight
+block cipher algorithms. However, we ﬁnd that the single-layer classi ﬁer model has
+problems such as low ef ﬁciency when dealing with classi ﬁcation tasks, over ﬁtting when
+samples have excessive noise, high training cost, curse of dimensionality, and dif ﬁculty
+in ﬁnding suitable parameters and kernel functions.
+In order to solve the existing problems of the single-layer classi ﬁer model, this article
+proposes a new model based on the idea of ensemble learning to identify block cipher
+algorithms. The speci ﬁc contributions of this work are as follows:
+1. The HKNNRF block cipher algorithm identi ﬁcation model is proposed. The ensemble
+learning-based model HKNNRF overcomes the problems of the single-layer classi ﬁer
+model. It has the advantages of stronger, higher identi ﬁcation efﬁciency, and more
+ﬂexible parameter setting.
+2. Feature extraction with randomness test. Select AES, 3DES, Blow ﬁsh, CAST and RC2,
+these ﬁve block cipher algorithms as our research objects, and we set ﬁve ciphertext
+sizes, including 1, 8, 64, 256, 512 KB. Then, in the ciphertext-only scenario, we used
+NIST randomness test methods to extract ciphertext features.
+3. Construct a new identi ﬁcation scheme of block cipher algorithm based on HKNNRF
+model. In the ciphertext-only scenario, we used the NIST randomness test methods to
+extract ciphertext features, and used the HKNNRF model to build an identi ﬁcation
+classiﬁer, and perform binary and ﬁve classiﬁcation experiments on block cipher
+algorithms. The experiments show that the proposed model has better performance
+than traditional machine learning models.
+The rest of the article is arranged as follows. The ﬁrst section introduces the existing
+related work. The second section discusses the principles of cryptographic algorithm
+identiﬁcation. The third section introduces the RF algorithm, KNN algorithm and
+HKNNRF classiﬁcation model. The fourth section lists the relevant data preparation work
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 2/17and the evaluation criteria for classi ﬁcation results. The ﬁfth section gives the experiment
+results and analysis. At last, we summarize the current work and put forward some
+prospects for the future work.
+RELATED WORK
+In the early identiﬁcation work on cryptographic algorithms, the main research object was
+classical cryptographic algorithms. Pooja (2001) designed a classical cryptographic
+algorithms identiﬁcation scheme based on the frequency of letter usage. However, with the
+rapid development of modern cryptographic technology, more advanced symmetric
+cryptographic algorithms and asymmetric cryptographic algorithms have emerged, they
+are more complex than the intuitive classical mapping cryptographic algorithms. In this
+situation, traditional cryptographic algorithm identi ﬁcation scheme, which is based on
+statistical methods, is gradually failing. To cope with this problem and realize the ef ﬁcient
+identiﬁcation of cryptographic algorithms, researchers have used a series of machine
+learning algorithms to construct new identi ﬁcation schemes, such as SVM, KNN, and RF.
+The optimization of machine learning algorithms can use the Farmland fertility algorithm
+(Gharehchopogh, Farnad & Alizadeh, 2021 ), African Vultures Optimization Algorithm
+(Abdollahzadeh, Gharehchopogh & Mirjalili, 2021a ), and Arti ﬁcial Gorilla Troops
+Optimizer ( Abdollahzadeh, Gharehchopogh & Mirjalili, 2021b ). Dileep & Sekhar (2006)
+proposed a method to identify block cipher algorithms using SVM, they identi ﬁed the
+ciphertexts that are encrypted by AES, DES, 3DES, RC5 and Blow ﬁsh in ECB and CBC
+modes. Experiments show that the SVM model using Gaussian kernel function has the best
+performance, and they got better identi ﬁcation accuracy in ECB mode than in CBC mode.
+Sharif, Kuncheva & Mansoor (2010) compared the identi ﬁcation performance of different
+classiﬁcation models on block cipher algorithms, and they believed that the Rotation
+Forest model has better performance. Chou, Lin & Cheng (2012) used SVM model in their
+work to identify the ciphertexts that are encrypted by AES and DES in ECB and CBC
+modes. Mishra & Bhattacharjya (2013) proposed a block cipher and stream cryptographic
+algorithm identiﬁcation scheme combining pattern recognition and decision tree, and
+greatly improved the identi ﬁcation accuracy using methods such as block length detection
+and reoccurrence analysis. Wu, Wang & Li (2015) proposed a hierarchical identi ﬁcation
+scheme based on k-means clustering algorithm, and had an identi ﬁcation accuracy of
+about 90% for classic block cipher algorithms. Ding & Tan (2016) identiﬁed ﬁve block
+cipher algorithms in pairs. After analyzing the results, they found that the setting of the key
+has a certain impact on the identi ﬁcation accuracy. Mello & Xexéo (2018) analyzed the
+ciphertexts encrypted by seven cryptographic algorithms of ARC4, Blow ﬁsh, DES, Rijdael,
+RSA, Serpent, and Twoﬁsh in both ECB and CBC modes, and they found these algorithms
+almost all can be fully identi ﬁed in ECB mode.
+THE PRINCIPLES OF CRYPTOGRAPHIC ALGORITHM
+IDENTIFICATION
+At present, the design ideas of cryptographic algorithm identi ﬁcation schemes mainly
+come from statistical methods and machine learning techniques. Wu et al. (2015) believed
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 3/17that there are certain differences in the ciphertext space generated by different
+cryptographic algorithms, and the characteristics that characterize the corresponding
+differences can be extracted from them as the basis for the cryptographic algorithm
+identiﬁcation task. The task is to distinguish ciphertext features with small differences, so
+as to identify the cryptographic algorithm corresponding to the speci ﬁc ciphertexts.
+In the early work of cryptographic algorithm identi ﬁcation, most researchers used
+identiﬁcation schemes based on statistical methods. They select some speci ﬁc statistical
+indicators, and compare them to get the ﬁnal identi ﬁcation result. These statistics-based
+schemes are more intuitive and easier to understand. However, such schemes are only
+suitable for the scenario that there are fewer cryptographic algorithms. As time goes by,
+cryptography continues to develop, more and more cryptographic algorithms are
+proposed, it is precisely because of the increase in cryptographic algorithms, there are more
+complex and subtle differences between various ciphertext features that the statistics-based
+schemes cannot handle well. To cope with this problem and realize the ef ﬁcient
+identiﬁcation of cryptographic algorithms, a new kind of identi ﬁcation scheme, based on
+machine learning, steps into ( Gharehchopogh, 2022; Ghafori & Gharehchopogh, 2021 ). In
+this new identi ﬁcation scheme, we regard ciphertext features as a set of attributes, the
+identiﬁcation task is equivalent to the classi ﬁcation task, and it is completed in two stages.
+The ﬁrst stage trains the classi ﬁer model on the training data set with ciphertext features
+and algorithm labels, the second stage is to identify the test set with the trained classi ﬁer,
+then get the identi ﬁcation result and evaluate it. Compared with the statistics-based
+identiﬁcation scheme, the scheme based on machine learning is simple in design and stable
+in performance, and the most important thing is that it can handle complex data
+relationships. It is precisely because of these advantages that researchers are willing to
+invest more time and effort into it, there is no doubt that machine learning has become a
+research hotspot in the cryptographic algorithm identi ﬁcation ﬁeld.
+However, in the long run, the machine learning-based schemes also have obvious
+shortcomings, that is, it simply puts the cryptographic algorithm identi ﬁcation problem
+within the framework of general pattern recognition, and cannot discuss the particularity
+of cryptographic algorithm identi ﬁcation in depth, which brings dif ﬁculties to
+technological innovation.
+The following gives the formal de ﬁnition of the basic elements of cryptographic
+algorithm identiﬁcation: ciphertext, ciphertext features, cryptographic algorithm
+identiﬁcation and cryptographic algorithm identi ﬁcation scheme.
+Deﬁnition 1 Ciphertext. Set cryptographic algorithm set A ¼f a1; a2; … ; ang, where n
+is the number of cryptographic algorithms. For any given cryptographic algorithm ai, there
+is a ciphertext ﬁle C ¼f c1; c2; … ; cig generated by encrypting plaintext in mod mode,
+where ci is the ciphertext fragment of ciphertext ﬁle C.
+Deﬁnition 2 Ciphertext features. Extract the features of the ciphertext ﬁle of unknown
+cryptographic algorithm, and obtain the d dimension eigenvector v ¼f x1; x2; … ; xdg. The
+ciphertext feature extraction process is expressed as the process of mapping ciphertext ﬁle
+C into eigenvector v, which is denoted as WithdrawðCÞ! v. Withdraw is the speci ﬁc
+feature extraction process or method, also known as processing function. In the
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 4/17cryptographic algorithm identiﬁcation scheme, the features of C can be expressed as triple
+fea ¼ð E; Withdraw; dÞ, where E is the process of representing C as a binary bit string.
+Deﬁnition 3 Cryptographic algorithm identi ﬁcation. Known cryptographic
+algorithm set A ¼ð a1; a2; ... ; anÞ, ciphertext ﬁle C. Assuming that there is an
+identiﬁcation scheme P, in the ciphertext-only scenario, identify the cryptographic
+algorithm ai adopted by C with accuracy hp, where ai 2 A. The whole process is called
+cryptographic algorithm identi ﬁcation, which is denoted as triple R = (A, P , hp). Its
+workﬂow chart is shown in Fig. 1.
+Deﬁnition 4 Cryptographic algorithm identi ﬁcation scheme. In cryptographic
+algorithm identi ﬁcation R = (A,P ,hp), assuming oper is the process of R, fea is the
+ciphertext feature extracted from ciphertext ﬁle C, CLA is the classiﬁcation algorithm used
+in the identiﬁcation scheme, which refers to the subsequent SVM, KNN, RF and HKNNRF
+algorithms involved in this article, then the triple P ¼ð oper; fea; CLAÞ is denoted as a
+cryptographic algorithm identi ﬁcation scheme.
+A BLOCK CIPHER ALGORITHM IDENTIFICATION SCHEME
+BASED ON HKNNRF ALGORITHM
+We propose the HKNNRF model for block cipher algorithm identi ﬁcation and selected
+ﬁve block cipher algorithms: AES, 3DES, Blowﬁsh, Cast and RC2 as the research objects. In
+order to realize the effective identi ﬁcation of different cryptographic algorithms, our work
+was mainly divided into two stages. In the ﬁrst stage, we used the speci ﬁed method below
+to extract the features hidden in the ciphertext. In the second stage, we constructed the
+HKNNRF classi ﬁer proposed in this article. Then, we inputted the features into the
+classiﬁer to complete the identi ﬁcation task. In this article, we selected 15 randomness test
+methods in the NIST randomness test package as the basic methods of ciphertext feature
+extraction, and selected 10 useful ciphertext features as the ﬁnal features for classi ﬁcation.
+Random forest algorithm
+The random forest (RF) model is an ensemble learning algorithm. Decision tree is the basic
+unit of random forest, RF constructs multiple decision trees ( Shen et al., 2018 ) and
+integrates them to obtain the best decision results.
+Selection measure of split attribute in decision tree
+(1) Expectation of any classi ﬁcation sample of random forest model:
+Figure 1 Workﬂow of cryptographic algorithm identi ﬁcation.
+Full-size DOI: 10.7717/peerj-cs.1110/ ﬁg-1
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 5/17Hðs1; s2; … ; smÞ¼/C0
+Xn
+i¼1
+pi log2ðpiÞ:
+The possible value of random variable S could be one of s1; s2; … ; sm, and for each
+possible value s i, its probability
+PðS ¼ siÞ¼ pi; ði ¼ 1; 2; … ; mÞ:
+(2) The entropy of the sample set S is ﬁxed before division. Use the feature A to segment
+S and calculate the entropy of the segmented subset. The smaller entropy of ðs1; s2; … ; smÞ,
+the smaller uncertainty of the subset that divided by feature A, and the better classi ﬁcation
+result.
+(3) The sample set S is divided into I subsets s1; s2; … ; si by features A.
+HðS j AÞ¼
+Xn
+i¼1
+jSij
+jSj HðSiÞ¼/C0
+Xn
+i¼1
+jSij
+jSj HðSiÞ
+Xk
+k¼1
+jSikj
+jSij log2
+jSikj
+jSij
+/C18/C19
+:
+(4) Information gain
+GainðS; AÞ¼ HðSÞ/C0 HðSjAÞ:
+When input the sample set S which are going to be classi ﬁed, every decision tree is
+created in parallel and does not need pruning.
+K-nearest neighbor algorithm
+In the k-nearest neighbor algorithm (KNN), all training samples are stored in Euclidean
+space as one point, and the training data are grouped, then we classify the samples to be
+predicted according to the category labels of the nearest K samples. The distance
+measurement of k-nearest neighbor algorithm generally adopts Euclidean distance, of
+course, it can also be other distances ( Li, 2018 ).
+Based on the Euclidean distance function dðxi; xjÞ, we can obtain the nearest K adjacent
+nodes of this node, where the Euclidean distance function is:
+dðxi; xjÞ¼
+ﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ
+ðxi;1 /C0 xj;1Þ2 þ ... þð xi;m /C0 xj;mÞ2
+q
+:
+When new data without label appear, we can use the k-nearest neighbor algorithm to
+identify the new data according to the nearest sample labels in the known sample set.
+K-nearest neighbor algorithm is widely applied because it is simple, effective and easy to
+implement.
+Cryptographic algorithm identification classifier based on HKNNRF
+algorithm
+Compared with the traditional classi ﬁcation model, although the RF greatly improves the
+classiﬁcation accuracy, it is easily affected by the features that have been segmented many
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 6/17times. Based on this problem, this article attempts to propose an identi ﬁcation scheme of
+hybrid k-nearest neighbor and random forest algorithm based on the idea of stacking in
+ensemble learning (Benyamin, Farhad & Saeid, 2021 ; Goldanloo & Gharehchopogh, 2022 ).
+The idea of stacking refers to letting the output of the ﬁrst layer classiﬁer as the input of the
+next layer ’s classiﬁer. By analogy, we can get the ﬁnal classiﬁcation result by stacking.
+The pseudocode ﬂowchart of the HKNNRF model is shown in Fig. 2. The algorithm ﬁrst
+uses the original features to train the RF model, then uses the decision trees in RF to
+construct new features, add them to the original features to get ﬁnal features, then
+normalize the ﬁnal features with one-hot encoder. Finally, input the normalized features
+into KNN for training.
+We selected the cryptographic algorithm identi ﬁcation scheme P ¼ð oper; fea;
+HKNNRFÞ deﬁned in de ﬁnition 4, Its work ﬂow is as follows.
+Input: A set of cryptographic algorithms A ¼f a1; a2; ... akg( k is the number of
+cryptographic algorithms), the number of ciphertext encrypted by each cryptographic
+algorithm is F, and a set of test ciphertext ﬁles CT1; CT2; … ; CTs with unknown encryption
+algorithm.
+Output: Classi ﬁcation results. Classi ﬁcation results of the test ciphertext ﬁles, they are
+algorithms in at1, at2, … , ats (at1, at2, … , ats 2 A).
+The training stage includes the following 12 steps:
+Step 1. Input a total of k /C3 F ciphertext ﬁles. According to the randomness test methods,
+we extract features from each ciphertext ﬁle, and obtain k /C3 F sets of ciphertext feature sets
+FeaTr ¼f feaTrj
+iji ¼ 1; 2; … ; k /C3 F; j ¼ 1; 2; … ; dg, where feaTrj
+i represents the j-th feature
+of the i-th training ciphertext ﬁle.
+Step 2. The feature set and ciphertext label form a sample set ðFeaTr; LabÞ as the
+original data set, which is recorded as T.
+Step 3. Input feature set T. There are k /C3 F ciphertext ﬁles in total, each ciphertext ﬁle
+represents a sample and each sample has d features.
+Figure 2 The cryptographic algorithm identi ﬁcation process based on HKNNRF.
+Full-size DOI: 10.7717/peerj-cs.1110/ ﬁg-2
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 7/17Step 4. Use the method of sampling with replacement, extract M samples from the
+feature set T to form a sample set called Bootstrap sample set T/C3 , and it is used as root node
+samples of a decision tree.
+Step 5. Among the d features of the sample set, we select t attributes randomly as
+candidate attributes, and calculate the best splitting attributes.
+Step 6. Based on each value type of the best splitting attribute, segment the current data
+set to obtain the sub data sets.
+Step 7. For each sub data set, selected t attributes randomly, select the best splitting
+attribute, and segment the current data set at this level.
+Step 8. Repeat steps 4–7 to establish K decision trees to build a random forest and obtain
+a classi ﬁcation data set.
+Step 9. Use the trained decision trees to construct new features and add them to the
+original features to get ﬁnal features.
+Step 10. Use one-hot encoder to normalize the ﬁnal features.
+Step 11. Use the normalized features to train KNN classi ﬁer.
+Step 12. Output the integrated classi ﬁer HKNNRF.
+The test stage includes the following two steps:
+Step 1. Use NIST randomness test methods to scan the ciphertext ﬁles CT1,C T2, … ,C Ts
+to be identiﬁed to obtain the ciphertext featureFeaTr ={ feaTrj
+iji ¼ 1; 2; … ; s; j ¼ 1; 2; … ; dg.
+Step 2. Input the ciphertext feature FeaTr ¼f feaTrj
+iji ¼ 1; 2; … ; s; j ¼ 1; 2; … ; dg,
+where feaTrj
+i represents the j-th feature of the i-th test ciphertext ﬁle, into the trained
+HKNNRF and output the classi ﬁcation result of the ciphertext ﬁle, the result is
+cryptographic algorithm label in at1, at2, … , ats. The ﬂow of the cryptographic algorithm
+identiﬁcation scheme based on the HKNNRF model is shown in Fig. 3.
+Figure 3 The ﬂow of the cryptographic algorithm identi ﬁcation scheme constructed based on the
+HKNNRF model. Full-size DOI: 10.7717/peerj-cs.1110/ ﬁg-3
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 8/17EXPERIMENTAL ENVIRONMENT
+Data preparation
+The important features of ciphertext are the returned values of different NIST randomness
+test methods. In our work, we use the open source tool sp800_22_tests-master in python,
+which contains a variety of NIST randomness test methods, to extract the ciphertext
+features. Each of these different test methods is an independent module, works separately,
+and executes in parallel. For a single ciphertext ﬁle, the following is a complete feature
+extraction process: The main Python program read the ciphertext ﬁle, and inputs it into
+each randomness test method, then we can get different feature values of this ciphertext,
+save them in another corresponding ﬁle. Repeat the same operation on the remaining
+ciphertext ﬁles, and we can get the complete ciphertext feature ﬁles.
+This article uses the random numbers generated by the Fortuna Accumulator method of
+Crypto encryption module in python as plaintexts, and then uses the cryptographic
+algorithm library in the same module to encrypt the plaintexts to obtain the ciphertexts.
+The encryption key and initialization vector are generated by the Cipher encryption
+module of Crypto ( Gharehchopogh & Abdollahzadeh, 2021 ), and we use AES, 3DES,
+Blowﬁsh, CAST and RC2 from cryptographic algorithm library to generate ciphertexts
+using a ﬁxed 16-bit string key in ECB mode. We chose ﬁve ciphertext sizes: 1, 8, 64, 256,
+512 KB, and each with 100 ﬁles, totaling 500 ﬁles for one cryptographic algorithm, so 2,500
+ﬁles for ﬁve algorithms. We then used 15 different randomness test methods to extract
+features of ciphertexts; although we obtained 15 different values, only 10 useful values were
+selected as the ﬁnal input of the classiﬁer. Each ciphertext sample corresponds to a set of 10
+features. Next, we divided the data set, selected 80% samples randomly as the training set,
+and took the remaining 20% as the test set. Moreover, there were C2
+5 ¼ 10 kinds of binary-
+classiﬁcation identiﬁcation experiments. The speci ﬁc parameters used by the ﬁve
+cryptographic algorithms are shown in Table 1.
+The evaluation criteria for classification results
+In classi ﬁcation problems, the most commonly used criteria are:
+(1) Accuracy: proportion of correctly classi ﬁed samples to the total number of samples.
+(2) Precision: proportion of the samples that are predicted to be positive by the model that
+are actually positive to the samples that are predicted to be positive.
+Table 1 Speciﬁc parameter list of ﬁve block cipher algorithms.
+Algorithm Structure Key Mode Parameter Implementation
+AES SP Fixed ECB Fixed Crypto
+3DES Feistel Fixed ECB Fixed Crypto
+Blowﬁsh Feistel Fixed ECB Fixed Crypto
+CAST Feistel Fixed ECB Fixed Crypto
+RC2 Feistel Fixed ECB Fixed Crypto
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 9/17(3) Recall: the proportion of samples that are actually positive that are predicted to be
+positive among the samples that are actually positive.
+We used the confusion matrix to evaluate the classi ﬁcation results, and it produced four
+results, namely True Positive (TP), True Negative (TN), False Positive (FP) and False
+Negative (FN). Let TP, TN, FP, and FN respectively denote the corresponding sample
+numbers. The confusion matrix of the classi ﬁcation results is shown in Table 2.
+The following shows how to calculate Accuracy, Precision, and Recall:
+Accuracy ¼ TP þ TN
+TP þ TN þ FP þ FN :
+Precision ¼ TP
+TP þ FP :
+Recall ¼ TP
+TP þ FN :
+In our article, we take accuracy as the main criteria.
+DICUSSION
+To evaluate the performance of the proposed ensemble learning model on block cipher
+algorithm identi ﬁcation, we compared it with three classic machine learning models
+(SVM, KNN, RF). These models were applied to the same dataset, and the identi ﬁcation
+performance of binary-classiﬁcation and ﬁve-classiﬁcation were compared under different
+ciphertext ﬁle sizes (1, 8, 64, 256, 512 KB).
+Binary-classification identification on cryptographic algorithms
+We establish a classi ﬁcation model based on the 10 kinds of useful features extracted in
+“data preparation” above. Then we calculated the accuracy, precision, and recall values of
+SVM, KNN, RF and HKNNRF models on different sizes of ciphertext ﬁle which were
+encrypted by AES and 3DES. The results are shown in Table 3.
+The ﬁrst column of Table 3 shows the evaluation indicators of the identi ﬁcation result,
+and the second column shows the sizes of ciphertext ﬁle. From Table 3, it can be concluded
+that the average identiﬁcation accuracy of SVM, KNN, RF and HKNNRF on different sizes
+of ciphertext ﬁle are 0.565, 0.57, 0.595 and 0.695 respectively. In addition, the identiﬁcation
+accuracy of HKNNRF model is affected by the size of ciphertext, When the ciphertext ﬁle
+size is 1 and 512 KB, the binary-classi ﬁcation identiﬁcation accuracy on AES and 3DES is
+Table 2 Confusion matrix of classi ﬁcation results.
+Real situation Forecast result
+Positive Negative
+Positive TP (True positive) FN (False negative)
+Negative FP (False positive) TN (True negative)
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 10/17as high as 72.5%. Especially in the case of 1 KB, the identi ﬁcation accuracy of HKNNRF
+model is 22.5%, 17.5%, 20% higher than SVM, KNN and RF model respectively.
+As shown in Fig. 4, it intuitively shows the identi ﬁcation accuracy of the binary-
+classiﬁcation experiment using SVM, KNN, RF, HKNNRF model in the form of a line
+chart. Combining Table 3 and Fig. 4, it can be inferred that the cryptographic algorithm
+identiﬁcation scheme based on ensemble learning has higher accuracy than the schemes
+based on single-layer machine learning model.
+Table 3 Binary-classiﬁcation experimental results based on ciphertext features.
+Evaluating indicator File size (KB) Classi ﬁer
+SVM KNN RF HKNNRF
+Accuracy 512 0.600 0.600 0.600 0.725
+256 0.575 0.575 0.625 0.650
+64 0.625 0.600 0.650 0.675
+8 0.525 0.525 0.575 0.700
+1 0.500 0.550 0.525 0.725
+Precision 512 0.580 0.601 0.600 0.725
+256 0.580 0.583 0.628 0.700
+64 0.620 0.594 0.650 0.650
+8 0.530 0.532 0.600 0.675
+1 0.420 0.530 0.615 0.700
+Recall 512 0.580 0.600 0.600 0.700
+256 0.580 0.575 0.625 0.650
+64 0.660 0.600 0.650 0.700
+8 0.520 0.525 0.575 0.650
+1 0.420 0.550 0.525 0.625
+Figure 4 Identiﬁcation accuracy under different ﬁle sizes.
+Full-size DOI: 10.7717/peerj-cs.1110/ ﬁg-4
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 11/17Next, continue to use HKNNRF to perform binary-classi ﬁcation identiﬁcation
+experiments on the ﬁve algorithms of AES, 3DES, Blow ﬁsh, CAST and RC2, a total of 10
+combinations. The identi ﬁcation results are shown in Table 4.
+Figure 5 shows the contents of Table 4 in the form of histograms according to the
+difference of ﬁle size.
+From Fig. 5, the binary-classi ﬁcation accuracy of the 10 combinations using HKNNRF
+model in ﬁve different ﬁle sizes can be more clearly observed, and we can ﬁnd that all
+accuracy of HKNNRF are not less than 60%, and the highest can reach 72.5%. In addition,
+we can infer that the difference in the size of ciphertext ﬁle and the difference in the
+cryptographic algorithm used in ciphertext ﬁle will both affect the ﬁnal accuracy.
+Five-classification identification on cryptographic algorithms
+Finally, we established a ﬁve-classiﬁcation model based on the 10 kinds of ciphertext
+features,and carry out identi ﬁcation experiment on AES, 3DES, Blow ﬁsh, CAST and RC2
+using SVM, KNN, RF, HKNNRF in ﬁve different ciphertext ﬁle sizes. The results are
+shown in Table 5.
+The experimental results show that the highest identi ﬁcation accuracy of HKNNRF can
+reach 34%, which is 13%, 12%, 11% higher than the accuracy of the single-layer KNN,
+single-layer RF and single-layer SVM model respectively. And the accuracy of HKNNRF
+are all not less than 24%. Similarly, as the size of ciphertext ﬁle changes, the accuracy
+changes accordingly, it also tells us that the size of ciphertext ﬁle has a certain affect on the
+accuracy.
+Table 4 Binary-classiﬁcation accuracy of ﬁve cryptographic algorithms based on HKNNRF.
+Accuracy 1 KB 8 KB 64 KB 256 KB 512 KB
+3DES and AES 0.725 0.700 0.675 0.650 0.725
+3DES and Blow ﬁsh 0.625 0.625 0.650 0.625 0.650
+3DES and CAST 0.650 0.625 0.725 0.675 0.625
+3DES and RC2 0.650 0.675 0.700 0.625 0.65
+AES and Blow ﬁsh 0.600 0.700 0.675 0.650 0.675
+AES and CAST 0.650 0.675 0.650 0.700 0.700
+AES and RC2 0.625 0.600 0.700 0.675 0.650
+Blowﬁsh and CAST 0.650 0.650 0.650 0.625 0.625
+Blowﬁsh and RC2 0.700 0.600 0.675 0.700 0.700
+CAST and RC2 0.725 0.650 0.625 0.675 0.725
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 12/17(a) (b)
+(c)
+(e)
+(d)
+Figure 5 Comparison of binary-classi ﬁcation accuracy of different ﬁle sizes.
+Full-size DOI: 10.7717/peerj-cs.1110/ ﬁg-5
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 13/17CONCLUSIONS AND FUTURE WORK
+This article mainly focuses on the cryptographic algorithm identi ﬁcation problem. In the
+ciphertext-only scenario, we propose a new identi ﬁcation scheme based on ensemble
+learning named HKNNRF to achieve higher classi ﬁcation accuracy. The ciphertext ﬁles of
+different sizes encrypted by AES, 3DES, Blowﬁsh, CAST and RC2 are used as identiﬁcation
+objects to perform binary-classi ﬁcation and ﬁve-classiﬁcation experiments, and the results
+show that the difference in the size of ciphertext ﬁle and the difference in the cryptographic
+algorithm used in ciphertext ﬁle both are factors that in ﬂuence the identiﬁcation accuracy.
+Take the binary-classi ﬁcation of AES and 3DES as an example; the average accuracy of
+HKNNRF can reach 69.5%, which is much higher than the average 56.5% accuracy of
+SVM, and also higher than the average 57%, 59.5% accuracy of KNN and RF model. In
+other binary-classi ﬁcation cases, the identi ﬁcation accuracy of HKNNRF are all not less
+than 60%, and the highest can reach 72.5%; In the ﬁve-classiﬁcation case, the highest
+identiﬁcation accuracy of HKNNRF can reach 34%, which is higher than the 21% accuracy
+of KNN, the 22% accuracy of RF and the 23% accuracy of SVM under the same
+experimental conditions, and the minimum identi ﬁcation accuracy of HKNNRF model is
+24%. All results shown above mean the scheme based on ensemble learning has a higher
+accuracy compared with the scheme based on one single-layer classi ﬁer.
+The model and scheme proposed in this article are mainly suitable for the identi ﬁcation
+of cryptographic algorithms. In rare cases, the identi ﬁcation performance of HKNNRF is
+not better than single-layer machine learning model. In the future, we plan to add classic
+asymmetric cryptographic algorithms such as RSA, ElGamal, and ECC as experimental
+objects to expand application scenarios. In addition, we will further study the identiﬁcation
+Table 5 Five-classiﬁcation experimental results based on ciphertext features.
+Evaluating indicator File size (KB) Classi ﬁer
+SVM KNN RF HKNNRF
+Accuracy 512 0.190 0.200 0.170 0.240
+256 0.210 0.200 0.200 0.330
+64 0.100 0.160 0.220 0.270
+8 0.170 0.190 0.240 0.300
+1 0.230 0.210 0.220 0.340
+Precision 512 0.230 0.219 0.210 0.298
+256 0.233 0.225 0.208 0.330
+64 0.115 0.099 0.231 0.227
+8 0.204 0.207 0.233 0.305
+1 0.214 0.222 0.223 0.371
+Recall 512 0.190 0.200 0.170 0.240
+256 0.210 0.200 0.200 0.330
+64 0.100 0.160 0.220 0.270
+8 0.170 0.190 0.240 0.300
+1 0.230 0.210 0.220 0.340
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 14/17performance of HKNNRF model under different encryption modes of block cipher. As a
+new idea, the block cipher algorithm identi ﬁcation scheme based on ensemble learning is
+worthy of further exploration, and it has certain positive signi ﬁcance for the future
+research on block cipher algorithm identi ﬁcation.
+ADDITIONAL INFORMATION AND DECLARATIONS
+Funding
+This work was supported by the National Natural Science Foundation of China (61972073,
+61972215, 62066040); the Natural Science Foundation of Tianjin (20JCZDJC00640);
+the Key Specialized Research and Development Program of Henan Province
+(222102210062); the Basic Higher Educational Key Scienti ﬁc Research Program of Henan
+Province (22A413004); and the National Innovation Training Program of University
+Student (202110475072). The funders had no role in study design, data collection and
+analysis, decision to publish, or preparation of the manuscript.
+Grant Disclosures
+The following grant information was disclosed by the authors:
+The National Natural Science Foundation of China: 61972073, 61972215, 62066040.
+The Natural Science Foundation of Tianjin: 20JCZDJC00640.
+The Key Specialized Research and Development Program of Henan Province:
+222102210062.
+The Basic Higher Educational Key Scienti ﬁc Research Program of Henan Province:
+22A413004.
+The National Innovation Training Program of University Student: 202110475072.
+Competing Interests
+The authors declare that they have no competing interests.
+Author Contributions
+/C15 Ke Yuan conceived and designed the experiments, analyzed the data, authored or
+reviewed drafts of the article, and approved the ﬁnal draft.
+/C15 Daoming Yu performed the experiments, analyzed the data, performed the computation
+work, prepared ﬁgures and/or tables, authored or reviewed drafts of the article, and
+approved the ﬁnal draft.
+/C15 Jingkai Feng performed the experiments, performed the computation work, prepared
+ﬁgures and/or tables, and approved the ﬁnal draft.
+/C15 Longwei Yang conceived and designed the experiments, analyzed the data, authored or
+reviewed drafts of the article, and approved the ﬁnal draft.
+/C15 Chunfu Jia analyzed the data, authored or reviewed drafts of the article, and approved
+the ﬁnal draft.
+/C15 Yiwang Huang performed the computation work, prepared ﬁgures and/or tables, and
+approved the ﬁnal draft.
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 15/17Data Availability
+The following information was supplied regarding data availability:
+The raw data and code is available in the Supplemental Files .
+Supplemental Information
+Supplemental information for this article can be found online at http://dx.doi.org/10.7717/
+peerj-cs.1110#supplemental-information.
+REFERENCES
+Abdollahzadeh B, Gharehchopogh FS, Mirjalili S. 2021a. African vultures optimization
+algorithm: a new nature-inspired metaheuristic algorithm for global optimization problems.
+Computers & Industrial Engineering 158(4):107408 DOI 10.1016/j.cie.2021.107408 .
+Abdollahzadeh B, Gharehchopogh FS, Mirjalili S. 2021b. Artiﬁcial gorilla troops optimizer: a new
+nature-inspired metaheuristic algorithm for global optimization problems. International Journal
+of Intelligent Systems 36(10):5887–5958 DOI 10.1002/int.22535 .
+Benyamin A, Farhad SG, Saeid B. 2021. Discrete farmland fertility optimization algorithm with
+metropolis acceptance criterion for traveling salesman problems. International Journal of
+Intelligent Systems 36(3):1270–1303 DOI 10.1002/int.22342 .
+Chou JW, Lin SD, Cheng CM. 2012. On the effectiveness of using state-of-the-art machine
+learning techniques to launch cryptographic distinguishing attacks. In: Proceedings of the 5th
+ACM Workshop on Security and Arti ﬁcial Intelligence . 105 –110.
+Dileep AD, Sekhar CC. 2006. Identiﬁcation of block ciphers using support vector machines. In:
+The 2006 IEEE International Joint Conference on Neural Network Proceedings . Piscataway: IEEE,
+2696–2701.
+Ding W, Tan C. 2016. A cipher recognition technology based on ciphertext analysis.
+Communications Technology 49(10):1382–1386 DOI 10.3969/j.issn.1002-0802.2016.10.022 .
+Fan SJ, Zhao YQ. 2019. Analysis of cryptosystem recognition scheme based on Euclidean distance
+feature extraction in three machine learning classi ﬁers. Journal of Physics: Conference Series
+1314(1):1742–1750 DOI 10.1088/1742-6596/1314/1/012184 .
+Ghafori S, Gharehchopogh FS. 2021. Advances in spotted hyena optimizer: a comprehensive
+survey. Archives of Computational Methods in Engineering 29:1–22
+DOI 10.1007/s11831-021-09624-4 .
+Gharehchopogh FS. 2022. Advances in tree seed algorithm: a comprehensive survey. Archives of
+Computational Methods in Engineering 29:1–24 DOI 10.1007/s11831-021-09698-0 .
+Gharehchopogh FS, Abdollahzadeh B. 2021. An efﬁcient Harris Hawk optimization algorithm for
+solving the travelling salesman problem. Cluster Computing 25:1–25
+DOI 10.1007/s10586-021-03304-5 .
+Gharehchopogh FS, Farnad B, Alizadeh A. 2021. A modi ﬁed farmland fertility algorithm for
+solving constrained engineering problems. Concurrency and Computation: Practice and
+Experience 33(17):e6310 DOI 10.1002/cpe.6310 .
+Goldanloo MJ, Gharehchopogh FS. 2022. A hybrid OBL-based ﬁreﬂy algorithm with symbiotic
+organisms search algorithm for solving continuous optimization problems. The Journal of
+Supercomputing 78(3):3998–4031 DOI 10.1007/s11227-021-04015-9 .
+Li HC. 2018. Cipher-text features based cipher system recognition .X i’an: Xidian University.
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 16/17Mello FLD, Xexéo JAM. 2016. Cryptographic algorithm identiﬁcation using machine learning and
+massive processing. IEEE Latin America Transactions 14(11):4585–4590
+DOI 10.1109/TLA.2016.7795833 .
+Mello FLD, Xexéo JAM. 2018. Identifying encryption algorithms in ECB and CBC modes using
+computational intelligence. Universal Computer Science 24(1):25–42
+DOI 10.3217/jucs-024-01-0025 .
+Mishra S, Bhattacharjya A. 2013. Pattern analysis of cipher text: a combined approach. In: 2013
+International Conference on Recent Trends in Information Technology (ICRTIT) . Piscataway:
+IEEE, 393 –398.
+Pooja M. 2001. Classiﬁcation of ciphers . Kanpur: Indian Institute of Technology, 3 –21.
+Sharif S, Kuncheva L, Mansoor S. 2010. Classifying encryption algorithms using pattern
+recognition techniques. In: 2010 IEEE International Conference on Information Theory and
+Information Security . Piscataway: IEEE, 1168 –1172.
+Shen ZY, Su C, Zhou Y, Shen Z. 2018. A random forest algorithm for imbalanced classi ﬁcation.
+Computer and Modernization 280(12):60–64+70 DOI 10.3969/j.issn.1006-2475.2018.12.011 .
+Wu Y, Wang T, Li JD. 2015. Research on new statistical and testing method for ciphertexts of
+block cipher. Journal of Ordnance Engineering College 27(3):58–65
+DOI 10.3969/j.issn.1008-2956.2015.03.011 .
+Wu Y, Wang T, Xing M, Li JD. 2015. Block ciphers identiﬁcation scheme based on the distribution
+character of randomness test values of ciphertext. Journal on Communications 36(4):146–155
+DOI 10.11959/j.issn.1000-436x.2015107 .
+Zhao ZC, Zhao YQ, Liu FM. 2018. Scheme of block ciphers recognition based on randomness test.
+Journal of Cryptologic Research 6(2):177–190 DOI 10.13868/j.cnki.jcr.000293 .
+Yuan et al. (2022), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.1110 17/17

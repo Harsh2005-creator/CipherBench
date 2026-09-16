@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from utils.data_loader import (
     load_binary_dataset, load_multiclass_dataset,
-    load_hknnrf_split, get_all_binary_pairs, load_config
+    load_hknnrf_split, load_binary_hknnrf_split, get_all_binary_pairs, load_config
 )
 from utils.metrics import compute_metrics, compute_confusion_matrix
 from models.baseline import get_svm_model, get_knn_model, get_random_forest_model
@@ -266,30 +266,38 @@ def main():
                                     'multiclass', '5-class', size, db, config)
 
             elif task == 'binary':
-                # For binary, train on a subset of pairs (to save time)
-                # You can modify this to train on all pairs
-                sample_pairs = get_all_binary_pairs()[:3]  # Just first 3 pairs for demo
+                # For binary, train on all pairs (paper tests all 10 combinations)
+                all_pairs = get_all_binary_pairs()
 
-                for pair in sample_pairs:
+                for pair in all_pairs:
                     try:
                         # Convert size format (1KB -> 1kb for binary folder names)
                         size_folder = size.lower().replace('kb', 'kb')
-                        X_train, X_test, y_train, y_test = load_binary_dataset(pair, size_folder)
 
-                        if args.model in ['all', 'svm']:
-                            model = get_svm_model(**config['hyperparameters']['svm'])
-                            train_baseline_model(model, 'SVM', X_train, y_train, X_test, y_test,
-                                                'binary', pair, size, db)
+                        if args.model in ['all', 'svm', 'knn', 'rf']:
+                            # Load standard binary data for baseline models
+                            X_train, X_test, y_train, y_test = load_binary_dataset(pair, size_folder)
 
-                        if args.model in ['all', 'knn']:
-                            model = get_knn_model(**config['hyperparameters']['knn'])
-                            train_baseline_model(model, 'KNN', X_train, y_train, X_test, y_test,
-                                                'binary', pair, size, db)
+                            if args.model in ['all', 'svm']:
+                                model = get_svm_model(**config['hyperparameters']['svm'])
+                                train_baseline_model(model, 'SVM', X_train, y_train, X_test, y_test,
+                                                    'binary', pair, size, db)
 
-                        if args.model in ['all', 'rf']:
-                            model = get_random_forest_model(**config['hyperparameters']['random_forest'])
-                            train_baseline_model(model, 'RF', X_train, y_train, X_test, y_test,
-                                                'binary', pair, size, db)
+                            if args.model in ['all', 'knn']:
+                                model = get_knn_model(**config['hyperparameters']['knn'])
+                                train_baseline_model(model, 'KNN', X_train, y_train, X_test, y_test,
+                                                    'binary', pair, size, db)
+
+                            if args.model in ['all', 'rf']:
+                                model = get_random_forest_model(**config['hyperparameters']['random_forest'])
+                                train_baseline_model(model, 'RF', X_train, y_train, X_test, y_test,
+                                                    'binary', pair, size, db)
+
+                        # HKNNRF for binary classification
+                        if args.model in ['all', 'hknnrf']:
+                            X_train_rf, X_train_knn, X_test, y_train_rf, y_train_knn, y_test = load_binary_hknnrf_split(pair, size_folder)
+                            train_hknnrf_model(X_train_rf, y_train_rf, X_train_knn, y_train_knn,
+                                              X_test, y_test, 'binary', pair, size, db, config)
 
                     except FileNotFoundError:
                         print(f"Skipping {pair} ({size}) - file not found")
