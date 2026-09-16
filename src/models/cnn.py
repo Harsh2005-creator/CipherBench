@@ -83,19 +83,23 @@ def create_cnn_model(input_dim: int = 10, num_classes: int = 5,
 def train_cnn(model: keras.Model, X_train: np.ndarray, y_train: np.ndarray,
               X_test: np.ndarray, y_test: np.ndarray,
               epochs: int = 100, batch_size: int = 32,
-              verbose: int = 0) -> Tuple[keras.Model, Dict]:
+              verbose: int = 0, validation_split: float = 0.2) -> Tuple[keras.Model, Dict]:
     """
     Train 1D CNN model.
 
+    IMPORTANT: Uses validation_split to split X_train into train/validation.
+    X_test is NOT used during training - only for final evaluation.
+
     Args:
         model: Compiled Keras model
-        X_train: Training features, already reshaped or will be reshaped here
-        y_train: Training labels
-        X_test: Test features
-        y_test: Test labels
+        X_train: Training features (will be split into train/val)
+        y_train: Training labels (will be split into train/val)
+        X_test: Test features (NOT used during training)
+        y_test: Test labels (NOT used during training)
         epochs: Max epochs
         batch_size: Batch size
         verbose: Verbosity
+        validation_split: Fraction of training data to use for validation
 
     Returns:
         Trained model & training history
@@ -113,9 +117,11 @@ def train_cnn(model: keras.Model, X_train: np.ndarray, y_train: np.ndarray,
         verbose=verbose
     )
 
+    # Train model - validation_split automatically splits X_train
+    # Test set (X_test, y_test) is NOT used here
     history = model.fit(
         X_train, y_train,
-        validation_data=(X_test, y_test),
+        validation_split=validation_split,  # Split from X_train only
         epochs=epochs,
         batch_size=batch_size,
         callbacks=[early_stopping],
