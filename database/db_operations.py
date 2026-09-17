@@ -71,13 +71,13 @@ class ExperimentDB:
             conn.commit()
 
             experiment_id = cursor.lastrowid
-            print(f"✓ Inserted experiment ID: {experiment_id}")
+            print(f"[OK] Inserted experiment ID: {experiment_id}")
 
             return experiment_id
 
         except Exception as e:
             conn.rollback()
-            print(f"✗ Error inserting experiment: {e}")
+            print(f"[ERROR] Error inserting experiment: {e}")
             raise
 
         finally:
@@ -244,11 +244,11 @@ class ExperimentDB:
             query = "DELETE FROM experiments WHERE id = %s"
             cursor.execute(query, (experiment_id,))
             conn.commit()
-            print(f"✓ Deleted experiment ID: {experiment_id}")
+            print(f"[OK] Deleted experiment ID: {experiment_id}")
 
         except Exception as e:
             conn.rollback()
-            print(f"✗ Error deleting experiment: {e}")
+            print(f"[ERROR] Error deleting experiment: {e}")
             raise
 
         finally:
@@ -289,4 +289,4 @@ if __name__ == "__main__":
     for i, model in enumerate(best, 1):
         print(f"   {i}. {model['model_name']}: {model['accuracy']:.4f}")
 
-    print("\n✓ Database operations test completed!")
+    print("\n[OK] Database operations test completed!")

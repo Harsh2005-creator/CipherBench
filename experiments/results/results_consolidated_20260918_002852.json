@@ -208,110 +208,6 @@
     "timestamp": "2026-09-16T22:11:36.367048"
   },
   {
-    "model_name": "MLP",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "1KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.18,
-    "precision": 0.09962121212121212,
-    "recall": 0.18,
-    "f1_score": 0.11438596491228069,
-    "confusion_matrix": [
-      [
-        0,
-        5,
-        9,
-        0,
-        0
-      ],
-      [
-        1,
-        10,
-        17,
-        0,
-        0
-      ],
-      [
-        0,
-        2,
-        8,
-        0,
-        0
-      ],
-      [
-        0,
-        10,
-        14,
-        0,
-        0
-      ],
-      [
-        1,
-        5,
-        18,
-        0,
-        0
-      ]
-    ],
-    "training_time": 4.221477746963501,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:11:40.597882"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "1KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.17,
-    "precision": 0.12048076923076924,
-    "recall": 0.17,
-    "f1_score": 0.11970562770562769,
-    "confusion_matrix": [
-      [
-        9,
-        0,
-        4,
-        1,
-        0
-      ],
-      [
-        14,
-        0,
-        11,
-        3,
-        0
-      ],
-      [
-        4,
-        0,
-        2,
-        4,
-        0
-      ],
-      [
-        12,
-        0,
-        6,
-        6,
-        0
-      ],
-      [
-        13,
-        0,
-        9,
-        2,
-        0
-      ]
-    ],
-    "training_time": 5.7997050285339355,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:11:46.406233"
-  },
-  {
     "model_name": "SVM",
     "task_type": "multiclass",
     "algorithm_pair": "5-class",
@@ -518,110 +414,6 @@
     "training_time": 0.22005677223205566,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:11:46.803863"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "8KB",
-    "train_size": 399,
-    "test_size": 100,
-    "accuracy": 0.15,
-    "precision": 0.04476290832455217,
-    "recall": 0.15,
-    "f1_score": 0.06600321027287319,
-    "confusion_matrix": [
-      [
-        3,
-        0,
-        13,
-        0,
-        0
-      ],
-      [
-        11,
-        0,
-        16,
-        0,
-        0
-      ],
-      [
-        3,
-        0,
-        12,
-        1,
-        0
-      ],
-      [
-        5,
-        0,
-        12,
-        0,
-        0
-      ],
-      [
-        4,
-        0,
-        20,
-        0,
-        0
-      ]
-    ],
-    "training_time": 3.913607597351074,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:11:50.727481"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "8KB",
-    "train_size": 399,
-    "test_size": 100,
-    "accuracy": 0.25,
-    "precision": 0.06958762886597937,
-    "recall": 0.25,
-    "f1_score": 0.10887096774193548,
-    "confusion_matrix": [
-      [
-        0,
-        16,
-        0,
-        0,
-        0
-      ],
-      [
-        1,
-        25,
-        0,
-        0,
-        1
-      ],
-      [
-        0,
-        16,
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        16,
-        0,
-        0,
-        1
-      ],
-      [
-        0,
-        24,
-        0,
-        0,
-        0
-      ]
-    ],
-    "training_time": 7.3067522048950195,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:11:58.041364"
   },
   {
     "model_name": "SVM",
@@ -832,110 +624,6 @@
     "timestamp": "2026-09-16T22:11:58.402027"
   },
   {
-    "model_name": "MLP",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "64KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.18,
-    "precision": 0.08307210031347961,
-    "recall": 0.18,
-    "f1_score": 0.11071219512195121,
-    "confusion_matrix": [
-      [
-        0,
-        5,
-        9,
-        0,
-        14
-      ],
-      [
-        0,
-        1,
-        9,
-        0,
-        4
-      ],
-      [
-        0,
-        1,
-        0,
-        0,
-        9
-      ],
-      [
-        0,
-        2,
-        8,
-        0,
-        14
-      ],
-      [
-        0,
-        2,
-        5,
-        0,
-        17
-      ]
-    ],
-    "training_time": 3.758016347885132,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:02.168494"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "64KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.17,
-    "precision": 0.17014354838709678,
-    "recall": 0.17,
-    "f1_score": 0.16436116082394642,
-    "confusion_matrix": [
-      [
-        6,
-        9,
-        0,
-        8,
-        5
-      ],
-      [
-        6,
-        2,
-        0,
-        5,
-        1
-      ],
-      [
-        3,
-        6,
-        0,
-        1,
-        0
-      ],
-      [
-        7,
-        6,
-        0,
-        7,
-        4
-      ],
-      [
-        9,
-        9,
-        0,
-        4,
-        2
-      ]
-    ],
-    "training_time": 7.171612739562988,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:09.356283"
-  },
-  {
     "model_name": "SVM",
     "task_type": "multiclass",
     "algorithm_pair": "5-class",
@@ -1142,110 +830,6 @@
     "training_time": 0.6804804801940918,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:12:10.475328"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "256KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.15,
-    "precision": 0.22926470588235293,
-    "recall": 0.15,
-    "f1_score": 0.11137583485124469,
-    "confusion_matrix": [
-      [
-        5,
-        0,
-        9,
-        0,
-        0
-      ],
-      [
-        12,
-        0,
-        13,
-        2,
-        1
-      ],
-      [
-        4,
-        0,
-        6,
-        0,
-        0
-      ],
-      [
-        9,
-        0,
-        11,
-        3,
-        1
-      ],
-      [
-        10,
-        0,
-        12,
-        1,
-        1
-      ]
-    ],
-    "training_time": 11.226067066192627,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:21.716050"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "256KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.24,
-    "precision": 0.14148977604673807,
-    "recall": 0.24,
-    "f1_score": 0.13767084095492707,
-    "confusion_matrix": [
-      [
-        0,
-        1,
-        1,
-        0,
-        12
-      ],
-      [
-        0,
-        2,
-        5,
-        0,
-        21
-      ],
-      [
-        0,
-        1,
-        1,
-        0,
-        8
-      ],
-      [
-        0,
-        3,
-        4,
-        0,
-        17
-      ],
-      [
-        0,
-        1,
-        2,
-        0,
-        21
-      ]
-    ],
-    "training_time": 12.547218322753906,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:34.275954"
   },
   {
     "model_name": "SVM",
@@ -1456,110 +1040,6 @@
     "timestamp": "2026-09-16T22:12:35.298540"
   },
   {
-    "model_name": "MLP",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "512KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.18,
-    "precision": 0.13286821705426355,
-    "recall": 0.18,
-    "f1_score": 0.14375939849624061,
-    "confusion_matrix": [
-      [
-        6,
-        0,
-        2,
-        1,
-        5
-      ],
-      [
-        14,
-        0,
-        1,
-        5,
-        8
-      ],
-      [
-        4,
-        0,
-        0,
-        3,
-        3
-      ],
-      [
-        9,
-        0,
-        3,
-        4,
-        8
-      ],
-      [
-        10,
-        0,
-        1,
-        5,
-        8
-      ]
-    ],
-    "training_time": 5.1938536167144775,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:40.503211"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "multiclass",
-    "algorithm_pair": "5-class",
-    "ciphertext_size": "512KB",
-    "train_size": 400,
-    "test_size": 100,
-    "accuracy": 0.23,
-    "precision": 0.2015219512195122,
-    "recall": 0.23,
-    "f1_score": 0.2078112625088761,
-    "confusion_matrix": [
-      [
-        1,
-        6,
-        0,
-        2,
-        5
-      ],
-      [
-        0,
-        11,
-        0,
-        9,
-        8
-      ],
-      [
-        0,
-        3,
-        0,
-        4,
-        3
-      ],
-      [
-        3,
-        9,
-        0,
-        7,
-        5
-      ],
-      [
-        1,
-        12,
-        1,
-        6,
-        4
-      ]
-    ],
-    "training_time": 7.783191442489624,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:48.293451"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and 3DES",
@@ -1658,56 +1138,6 @@
     "training_time": 0.24353623390197754,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:12:48.668723"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.7625,
-    "recall": 0.525,
-    "f1_score": 0.40797101449275364,
-    "confusion_matrix": [
-      [
-        19,
-        0
-      ],
-      [
-        19,
-        2
-      ]
-    ],
-    "training_time": 3.4563937187194824,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:52.133695"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.475,
-    "precision": 0.22562500000000002,
-    "recall": 0.475,
-    "f1_score": 0.3059322033898305,
-    "confusion_matrix": [
-      [
-        19,
-        0
-      ],
-      [
-        21,
-        0
-      ]
-    ],
-    "training_time": 5.154134035110474,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:12:57.295091"
   },
   {
     "model_name": "SVM",
@@ -1810,70 +1240,6 @@
     "timestamp": "2026-09-16T22:12:57.590241"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 9.700829267501831,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:13:07.303788"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.565911054611206,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:13:22.880381"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and CAST",
@@ -1972,70 +1338,6 @@
     "training_time": 0.23163986206054688,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:13:23.261808"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.604502201080322,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:13:40.878882"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.125,
-    "precision": 0.23863636363636362,
-    "recall": 0.125,
-    "f1_score": 0.1640625,
-    "confusion_matrix": [
-      [
-        5,
-        16,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        6,
-        13,
-        0
-      ]
-    ],
-    "training_time": 19.165635108947754,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:14:00.057186"
   },
   {
     "model_name": "SVM",
@@ -2138,70 +1440,6 @@
     "timestamp": "2026-09-16T22:14:00.417119"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 16.28599452972412,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:14:16.710635"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.96311330795288,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:14:34.683463"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and CAST",
@@ -2300,56 +1538,6 @@
     "training_time": 0.2458512783050537,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:14:35.126937"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.595448970794678,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:14:52.736879"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 20.453306913375854,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:15:13.202793"
   },
   {
     "model_name": "SVM",
@@ -2452,56 +1640,6 @@
     "timestamp": "2026-09-16T22:15:13.518164"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.75280475616455,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:15:31.285144"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 19.37899398803711,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:15:50.671952"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and 3DES",
@@ -2600,56 +1738,6 @@
     "training_time": 0.21382451057434082,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:15:51.127152"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.575,
-    "precision": 0.6208333333333333,
-    "recall": 0.575,
-    "f1_score": 0.5473008558262015,
-    "confusion_matrix": [
-      [
-        16,
-        3
-      ],
-      [
-        14,
-        7
-      ]
-    ],
-    "training_time": 3.610103130340576,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:15:54.745437"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.575,
-    "precision": 0.5854166666666666,
-    "recall": 0.575,
-    "f1_score": 0.5709930861093652,
-    "confusion_matrix": [
-      [
-        13,
-        6
-      ],
-      [
-        11,
-        10
-      ]
-    ],
-    "training_time": 4.483469247817993,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:15:59.238147"
   },
   {
     "model_name": "SVM",
@@ -2752,70 +1840,6 @@
     "timestamp": "2026-09-16T22:15:59.573487"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "8kb",
-    "train_size": 159,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 10.256745338439941,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:16:09.837458"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "8kb",
-    "train_size": 159,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 6.540014982223511,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:16:16.386468"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and CAST",
@@ -2914,70 +1938,6 @@
     "training_time": 0.20819306373596191,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:16:16.704011"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.668075561523438,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:16:32.379438"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 5.91032338142395,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:16:38.302639"
   },
   {
     "model_name": "SVM",
@@ -3080,70 +2040,6 @@
     "timestamp": "2026-09-16T22:16:38.690956"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 159,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.704289197921753,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:16:56.402376"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 159,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 22.64805841445923,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:17:19.062031"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and Blowfish",
@@ -3242,56 +2138,6 @@
     "training_time": 0.2434382438659668,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:17:19.451118"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 26.764950037002563,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:17:46.231343"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 31.300891637802124,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:18:17.538489"
   },
   {
     "model_name": "SVM",
@@ -3394,56 +2240,6 @@
     "timestamp": "2026-09-16T22:18:17.783089"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 26.24903893470764,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:18:44.056172"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 30.503234148025513,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:19:14.583275"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and RC2",
@@ -3542,56 +2338,6 @@
     "training_time": 0.6329741477966309,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:19:15.511340"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 30.616765022277832,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:19:46.136415"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 24.1834135055542,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:20:10.329913"
   },
   {
     "model_name": "SVM",
@@ -3694,70 +2440,6 @@
     "timestamp": "2026-09-16T22:20:10.654909"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 16.83174753189087,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:20:27.497804"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 29.431984186172485,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:20:56.941122"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "Blowfish and RC2",
@@ -3856,70 +2538,6 @@
     "training_time": 0.6165120601654053,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:20:57.848449"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 23.787556648254395,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:21:21.647913"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 17.99153757095337,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:21:39.647579"
   },
   {
     "model_name": "SVM",
@@ -4022,70 +2640,6 @@
     "timestamp": "2026-09-16T22:21:39.962777"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 15.686906576156616,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:21:55.658709"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "8kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 17.0400550365448,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:22:12.707375"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and 3DES",
@@ -4184,56 +2738,6 @@
     "training_time": 0.20714235305786133,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:22:13.037283"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.425,
-    "precision": 0.4233585858585858,
-    "recall": 0.425,
-    "f1_score": 0.4239157762413576,
-    "confusion_matrix": [
-      [
-        7,
-        12
-      ],
-      [
-        11,
-        10
-      ]
-    ],
-    "training_time": 7.326286792755127,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:22:20.373470"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.475,
-    "precision": 0.48303571428571423,
-    "recall": 0.475,
-    "f1_score": 0.45367504835589945,
-    "confusion_matrix": [
-      [
-        13,
-        6
-      ],
-      [
-        15,
-        6
-      ]
-    ],
-    "training_time": 5.325762987136841,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:22:25.708008"
   },
   {
     "model_name": "SVM",
@@ -4336,70 +2840,6 @@
     "timestamp": "2026-09-16T22:22:26.051799"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 11.43003225326538,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:22:37.490986"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 4.826553583145142,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:22:42.326296"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and CAST",
@@ -4498,70 +2938,6 @@
     "training_time": 0.2084636688232422,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:22:42.661846"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.318217992782593,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:22:57.987897"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.05,
-    "precision": 0.35,
-    "recall": 0.05,
-    "f1_score": 0.0875,
-    "confusion_matrix": [
-      [
-        2,
-        19,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        1,
-        18,
-        0
-      ]
-    ],
-    "training_time": 5.48507022857666,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:23:03.482052"
   },
   {
     "model_name": "SVM",
@@ -4664,70 +3040,6 @@
     "timestamp": "2026-09-16T22:23:03.809785"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 14.672725200653076,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:23:18.493883"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.158693075180054,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:23:35.661207"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and Blowfish",
@@ -4826,56 +3138,6 @@
     "training_time": 0.20757389068603516,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:23:35.992404"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 14.569765567779541,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:23:50.570261"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.23675274848938,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:24:07.815720"
   },
   {
     "model_name": "SVM",
@@ -4978,56 +3240,6 @@
     "timestamp": "2026-09-16T22:24:08.124502"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.71851634979248,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:24:23.852779"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.517534732818604,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:24:41.378908"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and RC2",
@@ -5126,56 +3338,6 @@
     "training_time": 0.20637106895446777,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:24:41.713841"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.063141822814941,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:24:56.786188"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 19.374940872192383,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:25:16.170974"
   },
   {
     "model_name": "SVM",
@@ -5278,70 +3440,6 @@
     "timestamp": "2026-09-16T22:25:16.507385"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 15.413044929504395,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:25:31.927698"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 17.270936965942383,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:25:49.207672"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "Blowfish and RC2",
@@ -5440,70 +3538,6 @@
     "training_time": 0.18261289596557617,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:25:49.517805"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 16.110607147216797,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:26:05.635790"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 18.52281928062439,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:26:24.165510"
   },
   {
     "model_name": "SVM",
@@ -5606,70 +3640,6 @@
     "timestamp": "2026-09-16T22:26:24.503120"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 15.380781173706055,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:26:39.893521"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "64kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 17.96207094192505,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:26:57.865433"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and 3DES",
@@ -5768,56 +3738,6 @@
     "training_time": 0.20900607109069824,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:26:58.205514"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.475,
-    "precision": 0.4604166666666667,
-    "recall": 0.475,
-    "f1_score": 0.4532258064516129,
-    "confusion_matrix": [
-      [
-        5,
-        14
-      ],
-      [
-        7,
-        14
-      ]
-    ],
-    "training_time": 3.696981430053711,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:27:01.911950"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.45,
-    "precision": 0.4515673981191222,
-    "recall": 0.45,
-    "f1_score": 0.4213541666666666,
-    "confusion_matrix": [
-      [
-        13,
-        6
-      ],
-      [
-        16,
-        5
-      ]
-    ],
-    "training_time": 4.407135725021362,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:27:06.326017"
   },
   {
     "model_name": "SVM",
@@ -5920,70 +3840,6 @@
     "timestamp": "2026-09-16T22:27:06.644452"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.623077869415283,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:27:22.278185"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 5.812382698059082,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:27:28.117505"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and CAST",
@@ -6082,70 +3938,6 @@
     "training_time": 0.6051476001739502,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:27:29.092844"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 24.54837918281555,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:27:53.654528"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.325,
-    "precision": 0.273,
-    "recall": 0.325,
-    "f1_score": 0.29673913043478256,
-    "confusion_matrix": [
-      [
-        13,
-        8,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        12,
-        7,
-        0
-      ]
-    ],
-    "training_time": 8.20751428604126,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:28:01.868989"
   },
   {
     "model_name": "SVM",
@@ -6248,70 +4040,6 @@
     "timestamp": "2026-09-16T22:28:02.239690"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 16.094382762908936,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:28:18.343546"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 20.27949833869934,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:28:38.629745"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and Blowfish",
@@ -6410,56 +4138,6 @@
     "training_time": 0.20332717895507812,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:28:38.953250"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.912782192230225,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:28:54.874890"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 18.08377432823181,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:29:12.967604"
   },
   {
     "model_name": "SVM",
@@ -6562,63 +4240,6 @@
     "timestamp": "2026-09-16T22:29:13.260987"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.569507122039795,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:29:28.838118"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.5,
-    "precision": 0.2763157894736842,
-    "recall": 0.5,
-    "f1_score": 0.3559322033898305,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        1,
-        20,
-        0
-      ],
-      [
-        1,
-        18,
-        0
-      ]
-    ],
-    "training_time": 17.49992871284485,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:29:46.346862"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and RC2",
@@ -6717,56 +4338,6 @@
     "training_time": 0.2111821174621582,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:29:46.666881"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.795407056808472,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:30:02.470518"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 22.421524047851562,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:30:24.904731"
   },
   {
     "model_name": "SVM",
@@ -6869,70 +4440,6 @@
     "timestamp": "2026-09-16T22:30:25.316635"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 18.327123641967773,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:30:43.655338"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 23.397512435913086,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:31:07.058519"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "Blowfish and RC2",
@@ -7031,70 +4538,6 @@
     "training_time": 0.27819395065307617,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:31:07.442961"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 12.908843755722046,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:31:20.363720"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 19.04201102256775,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:31:39.414295"
   },
   {
     "model_name": "SVM",
@@ -7197,70 +4640,6 @@
     "timestamp": "2026-09-16T22:31:39.683202"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 13.696204900741577,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:31:53.389999"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "256kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 26.824302434921265,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:32:20.227241"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and 3DES",
@@ -7359,56 +4738,6 @@
     "training_time": 0.5181922912597656,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:32:20.945752"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.5238636363636363,
-    "recall": 0.525,
-    "f1_score": 0.5241043368950346,
-    "confusion_matrix": [
-      [
-        9,
-        10
-      ],
-      [
-        9,
-        12
-      ]
-    ],
-    "training_time": 11.876980304718018,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:32:32.850001"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and 3DES",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.5,
-    "precision": 0.5025062656641603,
-    "recall": 0.5,
-    "f1_score": 0.5,
-    "confusion_matrix": [
-      [
-        10,
-        9
-      ],
-      [
-        11,
-        10
-      ]
-    ],
-    "training_time": 21.621131896972656,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:32:54.483596"
   },
   {
     "model_name": "SVM",
@@ -7511,70 +4840,6 @@
     "timestamp": "2026-09-16T22:32:54.842841"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 16.450998544692993,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:33:11.304278"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and Blowfish",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 6.259939432144165,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:33:17.574554"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "AES and CAST",
@@ -7673,70 +4938,6 @@
     "training_time": 0.21329736709594727,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:33:17.924239"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.813668727874756,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:33:33.747329"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and CAST",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        1,
-        18,
-        0
-      ]
-    ],
-    "training_time": 17.293219327926636,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:33:51.049330"
   },
   {
     "model_name": "SVM",
@@ -7839,70 +5040,6 @@
     "timestamp": "2026-09-16T22:33:51.390574"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.269631624221802,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:34:06.668831"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "AES and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        21,
-        0
-      ],
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.919763326644897,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:34:24.595198"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and Blowfish",
@@ -8001,56 +5138,6 @@
     "training_time": 0.22058868408203125,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:34:24.927790"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.238639116287231,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:34:40.175503"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.720335960388184,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:34:57.903496"
   },
   {
     "model_name": "SVM",
@@ -8153,56 +5240,6 @@
     "timestamp": "2026-09-16T22:34:58.257415"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 15.777042627334595,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:35:14.043601"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and CAST",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 17.55680513381958,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:35:31.609647"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and RC2",
@@ -8301,56 +5338,6 @@
     "training_time": 0.20813202857971191,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:35:31.956875"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 14.4862699508667,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:35:46.452345"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.275625,
-    "recall": 0.525,
-    "f1_score": 0.3614754098360656,
-    "confusion_matrix": [
-      [
-        21,
-        0
-      ],
-      [
-        19,
-        0
-      ]
-    ],
-    "training_time": 16.930037260055542,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:36:03.391847"
   },
   {
     "model_name": "SVM",
@@ -8453,70 +5440,6 @@
     "timestamp": "2026-09-16T22:36:03.724357"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 16.056549072265625,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:36:19.790653"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 18.753544330596924,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:36:38.551169"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "Blowfish and RC2",
@@ -8615,70 +5538,6 @@
     "training_time": 0.20260024070739746,
     "random_seed": 42,
     "timestamp": "2026-09-16T22:36:38.864843"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 15.215670347213745,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:36:54.090243"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 17.66875648498535,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:37:11.768270"
   },
   {
     "model_name": "SVM",
@@ -8781,70 +5640,6 @@
     "timestamp": "2026-09-16T22:37:12.077303"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 15.237305879592896,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:37:27.323851"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
-    "ciphertext_size": "512kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1_score": 0.0,
-    "confusion_matrix": [
-      [
-        0,
-        0,
-        0
-      ],
-      [
-        21,
-        0,
-        0
-      ],
-      [
-        19,
-        0,
-        0
-      ]
-    ],
-    "training_time": 17.833840131759644,
-    "random_seed": 42,
-    "timestamp": "2026-09-16T22:37:45.164621"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "3DES and Blowfish",
@@ -8943,56 +5738,6 @@
     "training_time": 2.1277055740356445,
     "random_seed": 42,
     "timestamp": "2026-09-17T20:17:34.688870"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.475,
-    "precision": 0.40990990990990994,
-    "recall": 0.475,
-    "f1_score": 0.35926773455377575,
-    "confusion_matrix": [
-      [
-        18,
-        2
-      ],
-      [
-        19,
-        1
-      ]
-    ],
-    "training_time": 3.733110189437866,
-    "random_seed": 42,
-    "timestamp": "2026-09-17T20:17:38.428016"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "3DES and Blowfish",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.425,
-    "precision": 0.3701298701298701,
-    "recall": 0.425,
-    "f1_score": 0.3570929419986023,
-    "confusion_matrix": [
-      [
-        2,
-        18
-      ],
-      [
-        5,
-        15
-      ]
-    ],
-    "training_time": 5.252684831619263,
-    "random_seed": 42,
-    "timestamp": "2026-09-17T20:17:43.688746"
   },
   {
     "model_name": "SVM",
@@ -9095,56 +5840,6 @@
     "timestamp": "2026-09-17T20:17:43.981097"
   },
   {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.55,
-    "precision": 0.5595238095238095,
-    "recall": 0.55,
-    "f1_score": 0.53125,
-    "confusion_matrix": [
-      [
-        15,
-        5
-      ],
-      [
-        13,
-        7
-      ]
-    ],
-    "training_time": 7.73586368560791,
-    "random_seed": 42,
-    "timestamp": "2026-09-17T20:17:51.726954"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and CAST",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.525,
-    "precision": 0.5432900432900432,
-    "recall": 0.525,
-    "f1_score": 0.46890286512928014,
-    "confusion_matrix": [
-      [
-        17,
-        3
-      ],
-      [
-        16,
-        4
-      ]
-    ],
-    "training_time": 5.378838539123535,
-    "random_seed": 42,
-    "timestamp": "2026-09-17T20:17:57.111344"
-  },
-  {
     "model_name": "SVM",
     "task_type": "binary",
     "algorithm_pair": "Blowfish and RC2",
@@ -9243,56 +5938,6 @@
     "training_time": 0.1483011245727539,
     "random_seed": 42,
     "timestamp": "2026-09-17T20:17:57.365665"
-  },
-  {
-    "model_name": "MLP",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.5,
-    "precision": 0.5,
-    "recall": 0.5,
-    "f1_score": 0.40476190476190477,
-    "confusion_matrix": [
-      [
-        18,
-        2
-      ],
-      [
-        18,
-        2
-      ]
-    ],
-    "training_time": 2.8869614601135254,
-    "random_seed": 42,
-    "timestamp": "2026-09-17T20:18:00.259048"
-  },
-  {
-    "model_name": "CNN",
-    "task_type": "binary",
-    "algorithm_pair": "Blowfish and RC2",
-    "ciphertext_size": "1kb",
-    "train_size": 160,
-    "test_size": 40,
-    "accuracy": 0.475,
-    "precision": 0.45670995670995673,
-    "recall": 0.475,
-    "f1_score": 0.4129979035639413,
-    "confusion_matrix": [
-      [
-        16,
-        4
-      ],
-      [
-        17,
-        3
-      ]
-    ],
-    "training_time": 4.7390220165252686,
-    "random_seed": 42,
-    "timestamp": "2026-09-17T20:18:05.006328"
   },
   {
     "model_name": "SVM",
@@ -9396,34 +6041,2479 @@
   },
   {
     "model_name": "MLP",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "1KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.24,
+    "precision": 0.20141262246525404,
+    "recall": 0.24,
+    "f1_score": 0.20692047150675497,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        2,
+        10,
+        8
+      ],
+      [
+        0,
+        5,
+        6,
+        7,
+        2
+      ],
+      [
+        0,
+        4,
+        2,
+        6,
+        8
+      ],
+      [
+        2,
+        2,
+        2,
+        8,
+        6
+      ],
+      [
+        1,
+        3,
+        0,
+        7,
+        9
+      ]
+    ],
+    "training_time": 5.8463733196258545,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:08.529779"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "1KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.26,
+    "precision": 0.1966183574879227,
+    "recall": 0.26,
+    "f1_score": 0.19140859140859143,
+    "confusion_matrix": [
+      [
+        12,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        4,
+        4,
+        0,
+        12,
+        0
+      ],
+      [
+        11,
+        2,
+        0,
+        7,
+        0
+      ],
+      [
+        9,
+        0,
+        1,
+        10,
+        0
+      ],
+      [
+        10,
+        2,
+        0,
+        8,
+        0
+      ]
+    ],
+    "training_time": 5.331029891967773,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:13.867199"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "8KB",
+    "train_size": 399,
+    "test_size": 100,
+    "accuracy": 0.22,
+    "precision": 0.2249206349206349,
+    "recall": 0.22,
+    "f1_score": 0.20866810786210035,
+    "confusion_matrix": [
+      [
+        1,
+        4,
+        2,
+        7,
+        6
+      ],
+      [
+        2,
+        6,
+        1,
+        4,
+        7
+      ],
+      [
+        1,
+        4,
+        4,
+        4,
+        7
+      ],
+      [
+        0,
+        6,
+        3,
+        6,
+        5
+      ],
+      [
+        1,
+        4,
+        4,
+        6,
+        5
+      ]
+    ],
+    "training_time": 12.476142406463623,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:26.352043"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "8KB",
+    "train_size": 399,
+    "test_size": 100,
+    "accuracy": 0.11,
+    "precision": 0.14695562435500517,
+    "recall": 0.11,
+    "f1_score": 0.08119288119288118,
+    "confusion_matrix": [
+      [
+        5,
+        5,
+        0,
+        10,
+        0
+      ],
+      [
+        11,
+        0,
+        1,
+        8,
+        0
+      ],
+      [
+        11,
+        1,
+        1,
+        7,
+        0
+      ],
+      [
+        15,
+        0,
+        0,
+        5,
+        0
+      ],
+      [
+        15,
+        1,
+        0,
+        4,
+        0
+      ]
+    ],
+    "training_time": 6.177165269851685,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:32.534022"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "64KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.1,
+    "precision": 0.1074357015533486,
+    "recall": 0.1,
+    "f1_score": 0.0945709186275224,
+    "confusion_matrix": [
+      [
+        0,
+        8,
+        3,
+        4,
+        5
+      ],
+      [
+        4,
+        4,
+        1,
+        7,
+        4
+      ],
+      [
+        3,
+        7,
+        2,
+        6,
+        2
+      ],
+      [
+        3,
+        7,
+        2,
+        3,
+        5
+      ],
+      [
+        4,
+        7,
+        0,
+        8,
+        1
+      ]
+    ],
+    "training_time": 4.115180253982544,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:36.655969"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "64KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.15,
+    "precision": 0.06291208791208792,
+    "recall": 0.15,
+    "f1_score": 0.08804638715432649,
+    "confusion_matrix": [
+      [
+        6,
+        0,
+        0,
+        12,
+        2
+      ],
+      [
+        8,
+        0,
+        0,
+        11,
+        1
+      ],
+      [
+        5,
+        0,
+        0,
+        14,
+        1
+      ],
+      [
+        10,
+        0,
+        0,
+        9,
+        1
+      ],
+      [
+        10,
+        0,
+        0,
+        10,
+        0
+      ]
+    ],
+    "training_time": 6.163298606872559,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:42.826759"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "256KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.22,
+    "precision": 0.20386243386243386,
+    "recall": 0.22,
+    "f1_score": 0.17060360360360363,
+    "confusion_matrix": [
+      [
+        2,
+        3,
+        0,
+        11,
+        4
+      ],
+      [
+        2,
+        5,
+        1,
+        12,
+        0
+      ],
+      [
+        1,
+        8,
+        0,
+        8,
+        3
+      ],
+      [
+        0,
+        5,
+        1,
+        13,
+        1
+      ],
+      [
+        0,
+        7,
+        1,
+        10,
+        2
+      ]
+    ],
+    "training_time": 3.4386041164398193,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:46.270722"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "256KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.21,
+    "precision": 0.2231168831168831,
+    "recall": 0.21,
+    "f1_score": 0.13570631041598782,
+    "confusion_matrix": [
+      [
+        16,
+        2,
+        2,
+        0,
+        0
+      ],
+      [
+        15,
+        3,
+        2,
+        0,
+        0
+      ],
+      [
+        18,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        16,
+        1,
+        2,
+        1,
+        0
+      ],
+      [
+        15,
+        4,
+        0,
+        1,
+        0
+      ]
+    ],
+    "training_time": 5.9603636264801025,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:52.236738"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "512KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.15,
+    "precision": 0.16827922077922078,
+    "recall": 0.15,
+    "f1_score": 0.15397383978029136,
+    "confusion_matrix": [
+      [
+        2,
+        3,
+        5,
+        6,
+        4
+      ],
+      [
+        4,
+        4,
+        3,
+        8,
+        1
+      ],
+      [
+        2,
+        2,
+        3,
+        7,
+        6
+      ],
+      [
+        2,
+        2,
+        5,
+        3,
+        8
+      ],
+      [
+        1,
+        5,
+        0,
+        11,
+        3
+      ]
+    ],
+    "training_time": 5.9149768352508545,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:18:58.160561"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "multiclass",
+    "algorithm_pair": "5-class",
+    "ciphertext_size": "512KB",
+    "train_size": 400,
+    "test_size": 100,
+    "accuracy": 0.18,
+    "precision": 0.08294930875576036,
+    "recall": 0.18,
+    "f1_score": 0.11175166297117517,
+    "confusion_matrix": [
+      [
+        10,
+        0,
+        0,
+        9,
+        1
+      ],
+      [
+        3,
+        0,
+        0,
+        17,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        15,
+        0
+      ],
+      [
+        10,
+        0,
+        0,
+        8,
+        2
+      ],
+      [
+        7,
+        0,
+        0,
+        13,
+        0
+      ]
+    ],
+    "training_time": 5.5792670249938965,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:03.748442"
+  },
+  {
+    "model_name": "MLP",
     "task_type": "binary",
-    "algorithm_pair": "CAST and RC2",
+    "algorithm_pair": "AES and 3DES",
     "ciphertext_size": "1kb",
     "train_size": 160,
     "test_size": 40,
-    "accuracy": 0.45,
-    "precision": 0.4333333333333334,
-    "recall": 0.45,
-    "f1_score": 0.4133333333333334,
+    "accuracy": 0.35,
+    "precision": 0.20588235294117646,
+    "recall": 0.35,
+    "f1_score": 0.25925925925925924,
     "confusion_matrix": [
       [
-        4,
-        16
+        0,
+        20
       ],
       [
         6,
         14
       ]
     ],
-    "training_time": 3.259575128555298,
+    "training_time": 3.5987284183502197,
     "random_seed": 42,
-    "timestamp": "2026-09-17T20:18:08.600067"
+    "timestamp": "2026-09-18T00:19:07.356465"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.7564102564102564,
+    "recall": 0.525,
+    "f1_score": 0.38660209846650523,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 4.445277452468872,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:11.807936"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.425,
+    "precision": 0.32857142857142857,
+    "recall": 0.425,
+    "f1_score": 0.33090909090909093,
+    "confusion_matrix": [
+      [
+        1,
+        19
+      ],
+      [
+        4,
+        16
+      ]
+    ],
+    "training_time": 3.2320187091827393,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:15.044798"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.40990990990990994,
+    "recall": 0.475,
+    "f1_score": 0.35926773455377575,
+    "confusion_matrix": [
+      [
+        18,
+        2
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 4.028474569320679,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:19.078454"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.23684210526315788,
+    "recall": 0.45,
+    "f1_score": 0.3103448275862069,
+    "confusion_matrix": [
+      [
+        0,
+        20
+      ],
+      [
+        2,
+        18
+      ]
+    ],
+    "training_time": 2.9185826778411865,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:22.006657"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.575,
+    "precision": 0.6714285714285714,
+    "recall": 0.575,
+    "f1_score": 0.5054545454545455,
+    "confusion_matrix": [
+      [
+        4,
+        16
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 4.9687488079071045,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:26.982176"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.474937343358396,
+    "recall": 0.475,
+    "f1_score": 0.474671669793621,
+    "confusion_matrix": [
+      [
+        10,
+        10
+      ],
+      [
+        11,
+        9
+      ]
+    ],
+    "training_time": 10.3224036693573,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:37.314525"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.36381983757019,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:41.684359"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.625,
+    "precision": 0.6567398119122257,
+    "recall": 0.625,
+    "f1_score": 0.6050032916392363,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        3,
+        17
+      ]
+    ],
+    "training_time": 3.2155940532684326,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:44.908058"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.40476190476190477,
+    "confusion_matrix": [
+      [
+        18,
+        2
+      ],
+      [
+        18,
+        2
+      ]
+    ],
+    "training_time": 4.253431081771851,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:49.169571"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.46415770609318996,
+    "recall": 0.475,
+    "f1_score": 0.43204868154158216,
+    "confusion_matrix": [
+      [
+        4,
+        16
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 6.456780195236206,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:55.631877"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.40990990990990994,
+    "recall": 0.475,
+    "f1_score": 0.35926773455377575,
+    "confusion_matrix": [
+      [
+        18,
+        2
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 3.9394071102142334,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:19:59.578302"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.65,
+    "precision": 0.65625,
+    "recall": 0.65,
+    "f1_score": 0.6464646464646464,
+    "confusion_matrix": [
+      [
+        15,
+        5
+      ],
+      [
+        9,
+        11
+      ]
+    ],
+    "training_time": 11.925861597061157,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:11.513759"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.128737211227417,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:15.649347"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.4791666666666667,
+    "confusion_matrix": [
+      [
+        6,
+        14
+      ],
+      [
+        6,
+        14
+      ]
+    ],
+    "training_time": 4.301499366760254,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:19.958659"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.7564102564102564,
+    "recall": 0.525,
+    "f1_score": 0.38660209846650523,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 3.7338733673095703,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:23.699058"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.494949494949495,
+    "confusion_matrix": [
+      [
+        12,
+        8
+      ],
+      [
+        12,
+        8
+      ]
+    ],
+    "training_time": 9.179620027542114,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:32.885872"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.47333333333333333,
+    "recall": 0.475,
+    "f1_score": 0.4666666666666666,
+    "confusion_matrix": [
+      [
+        12,
+        8
+      ],
+      [
+        13,
+        7
+      ]
+    ],
+    "training_time": 5.008631706237793,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:37.903991"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.4450549450549451,
+    "recall": 0.45,
+    "f1_score": 0.4373401534526854,
+    "confusion_matrix": [
+      [
+        6,
+        14
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "training_time": 12.94704532623291,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:20:50.856024"
   },
   {
     "model_name": "CNN",
     "task_type": "binary",
     "algorithm_pair": "CAST and RC2",
     "ciphertext_size": "1kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        0,
+        20
+      ],
+      [
+        0,
+        20
+      ]
+    ],
+    "training_time": 9.32810640335083,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:00.188954"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.4404761904761905,
+    "recall": 0.45,
+    "f1_score": 0.4270833333333333,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        7,
+        13
+      ]
+    ],
+    "training_time": 3.0068440437316895,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:03.201137"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 5.769246578216553,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:08.977424"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "8kb",
+    "train_size": 159,
+    "test_size": 40,
+    "accuracy": 0.425,
+    "precision": 0.22972972972972974,
+    "recall": 0.425,
+    "f1_score": 0.2982456140350877,
+    "confusion_matrix": [
+      [
+        0,
+        20
+      ],
+      [
+        3,
+        17
+      ]
+    ],
+    "training_time": 3.827746629714966,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:12.810602"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "8kb",
+    "train_size": 159,
+    "test_size": 40,
+    "accuracy": 0.625,
+    "precision": 0.6333333333333333,
+    "recall": 0.625,
+    "f1_score": 0.619047619047619,
+    "confusion_matrix": [
+      [
+        15,
+        5
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 8.081880807876587,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:20.897290"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.44791666666666663,
+    "recall": 0.45,
+    "f1_score": 0.4444444444444445,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        13,
+        7
+      ]
+    ],
+    "training_time": 12.134023427963257,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:33.038522"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.3730407523510971,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 5.27782678604126,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:38.325259"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 159,
+    "test_size": 40,
+    "accuracy": 0.575,
+    "precision": 0.6298701298701299,
+    "recall": 0.575,
+    "f1_score": 0.5248078266946191,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        2,
+        18
+      ]
+    ],
+    "training_time": 3.84350848197937,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:42.174413"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 159,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5284900284900285,
+    "recall": 0.525,
+    "f1_score": 0.5099935525467441,
+    "confusion_matrix": [
+      [
+        14,
+        6
+      ],
+      [
+        13,
+        7
+      ]
+    ],
+    "training_time": 6.858499050140381,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:49.039212"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.6,
+    "precision": 0.619047619047619,
+    "recall": 0.6,
+    "f1_score": 0.5833333333333333,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        4,
+        16
+      ]
+    ],
+    "training_time": 2.9611988067626953,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:52.009912"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.625,
+    "precision": 0.6278772378516624,
+    "recall": 0.625,
+    "f1_score": 0.6228786926461346,
+    "confusion_matrix": [
+      [
+        14,
+        6
+      ],
+      [
+        9,
+        11
+      ]
+    ],
+    "training_time": 5.1408140659332275,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:21:57.159332"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.4987468671679197,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        11,
+        9
+      ]
+    ],
+    "training_time": 4.788947105407715,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:01.953998"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.174939870834351,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:06.133779"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.675,
+    "precision": 0.7508960573476703,
+    "recall": 0.675,
+    "f1_score": 0.6484110885733604,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 3.1591386795043945,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:09.302094"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.425,
+    "precision": 0.4232736572890025,
+    "recall": 0.425,
+    "f1_score": 0.4217473287240729,
+    "confusion_matrix": [
+      [
+        7,
+        13
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 5.117062568664551,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:14.428483"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.5,
+    "confusion_matrix": [
+      [
+        10,
+        10
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 4.716818809509277,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:19.154566"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.3730407523510971,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 5.396531820297241,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:24.558213"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.474937343358396,
+    "recall": 0.475,
+    "f1_score": 0.474671669793621,
+    "confusion_matrix": [
+      [
+        10,
+        10
+      ],
+      [
+        11,
+        9
+      ]
+    ],
+    "training_time": 4.504837512969971,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:29.070877"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        0,
+        20
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 7.445174217224121,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:36.521402"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5900900900900901,
+    "recall": 0.525,
+    "f1_score": 0.42028985507246375,
+    "confusion_matrix": [
+      [
+        2,
+        18
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 3.1156389713287354,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:39.641838"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "8kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5900900900900901,
+    "recall": 0.525,
+    "f1_score": 0.42028985507246375,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        18,
+        2
+      ]
+    ],
+    "training_time": 4.800537824630737,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:44.452669"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5266666666666666,
+    "recall": 0.525,
+    "f1_score": 0.5174603174603174,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        7,
+        13
+      ]
+    ],
+    "training_time": 6.823735952377319,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:51.282329"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5900900900900901,
+    "recall": 0.525,
+    "f1_score": 0.42028985507246375,
+    "confusion_matrix": [
+      [
+        2,
+        18
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 6.066939353942871,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:22:57.358475"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.4987468671679197,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        11,
+        9
+      ]
+    ],
+    "training_time": 8.1817307472229,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:05.549684"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.333890199661255,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:09.889953"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.47442455242966747,
+    "recall": 0.475,
+    "f1_score": 0.47203016970458833,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        12,
+        8
+      ]
+    ],
+    "training_time": 13.277077674865723,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:23.174833"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.811391115188599,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:27.991640"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.4494949494949495,
+    "recall": 0.45,
+    "f1_score": 0.44862155388471175,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 7.691350698471069,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:35.689611"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.53584229390681,
+    "recall": 0.525,
+    "f1_score": 0.4861392832995267,
+    "confusion_matrix": [
+      [
+        16,
+        4
+      ],
+      [
+        15,
+        5
+      ]
+    ],
+    "training_time": 4.356019020080566,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:40.051950"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.4,
+    "precision": 0.39583333333333337,
+    "recall": 0.4,
+    "f1_score": 0.3939393939393939,
+    "confusion_matrix": [
+      [
+        6,
+        14
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 5.133352279663086,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:45.195810"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.5213634967803955,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:49.724573"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.4301994301994302,
+    "confusion_matrix": [
+      [
+        3,
+        17
+      ],
+      [
+        3,
+        17
+      ]
+    ],
+    "training_time": 3.3751940727233887,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:53.108983"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.7564102564102564,
+    "recall": 0.525,
+    "f1_score": 0.38660209846650523,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 5.085849046707153,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:23:58.200120"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.421875,
+    "recall": 0.45,
+    "f1_score": 0.39560439560439553,
+    "confusion_matrix": [
+      [
+        3,
+        17
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 3.327383041381836,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:01.532413"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.425,
+    "precision": 0.3701298701298701,
+    "recall": 0.425,
+    "f1_score": 0.3570929419986023,
+    "confusion_matrix": [
+      [
+        2,
+        18
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 5.708678245544434,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:07.247784"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5313479623824451,
+    "recall": 0.525,
+    "f1_score": 0.4996708360763661,
+    "confusion_matrix": [
+      [
+        6,
+        14
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 3.2539892196655273,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:10.509976"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.40990990990990994,
+    "recall": 0.475,
+    "f1_score": 0.35926773455377575,
+    "confusion_matrix": [
+      [
+        1,
+        19
+      ],
+      [
+        2,
+        18
+      ]
+    ],
+    "training_time": 5.202654838562012,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:15.717494"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.4686520376175548,
+    "recall": 0.475,
+    "f1_score": 0.44700460829493077,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        6,
+        14
+      ]
+    ],
+    "training_time": 4.474112510681152,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:20.200245"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        0,
+        20
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 6.402781009674072,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:26.612237"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.5595238095238095,
+    "recall": 0.55,
+    "f1_score": 0.53125,
+    "confusion_matrix": [
+      [
+        7,
+        13
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 6.138818740844727,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:32.761672"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "64kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.638888888888889,
+    "recall": 0.55,
+    "f1_score": 0.4642857142857143,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        17,
+        3
+      ]
+    ],
+    "training_time": 5.191883563995361,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:37.962028"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.4666666666666666,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 4.709449768066406,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:42.679753"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.3730407523510971,
+    "confusion_matrix": [
+      [
+        1,
+        19
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 5.619759559631348,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:48.308866"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.675,
+    "precision": 0.7508960573476703,
+    "recall": 0.675,
+    "f1_score": 0.6484110885733604,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 3.2140414714813232,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:51.530179"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.178496837615967,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:24:55.713531"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.494949494949495,
+    "confusion_matrix": [
+      [
+        8,
+        12
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "training_time": 10.335349321365356,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:06.055586"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.578125,
+    "recall": 0.55,
+    "f1_score": 0.5054945054945055,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        3,
+        17
+      ]
+    ],
+    "training_time": 5.503936529159546,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:11.567364"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.5595238095238095,
+    "recall": 0.55,
+    "f1_score": 0.53125,
+    "confusion_matrix": [
+      [
+        7,
+        13
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 3.4116907119750977,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:14.988902"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.408288955688477,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:19.402910"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.6,
+    "precision": 0.696078431372549,
+    "recall": 0.6,
+    "f1_score": 0.5441595441595442,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 3.2850780487060547,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:22.692819"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.63144063949585,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:27.329104"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.4,
+    "precision": 0.39010989010989017,
+    "recall": 0.4,
+    "f1_score": 0.38618925831202044,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        9,
+        11
+      ]
+    ],
+    "training_time": 9.41560673713684,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:36.752631"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 5.246296405792236,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:42.004455"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.4686520376175548,
+    "recall": 0.475,
+    "f1_score": 0.44700460829493077,
+    "confusion_matrix": [
+      [
+        5,
+        15
+      ],
+      [
+        6,
+        14
+      ]
+    ],
+    "training_time": 3.616283893585205,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:45.625780"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.165552616119385,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:49.796632"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.625,
+    "precision": 0.6253132832080202,
+    "recall": 0.625,
+    "f1_score": 0.6247654784240151,
+    "confusion_matrix": [
+      [
+        12,
+        8
+      ],
+      [
+        7,
+        13
+      ]
+    ],
+    "training_time": 7.642494201660156,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:25:57.446207"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.358435392379761,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:01.809776"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.525062656641604,
+    "recall": 0.525,
+    "f1_score": 0.5247029393370857,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 4.739867687225342,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:06.556198"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.3730407523510971,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 4.548958778381348,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:11.111834"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "256kb",
     "train_size": 160,
     "test_size": 40,
     "accuracy": 0.55,
@@ -9440,8 +8530,533 @@
         14
       ]
     ],
-    "training_time": 4.945613861083984,
+    "training_time": 3.4497270584106445,
     "random_seed": 42,
-    "timestamp": "2026-09-17T20:18:13.551743"
+    "timestamp": "2026-09-18T00:26:14.572001"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "256kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.278679132461548,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:18.857133"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.6,
+    "precision": 0.6,
+    "recall": 0.6,
+    "f1_score": 0.6,
+    "confusion_matrix": [
+      [
+        12,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "training_time": 5.135310649871826,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:23.999615"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and 3DES",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.7631578947368421,
+    "recall": 0.55,
+    "f1_score": 0.43573667711598746,
+    "confusion_matrix": [
+      [
+        2,
+        18
+      ],
+      [
+        0,
+        20
+      ]
+    ],
+    "training_time": 5.085214614868164,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:29.093152"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.4987468671679197,
+    "confusion_matrix": [
+      [
+        9,
+        11
+      ],
+      [
+        9,
+        11
+      ]
+    ],
+    "training_time": 6.9414472579956055,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:36.044844"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and Blowfish",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1_score": 0.3730407523510971,
+    "confusion_matrix": [
+      [
+        19,
+        1
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "training_time": 4.598046541213989,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:40.651251"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.575,
+    "precision": 0.5751879699248119,
+    "recall": 0.575,
+    "f1_score": 0.5747342088805503,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "training_time": 12.286933660507202,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:52.948314"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and CAST",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.7564102564102564,
+    "recall": 0.525,
+    "f1_score": 0.38660209846650523,
+    "confusion_matrix": [
+      [
+        1,
+        19
+      ],
+      [
+        0,
+        20
+      ]
+    ],
+    "training_time": 5.889751195907593,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:26:58.845381"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.5520833333333333,
+    "recall": 0.55,
+    "f1_score": 0.5454545454545455,
+    "confusion_matrix": [
+      [
+        13,
+        7
+      ],
+      [
+        11,
+        9
+      ]
+    ],
+    "training_time": 4.661410093307495,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:03.515584"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "AES and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5571428571428572,
+    "recall": 0.525,
+    "f1_score": 0.44727272727272727,
+    "confusion_matrix": [
+      [
+        3,
+        17
+      ],
+      [
+        2,
+        18
+      ]
+    ],
+    "training_time": 6.168912887573242,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:09.689656"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.525062656641604,
+    "recall": 0.525,
+    "f1_score": 0.5247029393370857,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        10,
+        10
+      ]
+    ],
+    "training_time": 9.232164859771729,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:18.931146"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and Blowfish",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.131446123123169,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:23.068970"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.575,
+    "precision": 0.5751879699248119,
+    "recall": 0.575,
+    "f1_score": 0.5747342088805503,
+    "confusion_matrix": [
+      [
+        11,
+        9
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "training_time": 8.265470027923584,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:31.340964"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and CAST",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 4.388136863708496,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:35.738708"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.575,
+    "precision": 0.5751879699248119,
+    "recall": 0.575,
+    "f1_score": 0.5747342088805503,
+    "confusion_matrix": [
+      [
+        12,
+        8
+      ],
+      [
+        9,
+        11
+      ]
+    ],
+    "training_time": 8.483237266540527,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:44.226909"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "3DES and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.5,
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1_score": 0.3333333333333333,
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "training_time": 3.848998546600342,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:48.084373"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.5266666666666666,
+    "recall": 0.525,
+    "f1_score": 0.5174603174603174,
+    "confusion_matrix": [
+      [
+        13,
+        7
+      ],
+      [
+        12,
+        8
+      ]
+    ],
+    "training_time": 4.348479509353638,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:52.443614"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and CAST",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.475,
+    "precision": 0.24358974358974356,
+    "recall": 0.475,
+    "f1_score": 0.3220338983050847,
+    "confusion_matrix": [
+      [
+        0,
+        20
+      ],
+      [
+        1,
+        19
+      ]
+    ],
+    "training_time": 5.882405519485474,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:27:58.331073"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.425,
+    "precision": 0.3701298701298701,
+    "recall": 0.425,
+    "f1_score": 0.3570929419986023,
+    "confusion_matrix": [
+      [
+        15,
+        5
+      ],
+      [
+        18,
+        2
+      ]
+    ],
+    "training_time": 4.237643480300903,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:28:02.574604"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "Blowfish and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.55,
+    "precision": 0.5595238095238095,
+    "recall": 0.55,
+    "f1_score": 0.53125,
+    "confusion_matrix": [
+      [
+        7,
+        13
+      ],
+      [
+        5,
+        15
+      ]
+    ],
+    "training_time": 5.074522256851196,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:28:07.656859"
+  },
+  {
+    "model_name": "MLP",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.45,
+    "precision": 0.3611111111111111,
+    "recall": 0.45,
+    "f1_score": 0.34523809523809523,
+    "confusion_matrix": [
+      [
+        1,
+        19
+      ],
+      [
+        3,
+        17
+      ]
+    ],
+    "training_time": 2.5976433753967285,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:28:10.259599"
+  },
+  {
+    "model_name": "CNN",
+    "task_type": "binary",
+    "algorithm_pair": "CAST and RC2",
+    "ciphertext_size": "512kb",
+    "train_size": 160,
+    "test_size": 40,
+    "accuracy": 0.525,
+    "precision": 0.525062656641604,
+    "recall": 0.525,
+    "f1_score": 0.5247029393370857,
+    "confusion_matrix": [
+      [
+        10,
+        10
+      ],
+      [
+        9,
+        11
+      ]
+    ],
+    "training_time": 5.915755033493042,
+    "random_seed": 42,
+    "timestamp": "2026-09-18T00:28:16.180356"
   }
 ]

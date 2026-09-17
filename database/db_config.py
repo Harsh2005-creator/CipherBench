@@ -30,6 +30,11 @@ class DatabaseConfig:
             config = yaml.safe_load(f)
 
         self.db_config = config['database']
+        # Prefer an environment variable for the password so real credentials
+        # never need to be committed to config.yaml.
+        env_password = os.environ.get('CIPHERBENCH_DB_PASSWORD')
+        if env_password:
+            self.db_config['password'] = env_password
         self.connection_pool = None
 
     def create_connection_pool(self, pool_name: str = "cipherbench_pool",
@@ -52,9 +57,9 @@ class DatabaseConfig:
                 user=self.db_config['user'],
                 password=self.db_config['password']
             )
-            print(f"✓ Connection pool '{pool_name}' created successfully")
+            print(f"[OK] Connection pool '{pool_name}' created successfully")
         except mysql.connector.Error as err:
-            print(f"✗ Error creating connection pool: {err}")
+            print(f"[ERROR] Error creating connection pool: {err}")
             raise
 
     def get_connection(self):
@@ -70,7 +75,7 @@ class DatabaseConfig:
         try:
             return self.connection_pool.get_connection()
         except mysql.connector.Error as err:
-            print(f"✗ Error getting connection: {err}")
+            print(f"[ERROR] Error getting connection: {err}")
             raise
 
     def close_pool(self):
@@ -96,16 +101,16 @@ def test_connection(config_path: Optional[str] = None):
         # Test query
         cursor.execute("SELECT VERSION()")
         version = cursor.fetchone()
-        print(f"✓ Connected to MySQL version: {version[0]}")
+        print(f"[OK] Connected to MySQL version: {version[0]}")
 
         # Check if database exists
         cursor.execute(f"SHOW DATABASES LIKE '{db_config.db_config['database']}'")
         result = cursor.fetchone()
 
         if result:
-            print(f"✓ Database '{db_config.db_config['database']}' exists")
+            print(f"[OK] Database '{db_config.db_config['database']}' exists")
         else:
-            print(f"✗ Database '{db_config.db_config['database']}' does not exist")
+            print(f"[ERROR] Database '{db_config.db_config['database']}' does not exist")
             print("  Run: mysql -u root -p < database/schema.sql")
 
         cursor.close()
@@ -114,7 +119,7 @@ def test_connection(config_path: Optional[str] = None):
         return True
 
     except Exception as e:
-        print(f"✗ Connection test failed: {e}")
+        print(f"[ERROR] Connection test failed: {e}")
         return False
 
 

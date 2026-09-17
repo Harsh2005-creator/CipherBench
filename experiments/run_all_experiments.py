@@ -10,7 +10,8 @@ With proper test set isolation for MLP/CNN.
 
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, PROJECT_ROOT)
 
 import pandas as pd
 import json
@@ -27,7 +28,7 @@ def main():
 
     # Initialize runner
     runner = ExperimentRunner(
-        output_dir='experiments/results',
+        output_dir=os.path.join(PROJECT_ROOT, 'experiments', 'results'),
         use_db=False,  # Disable DB for now
         random_seed=42
     )

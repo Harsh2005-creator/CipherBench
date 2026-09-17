@@ -194,8 +194,12 @@ def test_hknnrf_architecture():
 
 
 def test_mlp():
-    """Test MLP model."""
+    """Test MLP model. Validation split is carved out of the training data
+    only; the test set is used solely for the final prediction check."""
     X_train, X_test, y_train, y_test = load_multiclass_dataset("512KB", random_state=42)
+    X_fit, X_val, y_fit, y_val = train_test_split(
+        X_train, y_train, test_size=0.2, random_state=42, stratify=y_train
+    )
 
     model = MLPClassifier(
         num_classes=5,
@@ -204,16 +208,22 @@ def test_mlp():
         batch_size=32,
         verbose=0
     )
-    model.fit(X_train, y_train, X_test, y_test)
+    model.fit(X_fit, y_fit, X_val, y_val)
     y_pred = model.predict(X_test)
 
     assert len(y_pred) == len(y_test), "Prediction length should match test length"
     assert model.model is not None, "Model should be trained"
+    assert set(np.unique(y_pred)).issubset(set(model.classes_)), \
+        "Predictions must only contain labels seen during training"
 
 
 def test_cnn():
-    """Test CNN model."""
+    """Test CNN model. Validation split is carved out of the training data
+    only; the test set is used solely for the final prediction check."""
     X_train, X_test, y_train, y_test = load_multiclass_dataset("512KB", random_state=42)
+    X_fit, X_val, y_fit, y_val = train_test_split(
+        X_train, y_train, test_size=0.2, random_state=42, stratify=y_train
+    )
 
     model = CNN1DClassifier(
         num_classes=5,
@@ -222,11 +232,34 @@ def test_cnn():
         batch_size=32,
         verbose=0
     )
-    model.fit(X_train, y_train, X_test, y_test)
+    model.fit(X_fit, y_fit, X_val, y_val)
     y_pred = model.predict(X_test)
 
     assert len(y_pred) == len(y_test), "Prediction length should match test length"
     assert model.model is not None, "Model should be trained"
+    assert set(np.unique(y_pred)).issubset(set(model.classes_)), \
+        "Predictions must only contain labels seen during training"
+
+
+def test_binary_dl_label_space():
+    """Regression test for the historical bug where MLP/CNN predictions on a
+    binary pair could contain a label outside that pair's two classes
+    (e.g. leaking a raw 5-class index). Predictions must always be a subset
+    of the true labels present in the binary dataset."""
+    X_train, X_test, y_train, y_test = load_binary_dataset("AES and Blowfish", "1kb", random_state=42)
+    X_fit, X_val, y_fit, y_val = train_test_split(
+        X_train, y_train, test_size=0.2, random_state=42, stratify=y_train
+    )
+
+    model = MLPClassifier(num_classes=2, hidden_layers=[16], epochs=5, batch_size=32, verbose=0)
+    model.fit(X_fit, y_fit, X_val, y_val)
+    y_pred = model.predict(X_test)
+
+    valid_labels = set(np.unique(y_train)) | set(np.unique(y_test))
+    assert set(np.unique(y_pred)).issubset(valid_labels), (
+        f"MLP predicted labels outside the binary pair's class set: "
+        f"predicted={set(np.unique(y_pred))}, valid={valid_labels}"
+    )
 
 
 def test_data_leakage():
@@ -306,6 +339,7 @@ def main():
     runner.test("HKNNRF Architecture", test_hknnrf_architecture)
     runner.test("MLP Model", test_mlp)
     runner.test("CNN Model", test_cnn)
+    runner.test("Binary DL Label Space", test_binary_dl_label_space)
 
     # Validation tests
     runner.test("Data Leakage Check", test_data_leakage)

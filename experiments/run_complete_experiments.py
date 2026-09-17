@@ -5,7 +5,9 @@ Executes the full experiment matrix with proper splitting and evaluation.
 
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, PROJECT_ROOT)
+DEFAULT_RESULTS_DIR = os.path.join(PROJECT_ROOT, 'experiments', 'results')
 
 import pandas as pd
 import numpy as np
@@ -14,6 +16,7 @@ import json
 from datetime import datetime
 from typing import Dict, List, Tuple
 import argparse
+from sklearn.model_selection import train_test_split
 
 from src.utils.data_loader import (
     load_binary_dataset, load_multiclass_dataset,
@@ -33,7 +36,7 @@ class ExperimentRunner:
     Manages complete experiment execution with reproducibility and result tracking.
     """
 
-    def __init__(self, output_dir='experiments/results', use_db=True, random_seed=42):
+    def __init__(self, output_dir=None, use_db=True, random_seed=42):
         """
         Initialize experiment runner.
 
@@ -42,13 +45,13 @@ class ExperimentRunner:
             use_db: Whether to save results to database
             random_seed: Random seed for reproducibility
         """
-        self.output_dir = output_dir
+        self.output_dir = output_dir if output_dir is not None else DEFAULT_RESULTS_DIR
         self.use_db = use_db
         self.random_seed = random_seed
         self.config = load_config()
 
         # Create output directory
-        os.makedirs(output_dir, exist_ok=True)
+        os.makedirs(self.output_dir, exist_ok=True)
 
         # Initialize database if needed
         if use_db:
@@ -61,6 +64,22 @@ class ExperimentRunner:
 
         # Result storage
         self.results = []
+
+    def _fit_deep_model(self, model, X_train, y_train, seed: int):
+        """
+        Fit an MLP/CNN model with a validation split carved out of the
+        TRAINING data only. The caller's X_test/y_test must never be passed
+        here: early stopping and model selection must not see the test set.
+        """
+        X_fit, X_val, y_fit, y_val = train_test_split(
+            X_train,
+            y_train,
+            test_size=0.20,
+            random_state=seed,
+            stratify=y_train,
+        )
+        model.fit(X_fit, y_fit, X_val, y_val)
+        return model
 
     def run_binary_experiment(self, pair: str, size: str, model_name: str, seed: int = None) -> Dict:
         """
@@ -125,18 +144,20 @@ class ExperimentRunner:
                     model = MLPClassifier(
                         num_classes=2,
                         **self.config['hyperparameters']['mlp'],
-                        verbose=0
+                        verbose=0,
+                        random_state=seed,
                     )
-                    model.fit(X_train, y_train, X_test, y_test)
+                    self._fit_deep_model(model, X_train, y_train, seed)
                     y_pred = model.predict(X_test)
 
                 elif model_name == 'CNN':
                     model = CNN1DClassifier(
                         num_classes=2,
                         **self.config['hyperparameters']['cnn'],
-                        verbose=0
+                        verbose=0,
+                        random_state=seed,
                     )
-                    model.fit(X_train, y_train, X_test, y_test)
+                    self._fit_deep_model(model, X_train, y_train, seed)
                     y_pred = model.predict(X_test)
 
                 else:
@@ -238,18 +259,20 @@ class ExperimentRunner:
                     model = MLPClassifier(
                         num_classes=5,
                         **self.config['hyperparameters']['mlp'],
-                        verbose=0
+                        verbose=0,
+                        random_state=seed,
                     )
-                    model.fit(X_train, y_train, X_test, y_test)
+                    self._fit_deep_model(model, X_train, y_train, seed)
                     y_pred = model.predict(X_test)
 
                 elif model_name == 'CNN':
                     model = CNN1DClassifier(
                         num_classes=5,
                         **self.config['hyperparameters']['cnn'],
-                        verbose=0
+                        verbose=0,
+                        random_state=seed,
                     )
-                    model.fit(X_train, y_train, X_test, y_test)
+                    self._fit_deep_model(model, X_train, y_train, seed)
                     y_pred = model.predict(X_test)
 
                 else:

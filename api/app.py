@@ -16,8 +16,25 @@ from database.db_operations import ExperimentDB
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend access
 
-# Initialize database
-db = ExperimentDB()
+# Initialize database. This API is optional and requires a configured MySQL
+# database (see config.yaml / CIPHERBENCH_DB_PASSWORD); if it is not
+# reachable, endpoints return a 503 instead of crashing the whole process.
+# The Streamlit app (app/streamlit_app.py) does not depend on this API.
+try:
+    db = ExperimentDB()
+    _db_error = None
+except Exception as exc:
+    db = None
+    _db_error = str(exc)
+
+
+@app.before_request
+def _check_db():
+    if db is None and request.path != '/':
+        return jsonify({
+            'success': False,
+            'error': f'Database unavailable: {_db_error}'
+        }), 503
 
 
 @app.route('/')

@@ -1,7 +1,8 @@
 database:
   host: localhost
   user: root
-  password: "Harshsj@2005"  # Configure your MySQL password
+  password: ""  # Do NOT put a real password here. Set the CIPHERBENCH_DB_PASSWORD
+                # environment variable instead (see database/db_config.py).
   database: cipherbench
   port: 3306
 

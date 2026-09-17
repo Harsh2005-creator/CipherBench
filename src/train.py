@@ -159,7 +159,8 @@ def train_deep_model(ModelClass, model_name: str, X_train, y_train, X_test, y_te
         batch_size=hparams['batch_size'],
         learning_rate=hparams['learning_rate'],
         dropout_rate=hparams['dropout_rate'],
-        verbose=1
+        verbose=1,
+        random_state=42
     )
 
     # Create an explicit validation split from the TRAINING portion only.

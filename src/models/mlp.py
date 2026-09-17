@@ -107,6 +107,7 @@ class MLPClassifier:
         batch_size: int = 32,
         learning_rate: float = 0.001,
         verbose: int = 0,
+        random_state: int = 42,
     ):
         self.num_classes = num_classes
         self.hidden_layers = [64, 32] if hidden_layers is None else hidden_layers
@@ -115,6 +116,7 @@ class MLPClassifier:
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.verbose = verbose
+        self.random_state = random_state
         self.model = None
         self.history = None
         self.classes_ = None
@@ -151,6 +153,8 @@ class MLPClassifier:
         X_val: np.ndarray = None,
         y_val: np.ndarray = None,
     ):
+        keras.utils.set_random_seed(self.random_state)
+
         X_train = np.asarray(X_train, dtype=np.float32)
         y_train_encoded = self._encode_labels(y_train, fit=True)
 
@@ -214,4 +218,5 @@ class MLPClassifier:
             "epochs": self.epochs,
             "batch_size": self.batch_size,
             "learning_rate": self.learning_rate,
+            "random_state": self.random_state,
         }

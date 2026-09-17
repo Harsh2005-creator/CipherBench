@@ -133,4 +133,4 @@ if __name__ == "__main__":
     cm = compute_confusion_matrix(y_true_multi, y_pred_multi)
     print(cm)
 
-    print("\n✓ Metrics module tests completed successfully!")
+    print("\n[OK] Metrics module tests completed successfully!")

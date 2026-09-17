@@ -1,6 +1,11 @@
 """
-Streamlit Dashboard for CipherBench.
-Interactive visualization of model performance and comparison.
+Streamlit Dashboard for CipherBench (MySQL-backed variant).
+
+This dashboard requires a configured, reachable MySQL database (see
+config.yaml / CIPHERBENCH_DB_PASSWORD). For a dependency-free demo that
+reads directly from the CSV/JSON files in experiments/results/, use
+`app/streamlit_app.py` instead - that is the recommended entry point and
+does not require a database.
 """
 
 import streamlit as st
@@ -24,29 +29,35 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize database
+# Initialize database (fails gracefully - no database is required to explore
+# the project; see app/streamlit_app.py for the file-based alternative).
 @st.cache_resource
 def get_db():
     return ExperimentDB()
 
-db = get_db()
-
-
-# Title and description
 st.title("🔐 CipherBench: Cryptographic Algorithm Identification")
 st.markdown("""
 This dashboard visualizes the performance of machine learning models for identifying
 block cipher algorithms from ciphertext using NIST-derived statistical features.
 """)
 
+try:
+    db = get_db()
+    all_experiments = db.get_experiments()
+except Exception as e:
+    st.error(
+        f"⚠️ Could not connect to the MySQL database ({e}).\n\n"
+        "This dashboard variant requires a configured database. For a dependency-free "
+        "demo that reads directly from `experiments/results/`, run:\n\n"
+        "`streamlit run app/streamlit_app.py`"
+    )
+    st.stop()
+
 # Sidebar filters
 st.sidebar.header("Filters")
 
-# Get all experiments for filter options
-all_experiments = db.get_experiments()
-
 if not all_experiments:
-    st.error("⚠️ No experiments found in database. Please run training first: `python train.py`")
+    st.error("⚠️ No experiments found in database. Please run training first: `python src/train.py`")
     st.stop()
 
 # Extract unique values

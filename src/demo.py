@@ -29,7 +29,7 @@ def main():
     # Load data
     print("[1/5] Loading data...")
     X_train, X_test, y_train, y_test = load_multiclass_dataset("512KB")
-    print(f"✓ Loaded: Train={X_train.shape}, Test={X_test.shape}")
+    print(f"[OK] Loaded: Train={X_train.shape}, Test={X_test.shape}")
 
     results = {}
 
@@ -43,7 +43,7 @@ def main():
 
     metrics_svm = compute_metrics(y_test, y_pred_svm, 'multiclass')
     results['SVM'] = metrics_svm
-    print(f"✓ SVM Accuracy: {metrics_svm['accuracy']:.4f} (trained in {svm_time:.2f}s)")
+    print(f"[OK] SVM Accuracy: {metrics_svm['accuracy']:.4f} (trained in {svm_time:.2f}s)")
 
     # Train KNN
     print("\n[3/5] Training KNN...")
@@ -55,7 +55,7 @@ def main():
 
     metrics_knn = compute_metrics(y_test, y_pred_knn, 'multiclass')
     results['KNN'] = metrics_knn
-    print(f"✓ KNN Accuracy: {metrics_knn['accuracy']:.4f} (trained in {knn_time:.2f}s)")
+    print(f"[OK] KNN Accuracy: {metrics_knn['accuracy']:.4f} (trained in {knn_time:.2f}s)")
 
     # Train Random Forest
     print("\n[4/5] Training Random Forest...")
@@ -67,7 +67,7 @@ def main():
 
     metrics_rf = compute_metrics(y_test, y_pred_rf, 'multiclass')
     results['RF'] = metrics_rf
-    print(f"✓ RF Accuracy: {metrics_rf['accuracy']:.4f} (trained in {rf_time:.2f}s)")
+    print(f"[OK] RF Accuracy: {metrics_rf['accuracy']:.4f} (trained in {rf_time:.2f}s)")
 
     # Train HKNNRF
     print("\n[5/5] Training HKNNRF...")
@@ -82,7 +82,7 @@ def main():
 
     metrics_hknnrf = compute_metrics(y_test_h, y_pred_hknnrf, 'multiclass')
     results['HKNNRF'] = metrics_hknnrf
-    print(f"✓ HKNNRF Accuracy: {metrics_hknnrf['accuracy']:.4f} (trained in {hknnrf_time:.2f}s)")
+    print(f"[OK] HKNNRF Accuracy: {metrics_hknnrf['accuracy']:.4f} (trained in {hknnrf_time:.2f}s)")
 
     # Summary
     print("\n" + "="*60)
@@ -99,15 +99,16 @@ def main():
     # Determine best model
     accuracies = {name: m['accuracy'] for name, m in results.items()}
     best_model = max(accuracies, key=accuracies.get)
-    print(f"\n🏆 Best Model: {best_model} with {accuracies[best_model]:.4f} accuracy")
+    print(f"\nBEST MODEL: {best_model} with {accuracies[best_model]:.4f} accuracy")
 
-    print("\n✓ Demo completed successfully!")
+    print("\n[OK] Demo completed successfully!")
     print("\nNext steps:")
-    print("1. Set MySQL password in config.yaml")
-    print("2. Create database: mysql -u root -p < database/schema.sql")
-    print("3. Run training: python train.py --model svm --task multiclass --size 512KB")
-    print("4. View results: python -c \"from database.db_operations import ExperimentDB; db=ExperimentDB(); print(db.get_experiments())\"")
-    print("\nNote: Deep learning models (MLP, CNN) require TensorFlow compatible with Python 3.14")
+    print("1. (Optional) Set CIPHERBENCH_DB_PASSWORD env var and create the MySQL database")
+    print("2. Run training: python src/train.py --model svm --task multiclass --size 512KB")
+    print("3. Run the full experiment matrix: python experiments/run_complete_experiments.py --no-db")
+    print("4. Explore results: streamlit run app/streamlit_app.py")
+    print("\nNote: Deep learning models (MLP, CNN) are trained via src/train.py or the")
+    print("experiment runner, not this quick demo (which only covers classical models).")
 
 
 if __name__ == "__main__":
