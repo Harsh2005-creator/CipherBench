@@ -1,149 +1,136 @@
 """
-1D Convolutional Neural Network (1D-CNN) model for cryptographic algorithm identification.
-Reshapes the 10-feature NIST data to 1D inputs to exploit spatial/ordered relationships in features.
+1D Convolutional Neural Network (1D-CNN) model for cryptographic
+algorithm identification.
+
+Binary labels are normalized internally to 0/1 and mapped back to the
+original labels during prediction. The final test set is never used for
+training, validation, early stopping, or model selection.
 """
 
 import numpy as np
 import keras
-from keras import layers, models, ops
+from keras import layers, models
 from typing import Tuple, Dict, Any
 
 
-def create_cnn_model(input_dim: int = 10, num_classes: int = 5,
-                     filters: list = [32, 64],
-                     kernel_size: int = 3,
-                     pool_size: int = 2,
-                     dropout_rate: float = 0.3,
-                     learning_rate: float = 0.001) -> keras.Model:
-    """
-    Create a 1D CNN model.
+def create_cnn_model(
+    input_dim: int = 10,
+    num_classes: int = 5,
+    filters: list = None,
+    kernel_size: int = 3,
+    pool_size: int = 2,
+    dropout_rate: float = 0.3,
+    learning_rate: float = 0.001,
+) -> keras.Model:
+    if filters is None:
+        filters = [32, 64]
 
-    Args:
-        input_dim: Number of input features (10 NIST features)
-        num_classes: Number of output classes (2 for binary, 5 for multiclass)
-        filters: List of filter sizes for Conv1D layers
-        kernel_size: Convolution kernel size
-        pool_size: MaxPooling size
-        dropout_rate: Dropout rate for regularization
-        learning_rate: Learning rate for optimizer
-
-    Returns:
-        Compiled Keras model
-    """
-    model = models.Sequential(name='CNN_1D_CipherBench')
-
-    # Input layer representing reshaped input (10 features, 1 channel)
+    model = models.Sequential(name="CNN_1D_CipherBench")
     model.add(layers.Input(shape=(input_dim, 1)))
 
-    # Conv1D layers block
     for i, f in enumerate(filters):
-        model.add(layers.Conv1D(
-            filters=f,
-            kernel_size=kernel_size,
-            activation='relu',
-            padding='same',
-            name=f'conv1d_{i+1}'
-        ))
-        model.add(layers.BatchNormalization(name=f'batchnorm_{i+1}'))
+        model.add(
+            layers.Conv1D(
+                filters=f,
+                kernel_size=kernel_size,
+                activation="relu",
+                padding="same",
+                name=f"conv1d_{i+1}",
+            )
+        )
+        model.add(layers.BatchNormalization(name=f"batchnorm_{i+1}"))
 
-        # Only pool if sequence length allows it, otherwise skip to keep dimension positive
-        # Sequence length starts at 10. Maxpooling splits it by pool_size.
-        if input_dim // (pool_size ** (i + 1)) > 0:
-            model.add(layers.MaxPooling1D(pool_size=pool_size, name=f'maxpool_{i+1}'))
+        if input_dim // (pool_size ** (i + 1)) >= 1:
+            model.add(layers.MaxPooling1D(pool_size=pool_size, name=f"maxpool_{i+1}"))
 
-        model.add(layers.Dropout(dropout_rate, name=f'dropout_conv_{i+1}'))
+        model.add(layers.Dropout(dropout_rate, name=f"dropout_conv_{i+1}"))
 
-    # Flatten and Dense classification layers
-    model.add(layers.Flatten(name='flatten'))
-    model.add(layers.Dense(64, activation='relu', name='dense_hidden'))
-    model.add(layers.Dropout(dropout_rate, name='dropout_dense'))
+    model.add(layers.Flatten(name="flatten"))
+    model.add(layers.Dense(64, activation="relu", name="dense_hidden"))
+    model.add(layers.Dropout(dropout_rate, name="dropout_dense"))
 
-    # Output layer
     if num_classes == 2:
-        # Binary classification
-        model.add(layers.Dense(1, activation='sigmoid', name='output'))
-        loss = 'binary_crossentropy'
-        metrics = ['accuracy', keras.metrics.Precision(), keras.metrics.Recall()]
+        model.add(layers.Dense(1, activation="sigmoid", name="output"))
+        loss = "binary_crossentropy"
+        metrics = ["accuracy", keras.metrics.Precision(), keras.metrics.Recall()]
     else:
-        # Multiclass classification
-        model.add(layers.Dense(num_classes, activation='softmax', name='output'))
-        loss = 'sparse_categorical_crossentropy'
-        metrics = ['accuracy']
+        model.add(layers.Dense(num_classes, activation="softmax", name="output"))
+        loss = "sparse_categorical_crossentropy"
+        metrics = ["accuracy"]
 
-    # Compile model
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
         loss=loss,
-        metrics=metrics
+        metrics=metrics,
     )
-
     return model
 
 
-def train_cnn(model: keras.Model, X_train: np.ndarray, y_train: np.ndarray,
-              X_test: np.ndarray, y_test: np.ndarray,
-              epochs: int = 100, batch_size: int = 32,
-              verbose: int = 0, validation_split: float = 0.2) -> Tuple[keras.Model, Dict]:
-    """
-    Train 1D CNN model.
-
-    IMPORTANT: Uses validation_split to split X_train into train/validation.
-    X_test is NOT used during training - only for final evaluation.
-
-    Args:
-        model: Compiled Keras model
-        X_train: Training features (will be split into train/val)
-        y_train: Training labels (will be split into train/val)
-        X_test: Test features (NOT used during training)
-        y_test: Test labels (NOT used during training)
-        epochs: Max epochs
-        batch_size: Batch size
-        verbose: Verbosity
-        validation_split: Fraction of training data to use for validation
-
-    Returns:
-        Trained model & training history
-    """
-    # Reshape features to (Samples, Time Steps, Channels) if not already
-    if len(X_train.shape) == 2:
+def train_cnn(
+    model: keras.Model,
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    X_val: np.ndarray = None,
+    y_val: np.ndarray = None,
+    epochs: int = 100,
+    batch_size: int = 32,
+    verbose: int = 0,
+    validation_split: float = 0.2,
+) -> Tuple[keras.Model, Dict]:
+    if X_train.ndim == 2:
         X_train = np.expand_dims(X_train, axis=-1)
-    if len(X_test.shape) == 2:
-        X_test = np.expand_dims(X_test, axis=-1)
+    if X_val is not None and X_val.ndim == 2:
+        X_val = np.expand_dims(X_val, axis=-1)
 
     early_stopping = keras.callbacks.EarlyStopping(
-        monitor='val_loss',
+        monitor="val_loss",
         patience=15,
         restore_best_weights=True,
-        verbose=verbose
+        verbose=verbose,
     )
 
-    # Train model - validation_split automatically splits X_train
-    # Test set (X_test, y_test) is NOT used here
-    history = model.fit(
-        X_train, y_train,
-        validation_split=validation_split,  # Split from X_train only
+    fit_kwargs = dict(
         epochs=epochs,
         batch_size=batch_size,
         callbacks=[early_stopping],
-        verbose=verbose
+        verbose=verbose,
     )
+
+    if X_val is not None and y_val is not None:
+        history = model.fit(
+            X_train,
+            y_train,
+            validation_data=(X_val, y_val),
+            **fit_kwargs,
+        )
+    else:
+        history = model.fit(
+            X_train,
+            y_train,
+            validation_split=validation_split,
+            **fit_kwargs,
+        )
 
     return model, history.history
 
 
 class CNN1DClassifier:
-    """Wrapper class for 1D-CNN providing sklearn-like interface."""
+    """Sklearn-like 1D-CNN wrapper with safe label handling."""
 
-    def __init__(self, num_classes: int = 5, filters: list = [32, 64],
-                 kernel_size: int = 3, pool_size: int = 2,
-                 dropout_rate: float = 0.3, epochs: int = 100,
-                 batch_size: int = 32, learning_rate: float = 0.001,
-                 verbose: int = 0):
-        """
-        Initialize CNN classifier.
-        """
+    def __init__(
+        self,
+        num_classes: int = 5,
+        filters: list = None,
+        kernel_size: int = 3,
+        pool_size: int = 2,
+        dropout_rate: float = 0.3,
+        epochs: int = 100,
+        batch_size: int = 32,
+        learning_rate: float = 0.001,
+        verbose: int = 0,
+    ):
         self.num_classes = num_classes
-        self.filters = filters
+        self.filters = [32, 64] if filters is None else filters
         self.kernel_size = kernel_size
         self.pool_size = pool_size
         self.dropout_rate = dropout_rate
@@ -153,70 +140,109 @@ class CNN1DClassifier:
         self.verbose = verbose
         self.model = None
         self.history = None
+        self.classes_ = None
 
-    def fit(self, X_train: np.ndarray, y_train: np.ndarray,
-            X_val: np.ndarray = None, y_val: np.ndarray = None):
-        """Fit the CNN model."""
-        input_dim = X_train.shape[1]
+    def _encode_labels(self, y: np.ndarray, fit: bool = False) -> np.ndarray:
+        y = np.asarray(y).reshape(-1)
+        if fit:
+            self.classes_ = np.unique(y)
+            if len(self.classes_) != self.num_classes:
+                raise ValueError(
+                    f"Expected {self.num_classes} classes, found {len(self.classes_)}: "
+                    f"{self.classes_}"
+                )
 
-        # Reshape data to (Samples, Features, 1)
-        X_train_reshaped = np.expand_dims(X_train, axis=-1)
+        if self.classes_ is None:
+            raise ValueError("Model has not been fitted.")
 
-        if X_val is None or y_val is None:
-            X_val_reshaped, y_val = X_train_reshaped, y_train
+        mapping = {label: i for i, label in enumerate(self.classes_)}
+        try:
+            return np.asarray([mapping[v] for v in y], dtype=np.int64)
+        except KeyError as exc:
+            raise ValueError(f"Unknown label {exc.args[0]} encountered after fitting.")
+
+    def _decode_labels(self, encoded: np.ndarray) -> np.ndarray:
+        if self.classes_ is None:
+            raise ValueError("Model has not been fitted.")
+        return self.classes_[np.asarray(encoded, dtype=int)]
+
+    def fit(
+        self,
+        X_train: np.ndarray,
+        y_train: np.ndarray,
+        X_val: np.ndarray = None,
+        y_val: np.ndarray = None,
+    ):
+        X_train = np.asarray(X_train, dtype=np.float32)
+        y_train_encoded = self._encode_labels(y_train, fit=True)
+
+        if X_val is not None and y_val is not None:
+            X_val = np.asarray(X_val, dtype=np.float32)
+            y_val_encoded = self._encode_labels(y_val, fit=False)
         else:
-            X_val_reshaped = np.expand_dims(X_val, axis=-1)
+            y_val_encoded = None
 
-        # Create model
         self.model = create_cnn_model(
-            input_dim=input_dim,
+            input_dim=X_train.shape[1],
             num_classes=self.num_classes,
             filters=self.filters,
             kernel_size=self.kernel_size,
             pool_size=self.pool_size,
             dropout_rate=self.dropout_rate,
-            learning_rate=self.learning_rate
+            learning_rate=self.learning_rate,
         )
 
-        # Train
         self.model, self.history = train_cnn(
-            self.model, X_train_reshaped, y_train,
-            X_val_reshaped, y_val,
+            self.model,
+            X_train,
+            y_train_encoded,
+            X_val,
+            y_val_encoded,
             epochs=self.epochs,
             batch_size=self.batch_size,
-            verbose=self.verbose
+            verbose=self.verbose,
         )
+        return self
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Predict class labels."""
         if self.model is None:
             raise ValueError("Model must be fitted before prediction")
 
-        X_reshaped = np.expand_dims(X, axis=-1)
-        predictions = self.model.predict(X_reshaped, verbose=0)
+        X = np.asarray(X, dtype=np.float32)
+        if X.ndim == 2:
+            X = np.expand_dims(X, axis=-1)
+
+        predictions = self.model.predict(X, verbose=0)
 
         if self.num_classes == 2:
-            return (predictions > 0.5).astype(int).flatten()
+            encoded = (predictions.reshape(-1) >= 0.5).astype(int)
         else:
-            return np.argmax(predictions, axis=1)
+            encoded = np.argmax(predictions, axis=1)
+
+        return self._decode_labels(encoded)
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        """Predict class probabilities."""
         if self.model is None:
             raise ValueError("Model must be fitted before prediction")
 
-        X_reshaped = np.expand_dims(X, axis=-1)
-        return self.model.predict(X_reshaped, verbose=0)
+        X = np.asarray(X, dtype=np.float32)
+        if X.ndim == 2:
+            X = np.expand_dims(X, axis=-1)
+
+        probabilities = self.model.predict(X, verbose=0)
+        if self.num_classes == 2:
+            p = probabilities.reshape(-1, 1)
+            return np.hstack([1.0 - p, p])
+        return probabilities
 
     def get_params(self) -> Dict[str, Any]:
-        """Get hyperparameters."""
         return {
-            'num_classes': self.num_classes,
-            'filters': self.filters,
-            'kernel_size': self.kernel_size,
-            'pool_size': self.pool_size,
-            'dropout_rate': self.dropout_rate,
-            'epochs': self.epochs,
-            'batch_size': self.batch_size,
-            'learning_rate': self.learning_rate
+            "num_classes": self.num_classes,
+            "filters": self.filters,
+            "kernel_size": self.kernel_size,
+            "pool_size": self.pool_size,
+            "dropout_rate": self.dropout_rate,
+            "epochs": self.epochs,
+            "batch_size": self.batch_size,
+            "learning_rate": self.learning_rate,
         }

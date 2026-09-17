@@ -6,6 +6,7 @@ Train all models on binary and multiclass datasets.
 import argparse
 import time
 import numpy as np
+from sklearn.model_selection import train_test_split
 from typing import List, Dict
 import sys
 import os
@@ -161,10 +162,20 @@ def train_deep_model(ModelClass, model_name: str, X_train, y_train, X_test, y_te
         verbose=1
     )
 
-    # Train
-    model.fit(X_train, y_train, X_test, y_test)
+    # Create an explicit validation split from the TRAINING portion only.
+    # The final X_test/y_test pair remains completely untouched until prediction.
+    X_fit, X_val, y_fit, y_val = train_test_split(
+        X_train,
+        y_train,
+        test_size=0.20,
+        random_state=42,
+        stratify=y_train,
+    )
 
-    # Predict
+    # Train using train/validation data only.
+    model.fit(X_fit, y_fit, X_val, y_val)
+
+    # Predict on the untouched final test set.
     y_pred = model.predict(X_test)
 
     training_time = time.time() - start_time
