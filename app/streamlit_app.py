@@ -15,6 +15,10 @@ Design goals (see docs/PROJECT_REPORT.md):
   the project root.
 - Caches expensive work (dataset loads, live model training) so navigating
   the UI does not repeatedly retrain models.
+
+Presentation lives in app/style.css and .streamlit/config.toml; everything
+above the "Presentation" section below is data/model logic and does not
+depend on either.
 """
 
 import glob
@@ -27,6 +31,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+from matplotlib.colors import LinearSegmentedColormap
 from sklearn.model_selection import train_test_split
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -48,10 +53,10 @@ from src.models.mlp import MLPClassifier  # noqa: E402
 from src.models.cnn import CNN1DClassifier  # noqa: E402
 
 st.set_page_config(
-    page_title="CipherBench",
-    page_icon="🔐",
+    page_title="CipherBench · Block Cipher Identification",
+    page_icon=":material/lock:",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 SIZES = ["1KB", "8KB", "64KB", "256KB", "512KB"]
@@ -59,23 +64,95 @@ ALGORITHMS = ["AES", "3DES", "Blowfish", "CAST", "RC2"]
 ALL_MODELS = ["SVM", "KNN", "RF", "HKNNRF", "MLP", "CNN"]
 DEEP_MODELS = {"MLP", "CNN"}
 
+# --------------------------------------------------------------------------
+# Presentation — palette and helpers (purely visual; no data logic)
+# --------------------------------------------------------------------------
+
+ACCENT = "#7c6af7"
+TEXT_COLOR = "#e8e8f0"
+GRID_COLOR = "#2a2a38"
+PAPER_COLOR = "#8b8ba0"
+FONT_FAMILY = "Inter, sans-serif"
+
 MODEL_COLORS = {
-    "SVM": "#6366F1",
-    "KNN": "#06B6D4",
-    "RF": "#10B981",
-    "HKNNRF": "#F59E0B",
-    "MLP": "#EC4899",
-    "CNN": "#8B5CF6",
+    "SVM": "#7c6af7",
+    "KNN": "#38bdf8",
+    "RF": "#22d3a5",
+    "HKNNRF": "#f97316",
+    "MLP": "#f43f5e",
+    "CNN": "#facc15",
 }
 ALGO_COLORS = {
-    "AES": "#6366F1",
-    "3DES": "#06B6D4",
-    "Blowfish": "#10B981",
-    "CAST": "#F59E0B",
-    "RC2": "#EC4899",
+    "AES": "#7c6af7",
+    "3DES": "#38bdf8",
+    "Blowfish": "#22d3a5",
+    "CAST": "#f97316",
+    "RC2": "#f43f5e",
 }
-PLOTLY_TEMPLATE = "plotly_white"
-FONT_FAMILY = "Inter, -apple-system, sans-serif"
+
+SCALE_ACCENT = ["#1c1c27", "#5a4fcf", "#7c6af7"]
+SCALE_PAPER = ["#1c1c27", "#7a4a1e", "#f97316"]
+SCALE_GAP = ["#f43f5e", "#1c1c27", "#22d3a5"]
+CMAP_ACCENT = LinearSegmentedColormap.from_list("cb_accent", SCALE_ACCENT)
+CMAP_GAP = LinearSegmentedColormap.from_list("cb_gap", ["#8f1d34", "#1c1c27", "#0f6b55"])
+
+CSS_FILE = Path(__file__).resolve().parent / "style.css"
+
+
+def load_css():
+    """Inject app/style.css. If the file is missing the app still works,
+    just with Streamlit's own dark theme from .streamlit/config.toml."""
+    try:
+        css = CSS_FILE.read_text(encoding="utf-8")
+    except OSError:
+        return
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
+
+def style_fig(fig, height=360):
+    """Dark, transparent Plotly figure that sits on the app's card surface."""
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family=FONT_FAMILY, color=TEXT_COLOR, size=13),
+        height=height,
+        margin=dict(t=24, b=10, l=10, r=10),
+        legend=dict(bgcolor="rgba(0,0,0,0)"),
+        hoverlabel=dict(bgcolor="#1c1c27", font_color=TEXT_COLOR, bordercolor=GRID_COLOR),
+    )
+    fig.update_xaxes(gridcolor=GRID_COLOR, zerolinecolor=GRID_COLOR, linecolor=GRID_COLOR)
+    fig.update_yaxes(gridcolor=GRID_COLOR, zerolinecolor=GRID_COLOR, linecolor=GRID_COLOR)
+    return fig
+
+
+def page_title(title, sub=""):
+    n = SECTIONS.index(section) + 1
+    st.markdown(
+        f'<div class="page-head"><div class="eyebrow">{n:02d} · {NAV_LABELS[section]}</div>'
+        f'<div class="page-title">{title}</div><div class="page-sub">{sub}</div></div>',
+        unsafe_allow_html=True,
+    )
+
+
+def insight(text, tone=""):
+    st.markdown(f'<div class="insight-box {tone}">{text}</div>', unsafe_allow_html=True)
+
+
+def chip(label, color):
+    return (
+        f'<span class="chip" style="background:{color}26;color:{color};'
+        f'border:1px solid {color}55">{label}</span>'
+    )
+
+
+def class_names(values):
+    """Turn numeric class labels (0-4) into cipher names for display only."""
+    label_map = load_config()["algorithms"]["label_mapping"]
+    return [label_map.get(int(v), str(v)) for v in values]
+
+
+load_css()
+
 PAPER_MODELS = ["SVM", "KNN", "RF", "HKNNRF"]  # the only 4 models the base paper implements
 
 # --------------------------------------------------------------------------
@@ -171,171 +248,6 @@ def our_value(df, model, task, size_label, pair, metric):
         & (df["algorithm_pair"] == pair)
     ]
     return float(row.iloc[0][metric]) if len(row) else None
-
-
-# --------------------------------------------------------------------------
-# Visual theme — injected once, purely presentational
-# --------------------------------------------------------------------------
-
-def inject_theme():
-    st.markdown(
-        """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
-:root {
-    --cb-primary: #6366F1;
-    --cb-secondary: #EC4899;
-    --cb-accent: #06B6D4;
-    --cb-success: #10B981;
-    --cb-warning: #F59E0B;
-    --cb-bg-soft: #F8FAFC;
-}
-
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-h1, h2, h3 { font-family: 'Poppins', sans-serif !important; letter-spacing: -0.02em; }
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes gradientShift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-@keyframes floatY {
-    0%, 100% { transform: translateY(0px); }
-    50%      { transform: translateY(-6px); }
-}
-@keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.35); }
-    50%      { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-}
-
-/* Page content fades/slides in on every render */
-[data-testid="stAppViewContainer"] .main .block-container {
-    animation: fadeInUp 0.5s ease-out;
-    padding-top: 2rem;
-}
-
-/* Sidebar */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0F172A 0%, #1E1B4B 100%);
-}
-[data-testid="stSidebar"] * { color: #E2E8F0 !important; }
-[data-testid="stSidebar"] .stRadio label { transition: transform 0.15s ease; }
-[data-testid="stSidebar"] .stRadio label:hover { transform: translateX(4px); }
-[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.15); }
-
-/* Hero header */
-.hero-header {
-    padding: 1.6rem 2rem;
-    border-radius: 20px;
-    background: linear-gradient(120deg, #6366F1, #8B5CF6, #EC4899, #6366F1);
-    background-size: 300% 300%;
-    animation: gradientShift 8s ease infinite, fadeInUp 0.6s ease-out;
-    margin-bottom: 1.6rem;
-    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.5);
-}
-.hero-icon { font-size: 2.4rem; animation: floatY 3s ease-in-out infinite; display: inline-block; }
-.hero-title {
-    color: white !important; font-weight: 800 !important; font-size: 2.1rem !important;
-    margin: 0.2rem 0 0.2rem 0 !important; -webkit-font-smoothing: antialiased;
-}
-.hero-subtitle { color: rgba(255,255,255,0.92); font-size: 1.02rem; margin: 0; }
-
-/* Metric cards */
-div[data-testid="stMetric"] {
-    background: white;
-    border: 1px solid #E5E7EB;
-    border-radius: 16px;
-    padding: 1rem 1.1rem 0.8rem 1.1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    border-top: 3px solid var(--cb-primary);
-}
-div[data-testid="stMetric"]:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.35);
-    border-color: var(--cb-primary);
-}
-div[data-testid="stMetricValue"] {
-    font-family: 'Poppins', sans-serif; font-weight: 700 !important;
-    background: linear-gradient(90deg, #6366F1, #EC4899);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-/* Buttons */
-.stButton > button {
-    border-radius: 10px !important;
-    border: none !important;
-    background: linear-gradient(90deg, #6366F1, #8B5CF6) !important;
-    color: white !important;
-    font-weight: 600 !important;
-    padding: 0.55rem 1.4rem !important;
-    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
-    box-shadow: 0 4px 14px -4px rgba(99, 102, 241, 0.55) !important;
-}
-.stButton > button:hover {
-    transform: translateY(-2px) scale(1.015);
-    box-shadow: 0 10px 22px -6px rgba(99, 102, 241, 0.65) !important;
-}
-.stDownloadButton > button {
-    border-radius: 10px !important;
-    transition: transform 0.15s ease !important;
-}
-.stDownloadButton > button:hover { transform: translateY(-2px); }
-
-/* Cards for generic content blocks */
-.cb-card {
-    background: white; border: 1px solid #E5E7EB; border-radius: 16px;
-    padding: 1.1rem 1.3rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    animation: fadeInUp 0.5s ease-out;
-}
-
-/* Badges */
-.cb-badge {
-    display: inline-block; padding: 0.18rem 0.65rem; border-radius: 999px;
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
-}
-.cb-badge-correct { background: #D1FAE5; color: #047857; }
-.cb-badge-wrong { background: #FEE2E2; color: #B91C1C; }
-.cb-badge-model {
-    background: linear-gradient(90deg, #6366F1, #8B5CF6); color: white;
-    animation: pulseGlow 2.4s infinite;
-}
-
-/* Dataframes */
-[data-testid="stDataFrame"] { border-radius: 12px; overflow: hidden; }
-
-/* Section dividers */
-hr { border-top: 1px solid #E5E7EB; }
-
-/* Selectbox / radio focus glow */
-[data-baseweb="select"] > div:focus-within {
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
-}
-</style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-def page_header(title, subtitle="", icon="🔐"):
-    st.markdown(
-        f"""
-<div class="hero-header">
-    <span class="hero-icon">{icon}</span>
-    <h1 class="hero-title">{title}</h1>
-    <p class="hero-subtitle">{subtitle}</p>
-</div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-inject_theme()
 
 
 # --------------------------------------------------------------------------
@@ -436,45 +348,68 @@ def run_live_model(model_name, task, size, pair=None, seed=42):
     return model, X_test_out, y_test_out, y_pred, y_proba, metrics, cm
 
 
-# --------------------------------------------------------------------------
-# Sidebar navigation
-# --------------------------------------------------------------------------
 
-st.sidebar.markdown(
-    """
-<div style="text-align:center; padding: 0.4rem 0 1rem 0;">
-    <div style="font-size:2.2rem;">🔐</div>
-    <div style="font-family:'Poppins',sans-serif; font-weight:800; font-size:1.35rem;
-                background: linear-gradient(90deg, #A5B4FC, #F0ABFC);
-                -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-        CipherBench
-    </div>
-    <div style="font-size:0.8rem; opacity:0.75;">Block cipher ID via machine learning</div>
-</div>
-""",
-    unsafe_allow_html=True,
-)
+# --------------------------------------------------------------------------
+# Header navigation
+# --------------------------------------------------------------------------
 
 SECTIONS = [
-    "🏠 Home / Overview",
-    "🔍 Dataset Explorer",
-    "🧪 Cipher Identification",
-    "📊 Model Comparison",
-    "📖 Paper Comparison",
-    "📈 Results",
-    "🗂️ Experiment Matrix",
-    "📚 Research / Methodology",
-    "⚙️ About / Reproducibility",
+    "Home / Overview",
+    "Dataset Explorer",
+    "Cipher Identification",
+    "Model Comparison",
+    "Paper Comparison",
+    "Results",
+    "Experiment Matrix",
+    "Research / Methodology",
+    "About / Reproducibility",
 ]
-section = st.sidebar.radio("Navigate", SECTIONS, label_visibility="collapsed")
-section = section.split(" ", 1)[1]  # strip the emoji back off for comparisons below
+# Short labels for the header bar; the page logic keys off the full names above.
+NAV_LABELS = {
+    "Home / Overview": "Home",
+    "Dataset Explorer": "Datasets",
+    "Cipher Identification": "Identify",
+    "Model Comparison": "Models",
+    "Paper Comparison": "Paper",
+    "Results": "Results",
+    "Experiment Matrix": "Matrix",
+    "Research / Methodology": "Method",
+    "About / Reproducibility": "About",
+}
 
 results_df, results_filename = load_results_df()
-st.sidebar.markdown("---")
-if results_df is not None:
-    st.sidebar.success(f"✅ {len(results_df)} verified results loaded\n\n`{results_filename}`")
-else:
-    st.sidebar.warning("⚠️ No experiment results file found yet.")
+
+LOCK_SVG = (
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" '
+    'stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/>'
+    '<path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+)
+
+with st.container(key="navbar"):
+    nav_brand, nav_links, nav_status = st.columns([1.6, 8, 1.6], vertical_alignment="center")
+    nav_brand.markdown(
+        f'<div class="brand"><span class="brand-mark">{LOCK_SVG}</span>'
+        '<span class="name">Cipher<b>Bench</b></span></div>',
+        unsafe_allow_html=True,
+    )
+    section = nav_links.radio(
+        "Navigate", SECTIONS, key="nav", horizontal=True,
+        label_visibility="collapsed", format_func=NAV_LABELS.get,
+    )
+    if results_df is not None:
+        nav_status.markdown(
+            f'<span class="status-pill"><span class="dot"></span><b>{len(results_df)}</b> results</span>',
+            unsafe_allow_html=True,
+        )
+    else:
+        nav_status.markdown(
+            '<span class="status-pill">No results file yet</span>', unsafe_allow_html=True
+        )
+
+
+def go_to(page):
+    """Button callback: switch the header navigation to another page."""
+    st.session_state["nav"] = page
 
 
 # --------------------------------------------------------------------------
@@ -482,73 +417,112 @@ else:
 # --------------------------------------------------------------------------
 
 if section == "Home / Overview":
-    page_header(
-        "CipherBench",
-        "Identifying block cipher algorithms from ciphertext, using statistics — not brute force.",
-        icon="🔐",
+    n_exp = len(results_df) if results_df is not None else None
+
+    hero_l, hero_r = st.columns([1.15, 1], gap="large", vertical_alignment="center")
+    with hero_l:
+        st.markdown(
+            '<div class="hero-tag"><i></i>Block cipher identification with machine learning</div>'
+            '<div class="hero-title">CipherBench</div>'
+            '<div class="hero-sub">Tell which block cipher produced a ciphertext from its statistical '
+            "fingerprint alone: no key, no plaintext, no brute force.</div>",
+            unsafe_allow_html=True,
+        )
+        cta1, cta2, _ = st.columns([0.9, 1.1, 0.7])
+        cta1.button("Try the live demo", key="cta_demo", type="primary",
+                    icon=":material/play_arrow:", on_click=go_to, args=("Cipher Identification",))
+        cta2.button("Compare with the paper", key="cta_paper",
+                    on_click=go_to, args=("Paper Comparison",))
+    with hero_r:
+        st.markdown(
+            '<div class="terminal"><div class="term-bar"><i></i><i></i><i></i>'
+            "<span>cipherbench · pipeline</span></div>"
+            '<div class="term-body">'
+            '<span class="ln l1"><span class="p">$</span>extract <b>10</b> NIST p-values</span>'
+            '<span class="ln l2"><span class="p">$</span>train <b>6</b> models · <b>2</b> tasks · <b>5</b> sizes</span>'
+            f'<span class="ln l3"><span class="p">$</span>compare <b>{n_exp if n_exp is not None else "330"}</b> experiments vs. <em>Yuan et al.</em></span>'
+            '<span class="ln l4"><span class="p">$</span><span class="cursor"></span></span>'
+            "</div></div>",
+            unsafe_allow_html=True,
+        )
+
+    stat_items = [
+        (len(ALGORITHMS), "Ciphers"),
+        (len(SIZES), "Ciphertext sizes"),
+        (len(ALL_MODELS), "Models"),
+        (n_exp, "Verified experiments"),
+    ]
+    st.markdown(
+        '<div class="stats">'
+        + "".join(
+            f'<div class="stat"><div class="num" style="--to:{v}"></div><div class="lbl">{lbl}</div></div>'
+            if v is not None
+            else f'<div class="stat"><div class="num na">N/A</div><div class="lbl">{lbl}</div></div>'
+            for v, lbl in stat_items
+        )
+        + "</div>",
+        unsafe_allow_html=True,
     )
 
     st.markdown(
-        """
-CipherBench determines **which block cipher algorithm** produced a ciphertext
-(AES, 3DES, Blowfish, CAST or RC2) using only 10 NIST-randomness-derived
-statistical features of the ciphertext — no key or plaintext required.
-
-The project reproduces the **HKNNRF** (Hybrid K-Nearest-Neighbours +
-Random Forest) method of Yuan et al. (2022) and extends it with two deep
-learning baselines (MLP, 1D-CNN), comparing all six models fairly across
-**two tasks** (binary pairwise, five-class) and **five ciphertext sizes**
-(1KB – 512KB).
-        """
+        '<div class="section-head"><span class="no">01</span><h3>How it works</h3></div>',
+        unsafe_allow_html=True,
+    )
+    c1, c2, c3 = st.columns(3)
+    c1.markdown(
+        '<div class="card card-accent"><div class="step">01</div><h5>Extract</h5>'
+        "<p>Ten p-values from NIST randomness tests summarise each ciphertext sample.</p></div>",
+        unsafe_allow_html=True,
+    )
+    c2.markdown(
+        '<div class="card card-accent2"><div class="step">02</div><h5>Classify</h5>'
+        "<p>Six models learn to tell AES, 3DES, Blowfish, CAST and RC2 apart, pairwise and all at once.</p></div>",
+        unsafe_allow_html=True,
+    )
+    c3.markdown(
+        '<div class="card card-accent3"><div class="step">03</div><h5>Compare</h5>'
+        "<p>330 experiments are benchmarked against the base paper (Yuan et al., 2022).</p></div>",
+        unsafe_allow_html=True,
     )
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("🧬 Ciphers", len(ALGORITHMS))
-    col2.metric("📏 Ciphertext sizes", len(SIZES))
-    col3.metric("🤖 Models", len(ALL_MODELS))
-    col4.metric("✅ Verified experiments", len(results_df) if results_df is not None else "N/A")
-
-    st.markdown("#### Supported ciphers")
-    chip_html = "".join(
-        f'<span style="display:inline-block; margin:4px 6px 4px 0; padding:6px 14px; '
-        f'border-radius:999px; color:white; font-weight:600; font-size:0.85rem; '
-        f'background:{ALGO_COLORS[a]};">{a}</span>'
-        for a in ALGORITHMS
-    )
-    st.markdown(chip_html, unsafe_allow_html=True)
-
-    st.markdown("#### Model lineup")
-    chip_html = "".join(
-        f'<span style="display:inline-block; margin:4px 6px 4px 0; padding:6px 14px; '
-        f'border-radius:999px; color:white; font-weight:600; font-size:0.85rem; '
-        f'background:{MODEL_COLORS[m]};">{m}</span>'
-        for m in ALL_MODELS
-    )
-    st.markdown(chip_html, unsafe_allow_html=True)
-
-    st.markdown("#### Architecture overview")
     st.markdown(
-        """
-```
-data/ (55 CSVs)  →  src/utils/data_loader  →  train/test split (stratified, seeded)
-                                                    │
-                        ┌───────────────────────────┼───────────────────────────┐
-                        ▼                            ▼                           ▼
-                 SVM / KNN / RF                   HKNNRF                    MLP / CNN
-                 (src/models/baseline.py)   (src/models/hknnrf.py)   (src/models/mlp.py, cnn.py)
-                        │                            │                           │
-                        └───────────────────────────┼───────────────────────────┘
-                                                      ▼
-                                    src/utils/metrics.py → experiments/results/*.csv, *.json
-                                                      │
-                                                      ▼
-                                         this Streamlit app (app/streamlit_app.py)
-```
-        """
+        '<div class="section-head"><span class="no">02</span><h3>Explore</h3></div>',
+        unsafe_allow_html=True,
     )
-    st.info(
-        "💡 This app reads directly from the CSV/JSON files in `experiments/results/` and "
-        "`data/`. No database connection is required to explore the project."
+    tab_a, tab_b = st.tabs(["Ciphers & models", "Architecture"])
+    with tab_a:
+        st.markdown("**Supported ciphers**")
+        st.markdown("".join(chip(a, ALGO_COLORS[a]) for a in ALGORITHMS), unsafe_allow_html=True)
+        st.write("")
+        st.markdown("**Model lineup**")
+        st.markdown("".join(chip(m, MODEL_COLORS[m]) for m in ALL_MODELS), unsafe_allow_html=True)
+        st.markdown(
+            '<p class="hint">SVM, KNN, RF and HKNNRF come from the base paper. '
+            "MLP and CNN are this project's own extension.</p>",
+            unsafe_allow_html=True,
+        )
+    with tab_b:
+        st.markdown(
+            '<div class="diagram">'
+            "data/ (55 CSVs)  →  data_loader  →  stratified, seeded train/test split\n"
+            "                                        │\n"
+            "            ┌───────────────────────────┼───────────────────────────┐\n"
+            "            ▼                           ▼                           ▼\n"
+            "     SVM / KNN / RF                  HKNNRF                     MLP / CNN\n"
+            "            │                           │                           │\n"
+            "            └───────────────────────────┼───────────────────────────┘\n"
+            "                                        ▼\n"
+            "                 metrics  →  experiments/results/*.csv, *.json\n"
+            "                                        ▼\n"
+            "                        this app  (app/streamlit_app.py)"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+
+    insight(
+        "This app reads straight from the CSV and JSON files in <code>experiments/results/</code> "
+        "and <code>data/</code>. No database connection is required.",
+        "tip",
     )
 
 
@@ -557,14 +531,17 @@ data/ (55 CSVs)  →  src/utils/data_loader  →  train/test split (stratified, 
 # --------------------------------------------------------------------------
 
 elif section == "Dataset Explorer":
-    page_header("Dataset Explorer", "Inspect the 55 datasets that feed every model.", icon="🔍")
+    page_title("Dataset Explorer", "Browse the 55 CSV datasets that feed every model.")
 
-    task = st.radio("Task", ["multiclass", "binary"], horizontal=True)
-    size = st.selectbox("Ciphertext size", SIZES, index=4)
-
+    ctl1, ctl2, ctl3 = st.columns([1.2, 1, 1.6])
+    with ctl1:
+        task = st.radio("Task", ["multiclass", "binary"], horizontal=True)
+    with ctl2:
+        size = st.selectbox("Ciphertext size", SIZES, index=4)
     pair = None
-    if task == "binary":
-        pair = st.selectbox("Algorithm pair", get_all_binary_pairs())
+    with ctl3:
+        if task == "binary":
+            pair = st.selectbox("Algorithm pair", get_all_binary_pairs())
 
     try:
         X_train, X_test, y_train, y_test = load_dataset_cached(task, size, pair)
@@ -572,50 +549,46 @@ elif section == "Dataset Explorer":
         st.error(f"Dataset not found: {e}")
         st.stop()
 
-    n_total = len(X_train) + len(X_test)
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Total samples", n_total)
-    c2.metric("Train / Test", f"{len(X_train)} / {len(X_test)}")
-    c3.metric("Features", X_train.shape[1])
-
-    st.markdown("#### Class distribution (full dataset)")
-    y_all = np.concatenate([y_train, y_test])
-    dist = pd.Series(y_all).value_counts().sort_index()
-    if task == "multiclass":
-        label_map = load_config()["algorithms"]["label_mapping"]
-        dist.index = [label_map.get(int(i), str(i)) for i in dist.index]
-        colors = [ALGO_COLORS.get(str(i), "#6366F1") for i in dist.index]
-    else:
-        dist.index = [str(i) for i in dist.index]
-        colors = [ALGO_COLORS.get(str(i), MODEL_COLORS["SVM"]) for i in dist.index]
-
-    fig = go.Figure(
-        go.Bar(
-            x=dist.index, y=dist.values, marker_color=colors,
-            text=dist.values, textposition="outside",
-        )
-    )
-    fig.update_traces(marker_line_width=0)
-    fig.update_layout(
-        template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=340,
-        margin=dict(t=20, l=10, r=10, b=10), yaxis_title="Samples",
-        transition=dict(duration=400, easing="cubic-in-out"),
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("#### Feature preview (first 15 rows of training data)")
     feat_names = get_feature_names()
-    preview = pd.DataFrame(X_train[:15], columns=feat_names)
-    preview["label"] = y_train[:15]
-    st.dataframe(preview, use_container_width=True)
+    tab_over, tab_prev, tab_stats = st.tabs(["Overview", "Feature preview", "Statistics"])
 
-    st.markdown("#### Feature summary statistics")
-    st.dataframe(
-        pd.DataFrame(X_train, columns=feat_names).describe().T.style.background_gradient(
-            cmap="Purples", subset=["mean", "std"]
-        ),
-        use_container_width=True,
-    )
+    with tab_over:
+        n_total = len(X_train) + len(X_test)
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total samples", n_total)
+        c2.metric("Train / test", f"{len(X_train)} / {len(X_test)}")
+        c3.metric("Features", X_train.shape[1])
+
+        st.markdown("#### Class distribution")
+        y_all = np.concatenate([y_train, y_test])
+        dist = pd.Series(y_all).value_counts().sort_index()
+        dist.index = class_names(dist.index)
+        colors = [ALGO_COLORS.get(name, ACCENT) for name in dist.index]
+
+        fig = go.Figure(
+            go.Bar(
+                x=dist.index, y=dist.values, marker_color=colors,
+                text=dist.values, textposition="outside",
+            )
+        )
+        fig.update_traces(marker_line_width=0)
+        fig.update_layout(yaxis_title="Samples")
+        st.plotly_chart(style_fig(fig, 340), use_container_width=True)
+
+    with tab_prev:
+        st.markdown("#### First 15 training rows")
+        preview = pd.DataFrame(X_train[:15], columns=feat_names)
+        preview["label"] = y_train[:15]
+        st.dataframe(preview, use_container_width=True, hide_index=True)
+
+    with tab_stats:
+        st.markdown("#### Feature summary statistics")
+        st.dataframe(
+            pd.DataFrame(X_train, columns=feat_names).describe().T.style.background_gradient(
+                cmap=CMAP_ACCENT, subset=["mean", "std"]
+            ),
+            use_container_width=True,
+        )
 
 
 # --------------------------------------------------------------------------
@@ -623,18 +596,12 @@ elif section == "Dataset Explorer":
 # --------------------------------------------------------------------------
 
 elif section == "Cipher Identification":
-    page_header(
+    page_title(
         "Cipher Identification",
-        "Train any of the 6 models live and watch it identify ciphers on held-out data.",
-        icon="🧪",
-    )
-    st.caption(
-        "Trains a fresh model on the selected task/size and evaluates it on the held-out "
-        "test split, using the same seeded 80/20 split used for the verified experiments. "
-        "Classical models finish in well under a second; MLP/CNN take roughly 10–20 seconds."
+        "Train any of the six models live and see how it does on held-out ciphertext samples.",
     )
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1.2, 1, 1])
     with col1:
         task = st.radio("Task", ["multiclass", "binary"], horizontal=True)
     with col2:
@@ -651,15 +618,24 @@ elif section == "Cipher Identification":
         pair = st.selectbox("Algorithm pair", get_all_binary_pairs(), key="ci_pair")
 
     is_deep = model_name in DEEP_MODELS
-    badge = (
-        '<span class="cb-badge cb-badge-model">🧠 Neural network — trains in ~10–20s</span>'
-        if is_deep else
-        '<span class="cb-badge" style="background:#E0E7FF; color:#3730A3;">⚡ Classical model — trains instantly</span>'
+    st.markdown(
+        chip("Neural network · about 10–20 s", MODEL_COLORS[model_name]) if is_deep
+        else chip("Classical model · near-instant", MODEL_COLORS[model_name]),
+        unsafe_allow_html=True,
     )
-    st.markdown(badge, unsafe_allow_html=True)
-    st.write("")
+    st.markdown(
+        '<p class="hint">Uses the same seeded 80/20 split as the verified experiments; '
+        "the test set is only touched for the final prediction.</p>",
+        unsafe_allow_html=True,
+    )
 
-    if st.button("🚀 Train & Evaluate", type="primary"):
+    btn_train, btn_clear, _ = st.columns([1.15, 1, 4])
+    run_clicked = btn_train.button("Train & evaluate", type="primary", icon=":material/play_arrow:")
+    if btn_clear.button("Clear result", key="reset_demo", icon=":material/restart_alt:"):
+        st.session_state.pop("ci_result", None)
+        st.rerun()
+
+    if run_clicked:
         steps = (
             ["Loading dataset…", "Carving out a validation split…", "Training the network…", "Evaluating on the test set…"]
             if is_deep else
@@ -672,103 +648,88 @@ elif section == "Cipher Identification":
                 model_name, task, size, pair
             )
             st.write(steps[-1])
-            status.update(label=f"{model_name} trained ✅", state="complete", expanded=False)
+            status.update(label=f"{model_name} trained", state="complete", expanded=False)
 
         st.session_state["ci_result"] = (
-            model_name, task, size, pair, X_test, y_test, y_pred, y_proba, metrics, cm
+            model_name, task, size, pair, X_test, y_test, y_pred, y_proba, metrics, cm, model
         )
-        st.balloons()
 
     if "ci_result" in st.session_state:
-        model_name, task, size, pair, X_test, y_test, y_pred, y_proba, metrics, cm = st.session_state["ci_result"]
+        model_name, task, size, pair, X_test, y_test, y_pred, y_proba, metrics, cm, model = st.session_state["ci_result"]
 
-        st.markdown(f"### Results — {model_name} on {'5-class' if task == 'multiclass' else pair} ({size})")
+        st.divider()
+        st.markdown(
+            f"#### {model_name} · {'five-class' if task == 'multiclass' else pair} · {size}"
+        )
 
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Accuracy", f"{metrics['accuracy']:.3f}")
         m2.metric("Precision", f"{metrics['precision']:.3f}")
         m3.metric("Recall", f"{metrics['recall']:.3f}")
         m4.metric("F1-score", f"{metrics['f1_score']:.3f}")
+        st.write("")
 
-        col_left, col_right = st.columns([1.2, 1])
+        tab_cm, tab_conf, tab_pred = st.tabs(["Confusion matrix", "Sample confidence", "Predictions"])
 
-        with col_left:
-            st.markdown("#### Confusion matrix (test set)")
+        with tab_cm:
             labels = sorted(set(np.unique(y_test)) | set(np.unique(y_pred)))
-            if task == "multiclass":
-                label_map = load_config()["algorithms"]["label_mapping"]
-                display_labels = [label_map.get(int(i), str(i)) for i in labels]
-            else:
-                display_labels = [str(i) for i in labels]
-
+            display_labels = class_names(labels)
             fig = px.imshow(
                 cm, x=display_labels, y=display_labels, text_auto=True,
-                color_continuous_scale="Purples", aspect="auto",
+                color_continuous_scale=SCALE_ACCENT, aspect="auto",
                 labels=dict(x="Predicted", y="True", color="Count"),
             )
-            fig.update_layout(
-                template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380,
-                margin=dict(t=10, l=10, r=10, b=10),
-                transition=dict(duration=400, easing="cubic-in-out"),
-            )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(style_fig(fig, 400), use_container_width=True)
 
-        with col_right:
-            st.markdown("#### Confidence on one test sample")
+        with tab_conf:
             sample_idx = st.slider("Sample index", 0, len(X_test) - 1, 0)
             true_val = y_test[sample_idx]
             pred_val = y_pred[sample_idx]
             correct = bool(true_val == pred_val)
-            badge_cls = "cb-badge-correct" if correct else "cb-badge-wrong"
-            badge_txt = "✅ Correct" if correct else "❌ Incorrect"
             st.markdown(
-                f'<span class="cb-badge {badge_cls}">{badge_txt}</span>&nbsp;&nbsp;'
-                f'True: <b>{true_val}</b> &nbsp;·&nbsp; Predicted: <b>{pred_val}</b>',
+                f'<span class="{"normal-badge" if correct else "anomaly-badge"}">'
+                f'{"Correct" if correct else "Incorrect"}</span>&nbsp;&nbsp;'
+                f"True: <b>{class_names([true_val])[0]}</b> &nbsp;·&nbsp; "
+                f"Predicted: <b>{class_names([pred_val])[0]}</b>",
                 unsafe_allow_html=True,
             )
             if y_proba is not None:
                 proba_row = y_proba[sample_idx]
                 classes = getattr(model, "classes_", np.unique(np.concatenate([y_test, y_pred])))
-                if task == "multiclass":
-                    label_map = load_config()["algorithms"]["label_mapping"]
-                    class_labels = [label_map.get(int(c), str(c)) for c in classes]
-                else:
-                    class_labels = [str(c) for c in classes]
+                class_labels = class_names(classes)
                 order = np.argsort(proba_row)[::-1]
                 fig2 = go.Figure(
                     go.Bar(
                         x=[proba_row[i] for i in order],
                         y=[class_labels[i] for i in order],
                         orientation="h",
-                        marker_color=MODEL_COLORS.get(model_name, "#6366F1"),
+                        marker_color=MODEL_COLORS.get(model_name, ACCENT),
                         text=[f"{proba_row[i]:.1%}" for i in order],
                         textposition="outside",
                     )
                 )
-                fig2.update_layout(
-                    template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380,
-                    margin=dict(t=10, l=10, r=30, b=10), xaxis_range=[0, 1],
-                    xaxis_title="Predicted probability",
-                    transition=dict(duration=400, easing="cubic-in-out"),
-                )
-                st.plotly_chart(fig2, use_container_width=True)
+                fig2.update_layout(xaxis_range=[0, 1], xaxis_title="Predicted probability")
+                fig2.update_yaxes(autorange="reversed")
+                st.plotly_chart(style_fig(fig2, 340), use_container_width=True)
             else:
-                st.info("This model does not expose class probabilities.")
+                insight("This model does not expose class probabilities.")
 
-        st.markdown("#### Sample predictions")
-        feat_names = get_feature_names()
-        n_show = min(10, len(X_test))
-        sample_df = pd.DataFrame(X_test[:n_show], columns=feat_names)
-        sample_df["true_label"] = y_test[:n_show]
-        sample_df["predicted_label"] = y_pred[:n_show]
-        sample_df["correct"] = sample_df["true_label"] == sample_df["predicted_label"]
-        st.dataframe(
-            sample_df.style.apply(
-                lambda row: ["background-color: #D1FAE5" if row["correct"] else "background-color: #FEE2E2"] * len(row),
-                axis=1,
-            ),
-            use_container_width=True,
-        )
+        with tab_pred:
+            feat_names = get_feature_names()
+            n_show = min(10, len(X_test))
+            sample_df = pd.DataFrame(X_test[:n_show], columns=feat_names)
+            sample_df["true_label"] = y_test[:n_show]
+            sample_df["predicted_label"] = y_pred[:n_show]
+            sample_df["correct"] = sample_df["true_label"] == sample_df["predicted_label"]
+            st.dataframe(
+                sample_df.style.apply(
+                    lambda row: ["background-color: #12372f" if row["correct"] else "background-color: #3d1620"] * len(row),
+                    axis=1,
+                ),
+                use_container_width=True,
+                hide_index=True,
+            )
+            st.markdown('<p class="hint">First 10 test samples. Green rows were classified correctly.</p>', unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------------------
@@ -776,46 +737,49 @@ elif section == "Cipher Identification":
 # --------------------------------------------------------------------------
 
 elif section == "Model Comparison":
-    page_header("Model Comparison", "See how all 6 models stack up, side by side.", icon="📊")
+    page_title("Model Comparison", "How all six models stack up on the same task and ciphertext size.")
 
     if results_df is None:
         st.warning("No results file found. Run `python experiments/run_complete_experiments.py` first.")
         st.stop()
 
-    task = st.radio("Task", sorted(results_df["task_type"].unique()), horizontal=True)
+    ctl1, ctl2 = st.columns([1, 1])
+    with ctl1:
+        task = st.radio("Task", sorted(results_df["task_type"].unique()), horizontal=True)
     size_options = sorted(
-        results_df.loc[results_df["task_type"] == task, "ciphertext_size"].unique()
+        results_df.loc[results_df["task_type"] == task, "ciphertext_size"].unique(),
+        key=lambda s: int(s[:-2]),
     )
-    size = st.selectbox("Ciphertext size", size_options)
+    with ctl2:
+        size = st.selectbox("Ciphertext size", size_options, format_func=str.upper)
 
     subset = results_df[(results_df["task_type"] == task) & (results_df["ciphertext_size"] == size)]
     agg = subset.groupby("model_name")[["accuracy", "precision", "recall", "f1_score"]].mean()
     agg = agg.reindex([m for m in ALL_MODELS if m in agg.index])
 
-    st.markdown(f"#### Mean metrics — {task}, {size}")
-    st.dataframe(agg.style.format("{:.3f}").background_gradient(cmap="YlGn", subset=["accuracy"]),
-                 use_container_width=True)
+    tab_tbl, tab_acc, tab_radar, tab_time = st.tabs(
+        ["Summary table", "Accuracy", "All four metrics", "Training time"]
+    )
 
-    col_a, col_b = st.columns(2)
+    with tab_tbl:
+        st.markdown(f"#### Mean metrics · {task} · {size.upper()}")
+        st.dataframe(
+            agg.style.format("{:.3f}").background_gradient(cmap=CMAP_ACCENT, subset=["accuracy"]),
+            use_container_width=True,
+        )
 
-    with col_a:
-        st.markdown("#### Accuracy by model")
+    with tab_acc:
         fig = go.Figure(
             go.Bar(
                 x=agg.index, y=agg["accuracy"],
-                marker_color=[MODEL_COLORS.get(m, "#6366F1") for m in agg.index],
+                marker_color=[MODEL_COLORS.get(m, ACCENT) for m in agg.index],
                 text=[f"{v:.1%}" for v in agg["accuracy"]], textposition="outside",
             )
         )
-        fig.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380,
-            margin=dict(t=10, l=10, r=10, b=10), yaxis_title="Accuracy",
-            transition=dict(duration=500, easing="elastic"),
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        fig.update_layout(yaxis_title="Accuracy")
+        st.plotly_chart(style_fig(fig, 400), use_container_width=True)
 
-    with col_b:
-        st.markdown("#### All 4 metrics at once")
+    with tab_radar:
         metrics_cols = ["accuracy", "precision", "recall", "f1_score"]
         fig = go.Figure()
         for m in agg.index:
@@ -825,33 +789,35 @@ elif section == "Model Comparison":
                     r=values + values[:1],
                     theta=metrics_cols + metrics_cols[:1],
                     fill="toself", name=m, opacity=0.55,
-                    line_color=MODEL_COLORS.get(m, "#6366F1"),
+                    line_color=MODEL_COLORS.get(m, ACCENT),
                 )
             )
         fig.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380,
-            polar=dict(radialaxis=dict(visible=True, range=[0, max(0.05, agg[metrics_cols].values.max() * 1.15)])),
-            margin=dict(t=20, l=30, r=30, b=10), showlegend=True,
-            transition=dict(duration=500, easing="cubic-in-out"),
+            polar=dict(
+                bgcolor="rgba(0,0,0,0)",
+                radialaxis=dict(visible=True, range=[0, max(0.05, agg[metrics_cols].values.max() * 1.15)],
+                                gridcolor=GRID_COLOR, linecolor=GRID_COLOR),
+                angularaxis=dict(gridcolor=GRID_COLOR, linecolor=GRID_COLOR),
+            ),
+            showlegend=True,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(style_fig(fig, 440), use_container_width=True)
 
-    if subset["training_time"].notna().any():
-        st.markdown("#### Mean training time (s)")
-        tt = subset.groupby("model_name")["training_time"].mean().reindex(
-            [m for m in ALL_MODELS if m in agg.index]
-        )
-        fig = go.Figure(
-            go.Bar(
-                x=tt.index, y=tt.values,
-                marker_color=[MODEL_COLORS.get(m, "#6366F1") for m in tt.index],
+    with tab_time:
+        if subset["training_time"].notna().any():
+            tt = subset.groupby("model_name")["training_time"].mean().reindex(
+                [m for m in ALL_MODELS if m in agg.index]
             )
-        )
-        fig.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=320,
-            margin=dict(t=10, l=10, r=10, b=10), yaxis_title="Seconds",
-        )
-        st.plotly_chart(fig, use_container_width=True)
+            fig = go.Figure(
+                go.Bar(
+                    x=tt.index, y=tt.values,
+                    marker_color=[MODEL_COLORS.get(m, ACCENT) for m in tt.index],
+                )
+            )
+            fig.update_layout(yaxis_title="Seconds")
+            st.plotly_chart(style_fig(fig, 360), use_container_width=True)
+        else:
+            insight("No training-time data in the results file.")
 
 
 # --------------------------------------------------------------------------
@@ -859,52 +825,36 @@ elif section == "Model Comparison":
 # --------------------------------------------------------------------------
 
 elif section == "Paper Comparison":
-    page_header(
-        "CipherBench vs. the Base Paper",
-        "Every reported metric, side-by-side with Yuan et al. (2022) — model by model, size by size.",
-        icon="📖",
+    page_title(
+        "CipherBench vs. the base paper",
+        "Every reported metric, side by side with Yuan et al. (2022), model by model and size by size.",
     )
 
-    st.markdown(f'<div class="cb-card" style="font-size:0.85rem; color:#475569;">📄 {PAPER_CITATION}</div>', unsafe_allow_html=True)
-    st.write("")
+    st.markdown(
+        f'<div class="card"><div class="eyebrow">Reference</div><p>{PAPER_CITATION}</p></div>',
+        unsafe_allow_html=True,
+    )
 
     col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(
-            """
-<div class="cb-card" style="border-left:4px solid #F59E0B;">
-<b>📘 In the base paper</b><br>
-<span style="color:#475569;">SVM, KNN, Random Forest, HKNNRF — all 4 evaluated on binary
-(AES vs 3DES, plus HKNNRF on all 10 pairs) and five-class identification.
-Numbers below are transcribed directly from the paper's Tables 3–5.</span>
-</div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col2:
-        st.markdown(
-            """
-<div class="cb-card" style="border-left:4px solid #EC4899;">
-<b>🧠 Our extension — not in the paper</b><br>
-<span style="color:#475569;">MLP and 1D-CNN. The paper has <u>no neural-network baseline</u>,
-so there is no paper number to place next to them — they are shown on their
-own, using the identical evaluation protocol, to see whether deep learning
-helps on this feature set.</span>
-</div>
-            """,
-            unsafe_allow_html=True,
-        )
-    st.write("")
+    col1.markdown(
+        '<div class="card card-accent2"><h5>In the base paper</h5>'
+        "<p>SVM, KNN, Random Forest and HKNNRF, evaluated on binary identification "
+        "(AES vs 3DES, plus HKNNRF on all 10 pairs) and five-class identification. "
+        "Paper numbers are transcribed directly from its Tables 3 to 5.</p></div>",
+        unsafe_allow_html=True,
+    )
+    col2.markdown(
+        '<div class="card card-accent"><h5>Our extension, not in the paper</h5>'
+        "<p>MLP and 1D-CNN. The paper has no neural-network baseline, so there is no paper "
+        "number to place next to them. They are shown on their own under the identical "
+        "evaluation protocol.</p></div>",
+        unsafe_allow_html=True,
+    )
 
     if results_df is None:
         st.warning("No results file found — run `python experiments/run_complete_experiments.py` first.")
         st.stop()
 
-    view = st.radio(
-        "Comparison view",
-        ["Five-class identification (Table 5)", "Binary: AES vs 3DES (Table 3)", "Binary: HKNNRF, all 10 pairs (Table 4)"],
-        horizontal=True,
-    )
     metric = st.selectbox("Metric", ["accuracy", "precision", "recall"])
 
     def grouped_paper_vs_ours(paper_table, task, pair, size_labels_by_kb):
@@ -919,117 +869,96 @@ helps on this feature set.</span>
                 records.append({"Size": f"{kb}KB", "Model": model, "Source": "Ours", "Value": ours_val})
         return pd.DataFrame(records)
 
-    # ----------------------------------------------------------------
-    if view.startswith("Five-class"):
-        size_map = {1: "1KB", 8: "8KB", 64: "64KB", 256: "256KB", 512: "512KB"}
-        long_df = grouped_paper_vs_ours(PAPER_MULTICLASS, "multiclass", "5-class", size_map)
+    def gap_table(long_df, limit):
+        table = long_df.pivot_table(index=["Size", "Model"], columns="Source", values="Value").reset_index()
+        table["Gap (Ours − Paper)"] = table["Ours"] - table["Paper"]
+        return table.style.format(
+            {"Paper": "{:.3f}", "Ours": "{:.3f}", "Gap (Ours − Paper)": "{:+.3f}"}
+        ).background_gradient(cmap=CMAP_GAP, subset=["Gap (Ours − Paper)"], vmin=-limit, vmax=limit)
 
-        st.markdown("#### Paper vs. Ours — averaged across all 5 ciphertext sizes")
+    def source_bar(long_df):
         avg = long_df.dropna(subset=["Value"]).groupby(["Model", "Source"])["Value"].mean().reset_index()
         fig = px.bar(
             avg, x="Model", y="Value", color="Source", barmode="group",
-            color_discrete_map={"Paper": "#94A3B8", "Ours": "#6366F1"},
+            color_discrete_map={"Paper": PAPER_COLOR, "Ours": ACCENT},
             category_orders={"Model": PAPER_MODELS}, text_auto=".2f",
         )
-        fig.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380,
-            yaxis_title=metric.capitalize(), margin=dict(t=10, l=10, r=10, b=10),
-            transition=dict(duration=500, easing="cubic-in-out"),
+        fig.update_layout(yaxis_title=metric.capitalize())
+        return style_fig(fig, 380)
+
+    def extension_bar(task, size_labels_by_kb, pair):
+        ext_records = []
+        for kb, size_label in size_labels_by_kb.items():
+            for model in ["MLP", "CNN"]:
+                ext_records.append(
+                    {"Size": f"{kb}KB", "Model": model,
+                     "Value": our_value(results_df, model, task, size_label, pair, metric)}
+                )
+        fig = px.bar(
+            pd.DataFrame(ext_records), x="Size", y="Value", color="Model", barmode="group",
+            color_discrete_map={"MLP": MODEL_COLORS["MLP"], "CNN": MODEL_COLORS["CNN"]},
+            category_orders={"Size": ["1KB", "8KB", "64KB", "256KB", "512KB"]},
         )
-        st.plotly_chart(fig, use_container_width=True)
+        fig.update_layout(yaxis_title=metric.capitalize())
+        return style_fig(fig, 340)
+
+    size_map_upper = {1: "1KB", 8: "8KB", 64: "64KB", 256: "256KB", 512: "512KB"}
+    size_map_lower = {kb: lbl.lower() for kb, lbl in size_map_upper.items()}
+
+    tab_mc, tab_bin, tab_pairs = st.tabs(
+        ["Five-class (Table 5)", "Binary: AES vs 3DES (Table 3)", "HKNNRF, all 10 pairs (Table 4)"]
+    )
+
+    # ----------------------------------------------------------------
+    with tab_mc:
+        long_df = grouped_paper_vs_ours(PAPER_MULTICLASS, "multiclass", "5-class", size_map_upper)
+
+        st.markdown("#### Paper vs. ours, averaged across all five sizes")
+        st.plotly_chart(source_bar(long_df), use_container_width=True, key="pc_mc_avg")
 
         st.markdown("#### Per-size breakdown for one model")
         pick_model = st.selectbox("Model", PAPER_MODELS, key="mc_pick")
         detail = long_df[long_df["Model"] == pick_model]
         fig2 = px.line(
             detail, x="Size", y="Value", color="Source", markers=True,
-            color_discrete_map={"Paper": "#94A3B8", "Ours": MODEL_COLORS[pick_model]},
+            color_discrete_map={"Paper": PAPER_COLOR, "Ours": MODEL_COLORS[pick_model]},
             category_orders={"Size": ["1KB", "8KB", "64KB", "256KB", "512KB"]},
         )
         fig2.update_traces(line=dict(width=3), marker=dict(size=9))
-        fig2.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=340,
-            yaxis_title=metric.capitalize(), margin=dict(t=10, l=10, r=10, b=10),
-        )
-        st.plotly_chart(fig2, use_container_width=True)
+        fig2.update_layout(yaxis_title=metric.capitalize())
+        st.plotly_chart(style_fig(fig2, 340), use_container_width=True, key="pc_mc_line")
 
-        st.markdown("#### Full comparison table (with gap)")
-        table = long_df.pivot_table(index=["Size", "Model"], columns="Source", values="Value").reset_index()
-        table["Gap (Ours − Paper)"] = table["Ours"] - table["Paper"]
-        st.dataframe(
-            table.style.format({"Paper": "{:.3f}", "Ours": "{:.3f}", "Gap (Ours − Paper)": "{:+.3f}"})
-            .background_gradient(cmap="RdYlGn", subset=["Gap (Ours − Paper)"], vmin=-0.15, vmax=0.15),
-            use_container_width=True, height=420,
-        )
+        st.markdown("#### Full comparison table")
+        st.dataframe(gap_table(long_df, 0.15), use_container_width=True, height=420, hide_index=True)
 
-        st.markdown("#### 🧠 Our extension beyond the paper: MLP & 1D-CNN (five-class)")
-        ext_records = []
-        for kb, size_label in size_map.items():
-            for model in ["MLP", "CNN"]:
-                v = our_value(results_df, model, "multiclass", size_label, "5-class", metric)
-                ext_records.append({"Size": f"{kb}KB", "Model": model, "Value": v})
-        ext_df = pd.DataFrame(ext_records)
-        fig3 = px.bar(
-            ext_df, x="Size", y="Value", color="Model", barmode="group",
-            color_discrete_map={"MLP": MODEL_COLORS["MLP"], "CNN": MODEL_COLORS["CNN"]},
-            category_orders={"Size": ["1KB", "8KB", "64KB", "256KB", "512KB"]},
+        st.markdown("#### Our extension beyond the paper: MLP and 1D-CNN")
+        st.plotly_chart(extension_bar("multiclass", size_map_upper, "5-class"),
+                        use_container_width=True, key="pc_mc_ext")
+        st.markdown(
+            '<p class="hint">No paper bar here by design: the paper never tested a neural network on this task.</p>',
+            unsafe_allow_html=True,
         )
-        fig3.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=340,
-            yaxis_title=metric.capitalize(), margin=dict(t=10, l=10, r=10, b=10),
-        )
-        st.plotly_chart(fig3, use_container_width=True)
-        st.caption("No paper bar here by design — the paper never tested a neural network on this task.")
 
     # ----------------------------------------------------------------
-    elif view.startswith("Binary: AES vs 3DES"):
-        size_map_upper = {1: "1KB", 8: "8KB", 64: "64KB", 256: "256KB", 512: "512KB"}
-        size_map_lower = {kb: lbl.lower() for kb, lbl in size_map_upper.items()}
+    with tab_bin:
         long_df = grouped_paper_vs_ours(PAPER_BINARY_AES_3DES, "binary", "AES and 3DES", size_map_lower)
 
-        st.markdown("#### Paper vs. Ours — averaged across all 5 ciphertext sizes (AES vs 3DES)")
-        avg = long_df.dropna(subset=["Value"]).groupby(["Model", "Source"])["Value"].mean().reset_index()
-        fig = px.bar(
-            avg, x="Model", y="Value", color="Source", barmode="group",
-            color_discrete_map={"Paper": "#94A3B8", "Ours": "#6366F1"},
-            category_orders={"Model": PAPER_MODELS}, text_auto=".2f",
-        )
-        fig.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380,
-            yaxis_title=metric.capitalize(), margin=dict(t=10, l=10, r=10, b=10),
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("#### Paper vs. ours, averaged across all five sizes (AES vs 3DES)")
+        st.plotly_chart(source_bar(long_df), use_container_width=True, key="pc_bin_avg")
 
-        st.markdown("#### Full comparison table (with gap)")
-        table = long_df.pivot_table(index=["Size", "Model"], columns="Source", values="Value").reset_index()
-        table["Gap (Ours − Paper)"] = table["Ours"] - table["Paper"]
-        st.dataframe(
-            table.style.format({"Paper": "{:.3f}", "Ours": "{:.3f}", "Gap (Ours − Paper)": "{:+.3f}"})
-            .background_gradient(cmap="RdYlGn", subset=["Gap (Ours − Paper)"], vmin=-0.3, vmax=0.3),
-            use_container_width=True, height=420,
-        )
+        st.markdown("#### Full comparison table")
+        st.dataframe(gap_table(long_df, 0.3), use_container_width=True, height=420, hide_index=True)
 
-        st.markdown("#### 🧠 Our extension beyond the paper: MLP & 1D-CNN (AES vs 3DES)")
-        ext_records = []
-        for kb, size_label in size_map_lower.items():
-            for model in ["MLP", "CNN"]:
-                v = our_value(results_df, model, "binary", size_label, "AES and 3DES", metric)
-                ext_records.append({"Size": f"{kb}KB", "Model": model, "Value": v})
-        ext_df = pd.DataFrame(ext_records)
-        fig3 = px.bar(
-            ext_df, x="Size", y="Value", color="Model", barmode="group",
-            color_discrete_map={"MLP": MODEL_COLORS["MLP"], "CNN": MODEL_COLORS["CNN"]},
-            category_orders={"Size": ["1KB", "8KB", "64KB", "256KB", "512KB"]},
+        st.markdown("#### Our extension beyond the paper: MLP and 1D-CNN")
+        st.plotly_chart(extension_bar("binary", size_map_lower, "AES and 3DES"),
+                        use_container_width=True, key="pc_bin_ext")
+        st.markdown(
+            '<p class="hint">No paper bar here by design: the paper never tested a neural network on this task.</p>',
+            unsafe_allow_html=True,
         )
-        fig3.update_layout(
-            template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=340,
-            yaxis_title=metric.capitalize(), margin=dict(t=10, l=10, r=10, b=10),
-        )
-        st.plotly_chart(fig3, use_container_width=True)
-        st.caption("No paper bar here by design — the paper never tested a neural network on this task.")
 
     # ----------------------------------------------------------------
-    else:  # Binary: HKNNRF, all 10 pairs
+    with tab_pairs:
         pairs = list(PAPER_HKNNRF_BINARY_PAIRS.keys())
         size_order = ["1KB", "8KB", "64KB", "256KB", "512KB"]
 
@@ -1047,28 +976,26 @@ helps on this feature set.</span>
             index=pairs,
         )[size_order]
 
-        st.markdown("#### HKNNRF binary accuracy — Paper (Table 4) vs. Ours, all 10 pairs")
+        st.markdown("#### HKNNRF binary accuracy: paper (Table 4) vs. ours")
         c1, c2 = st.columns(2)
         with c1:
             st.caption("Paper")
-            fig = px.imshow(paper_matrix, text_auto=".2f", color_continuous_scale="Oranges", zmin=0, zmax=1, aspect="auto")
-            fig.update_layout(template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=420, margin=dict(t=10, l=10, r=10, b=10))
-            st.plotly_chart(fig, use_container_width=True)
+            fig = px.imshow(paper_matrix, text_auto=".2f", color_continuous_scale=SCALE_PAPER,
+                            zmin=0, zmax=1, aspect="auto")
+            st.plotly_chart(style_fig(fig, 420), use_container_width=True, key="pc_pairs_paper")
         with c2:
             st.caption("Ours")
-            fig = px.imshow(ours_matrix, text_auto=".2f", color_continuous_scale="Purples", zmin=0, zmax=1, aspect="auto")
-            fig.update_layout(template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=420, margin=dict(t=10, l=10, r=10, b=10))
-            st.plotly_chart(fig, use_container_width=True)
+            fig = px.imshow(ours_matrix, text_auto=".2f", color_continuous_scale=SCALE_ACCENT,
+                            zmin=0, zmax=1, aspect="auto")
+            st.plotly_chart(style_fig(fig, 420), use_container_width=True, key="pc_pairs_ours")
 
-        st.markdown("#### Gap (Ours − Paper)")
+        st.markdown("#### Gap (ours − paper)")
         delta = ours_matrix - paper_matrix
-        fig = px.imshow(
-            delta, text_auto=".2f", color_continuous_scale="RdYlGn", zmin=-0.3, zmax=0.3, aspect="auto",
-        )
-        fig.update_layout(template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=420, margin=dict(t=10, l=10, r=10, b=10))
-        st.plotly_chart(fig, use_container_width=True)
+        fig = px.imshow(delta, text_auto=".2f", color_continuous_scale=SCALE_GAP,
+                        zmin=-0.3, zmax=0.3, aspect="auto")
+        st.plotly_chart(style_fig(fig, 420), use_container_width=True, key="pc_pairs_gap")
 
-        st.markdown("#### 🧠 Our extension beyond the paper: MLP & CNN, all 10 pairs (no paper baseline)")
+        st.markdown("#### Our extension beyond the paper: MLP and CNN, all 10 pairs")
         ext_model = st.selectbox("Model", ["MLP", "CNN"], key="hknnrf_ext_model")
         ext_matrix = pd.DataFrame(
             {
@@ -1079,19 +1006,16 @@ helps on this feature set.</span>
             },
             index=pairs,
         )[size_order]
-        fig = px.imshow(
-            ext_matrix, text_auto=".2f", color_continuous_scale="Purples",
-            zmin=0, zmax=1, aspect="auto",
-        )
-        fig.update_layout(template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=420, margin=dict(t=10, l=10, r=10, b=10))
-        st.plotly_chart(fig, use_container_width=True)
+        fig = px.imshow(ext_matrix, text_auto=".2f", color_continuous_scale=SCALE_ACCENT,
+                        zmin=0, zmax=1, aspect="auto")
+        st.plotly_chart(style_fig(fig, 420), use_container_width=True, key="pc_pairs_ext")
 
-    st.info(
-        "💡 **Why the gap?** An ANOVA test on these 10 NIST p-value features found none "
-        "statistically significant for distinguishing algorithms — the feature set carries "
-        "less signal than whatever the paper's authors used, and every model (including "
-        "HKNNRF, MLP and CNN) shows the same ceiling. Full discussion in "
-        "`docs/PROJECT_REPORT.md` §7."
+    insight(
+        "<b>Why the gap?</b> An ANOVA test on these 10 NIST p-value features found none "
+        "statistically significant for telling the ciphers apart. The feature set carries less "
+        "signal than whatever the paper's authors used, and every model (HKNNRF, MLP and CNN "
+        "included) shows the same ceiling. Full discussion in <code>docs/PROJECT_REPORT.md</code> §7.",
+        "tip",
     )
 
 
@@ -1100,15 +1024,17 @@ helps on this feature set.</span>
 # --------------------------------------------------------------------------
 
 elif section == "Results":
-    page_header("Verified Experiment Results", "Every one of the 330 experiments, filterable.", icon="📈")
+    page_title("Verified results", "Every one of the 330 experiments, filterable and downloadable.")
 
     if results_df is None:
         st.warning("No results file found.")
         st.stop()
 
-    st.caption(
-        f"Source: `experiments/results/{results_filename}` — {len(results_df)} experiments. "
-        "See docs/PROJECT_REPORT.md and docs/RESULTS.md for methodology and headline numbers."
+    st.markdown(
+        f'<p class="hint">Source: <code>experiments/results/{results_filename}</code> · '
+        f"{len(results_df)} experiments · see docs/PROJECT_REPORT.md and docs/RESULTS.md "
+        "for methodology and headline numbers.</p>",
+        unsafe_allow_html=True,
     )
 
     c1, c2, c3 = st.columns(3)
@@ -1120,40 +1046,42 @@ elif section == "Results":
             default=sorted(results_df["task_type"].unique()),
         )
     with c3:
-        size_filter = st.multiselect(
-            "Size", sorted(results_df["ciphertext_size"].unique()),
-            default=sorted(results_df["ciphertext_size"].unique()),
-        )
+        # multiclass rows store sizes as "512KB", binary rows as "512kb": show one list
+        size_choices = sorted(results_df["ciphertext_size"].str.upper().unique(), key=lambda s: int(s[:-2]))
+        size_filter = st.multiselect("Size", size_choices, default=size_choices)
 
     filtered = results_df[
         results_df["model_name"].isin(model_filter)
         & results_df["task_type"].isin(task_filter)
-        & results_df["ciphertext_size"].isin(size_filter)
+        & results_df["ciphertext_size"].str.upper().isin(size_filter)
     ]
 
-    sort_col = st.selectbox("Sort by", ["accuracy", "f1_score", "precision", "recall", "training_time"])
-    filtered = filtered.sort_values(sort_col, ascending=False)
+    tab_dist, tab_tbl = st.tabs(["Accuracy distribution", "Results table"])
 
-    st.markdown("#### Accuracy distribution by model")
-    fig = px.violin(
-        filtered, x="model_name", y="accuracy", color="model_name",
-        color_discrete_map=MODEL_COLORS, box=True, points="all",
-        category_orders={"model_name": [m for m in ALL_MODELS if m in filtered["model_name"].unique()]},
-    )
-    fig.update_layout(
-        template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=380, showlegend=False,
-        margin=dict(t=10, l=10, r=10, b=10),
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with tab_dist:
+        if len(filtered):
+            fig = px.violin(
+                filtered, x="model_name", y="accuracy", color="model_name",
+                color_discrete_map=MODEL_COLORS, box=True, points="all",
+                category_orders={"model_name": [m for m in ALL_MODELS if m in filtered["model_name"].unique()]},
+            )
+            fig.update_traces(marker_size=4)
+            fig.update_layout(showlegend=False, xaxis_title="", yaxis_title="Accuracy")
+            st.plotly_chart(style_fig(fig, 420), use_container_width=True)
+        else:
+            insight("No experiments match the current filters.")
 
-    st.markdown("#### Filtered results table")
-    st.dataframe(filtered, use_container_width=True, height=420)
-    st.download_button(
-        "📥 Download filtered results as CSV",
-        data=filtered.to_csv(index=False),
-        file_name="cipherbench_filtered_results.csv",
-        mime="text/csv",
-    )
+    with tab_tbl:
+        sort_col = st.selectbox("Sort by", ["accuracy", "f1_score", "precision", "recall", "training_time"])
+        filtered = filtered.sort_values(sort_col, ascending=False)
+        st.dataframe(filtered, use_container_width=True, height=420, hide_index=True)
+        st.download_button(
+            "Download filtered results (CSV)",
+            data=filtered.to_csv(index=False),
+            file_name="cipherbench_filtered_results.csv",
+            mime="text/csv",
+            icon=":material/download:",
+        )
 
 
 # --------------------------------------------------------------------------
@@ -1161,7 +1089,7 @@ elif section == "Results":
 # --------------------------------------------------------------------------
 
 elif section == "Experiment Matrix":
-    page_header("Experiment Matrix Coverage", "330 experiments: 6 models × 2 tasks × 5 sizes.", icon="🗂️")
+    page_title("Experiment matrix", "330 experiments: 6 models across 2 tasks and 5 ciphertext sizes.")
 
     if results_df is None:
         st.warning("No results file found.")
@@ -1175,31 +1103,31 @@ elif section == "Experiment Matrix":
     c1.metric("Expected total", expected_total)
     c2.metric("Present in results file", len(results_df))
     c3.metric("Coverage", f"{len(results_df) / expected_total * 100:.1f}%")
+    st.write("")
 
-    st.markdown("#### Coverage heatmap — count of runs per (model, size)")
-    pivot = results_df.pivot_table(
-        index="model_name", columns="ciphertext_size", values="accuracy", aggfunc="count"
-    ).reindex(index=[m for m in ALL_MODELS if m in results_df["model_name"].unique()])
-    fig = px.imshow(
-        pivot, text_auto=True, color_continuous_scale="Blues", aspect="auto",
-        labels=dict(x="Ciphertext size", y="Model", color="Runs"),
-    )
-    fig.update_layout(
-        template=PLOTLY_TEMPLATE, font_family=FONT_FAMILY, height=340,
-        margin=dict(t=10, l=10, r=10, b=10),
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    tab_cov, tab_q = st.tabs(["Coverage", "Data quality"])
 
-    st.markdown("#### Data quality check")
-    zero_rows = results_df[results_df["accuracy"] == 0.0]
-    if len(zero_rows) == 0:
-        st.success("✅ All rows have a non-zero accuracy value.")
-    else:
-        st.warning(f"{len(zero_rows)} rows have accuracy == 0.0:")
-        st.dataframe(
-            zero_rows[["model_name", "task_type", "algorithm_pair", "ciphertext_size", "accuracy"]],
-            use_container_width=True,
+    with tab_cov:
+        st.markdown("#### Runs per model and ciphertext size")
+        pivot = results_df.pivot_table(
+            index="model_name", columns="ciphertext_size", values="accuracy", aggfunc="count"
+        ).reindex(index=[m for m in ALL_MODELS if m in results_df["model_name"].unique()])
+        fig = px.imshow(
+            pivot, text_auto=True, color_continuous_scale=SCALE_ACCENT, aspect="auto",
+            labels=dict(x="Ciphertext size", y="Model", color="Runs"),
         )
+        st.plotly_chart(style_fig(fig, 340), use_container_width=True)
+
+    with tab_q:
+        zero_rows = results_df[results_df["accuracy"] == 0.0]
+        if len(zero_rows) == 0:
+            insight("All rows have a non-zero accuracy value.", "good")
+        else:
+            insight(f"{len(zero_rows)} rows have accuracy == 0.0:", "warn")
+            st.dataframe(
+                zero_rows[["model_name", "task_type", "algorithm_pair", "ciphertext_size", "accuracy"]],
+                use_container_width=True, hide_index=True,
+            )
 
 
 # --------------------------------------------------------------------------
@@ -1207,51 +1135,80 @@ elif section == "Experiment Matrix":
 # --------------------------------------------------------------------------
 
 elif section == "Research / Methodology":
-    page_header("Research / Methodology", "The paper, the pipeline, and how evaluation stays honest.", icon="📚")
-    st.markdown(
-        """
-### Base paper
+    page_title("Research and methodology", "The paper, the pipeline, and how evaluation stays honest.")
+
+    tab_paper, tab_feat, tab_hk, tab_dl, tab_eval = st.tabs(
+        ["Base paper", "Features", "HKNNRF", "Deep learning", "Evaluation"]
+    )
+
+    with tab_paper:
+        st.markdown(
+            """
 Yuan, K., Yu, D., Feng, J., Yang, L., Jia, C., Huang, Y. (2022).
 *A block cipher algorithm identification scheme based on hybrid k-nearest
 neighbor and random forest algorithm.* PeerJ Computer Science.
 
-### Feature extraction
+The paper proposes HKNNRF and compares it against SVM, KNN and Random
+Forest on binary and five-class identification of AES, 3DES, Blowfish,
+CAST and RC2, at ciphertext sizes from 1KB to 512KB.
+            """
+        )
+
+    with tab_feat:
+        st.markdown(
+            """
 Each ciphertext sample is represented by **10 p-values from NIST
 randomness tests**: Approximate Entropy, Cumulative Sums, Discrete Fourier
 Transform, Frequency-within-Block, Linear Complexity, Monobit, Random
 Excursions, Random Excursions Variant, Runs, and Serial. These 10 columns
-are consumed as-is by every model — no additional scaling or feature
+are consumed as-is by every model. No additional scaling or feature
 selection is applied, matching the paper's methodology.
+            """
+        )
 
-### HKNNRF pipeline (`src/models/hknnrf.py`)
+    with tab_hk:
+        st.markdown(
+            """
+Implemented in `src/models/hknnrf.py`:
+
 1. Split the training portion 50/50 into an RF-training set and a
    KNN-training set (both stratified, seeded).
 2. Train a Random Forest on the RF-training set.
 3. Extract each sample's leaf index per tree (`RandomForestClassifier.apply`)
-   and one-hot encode them — these are the RF-derived features.
+   and one-hot encode them. These are the RF-derived features.
 4. **Concatenate** the RF-derived features with the original 10 NIST
    features (paper Steps 9–10).
 5. Train a KNN classifier on the combined feature vector.
+            """
+        )
 
-### Deep learning extension (not in the original paper)
+    with tab_dl:
+        st.markdown(
+            """
+Not in the original paper:
+
 - **MLP**: 2 hidden dense layers [64, 32] with dropout 0.3, trained with
   early stopping on a validation split carved out of the training data only.
 - **1D-CNN**: Conv1D layers [32, 64] with batch normalization and
   max-pooling, same validation discipline as the MLP.
 - Framework: **TensorFlow/Keras** (`tf-nightly`), not PyTorch. The synopsis
   lists PyTorch; PyTorch does not currently ship wheels for the Python
-  version used in this environment, so Keras was substituted — see
+  version used in this environment, so Keras was substituted. See
   `docs/PROJECT_REPORT.md` §6.
+            """
+        )
 
-### Evaluation protocol
+    with tab_eval:
+        st.markdown(
+            """
 - 80/20 train/test split, stratified, fixed `random_state` per experiment.
 - For MLP/CNN, an additional 80/20 split of the *training* portion produces
   the validation set used for early stopping. **The test set is never seen
-  until the single final `predict` call.** This app's live demo (Cipher
-  Identification tab) follows the identical protocol for every model.
+  until the single final `predict` call.** The live demo in the Cipher
+  Identification page follows the identical protocol for every model.
 - Metrics: accuracy, weighted precision/recall/F1, full confusion matrix.
-        """
-    )
+            """
+        )
 
 
 # --------------------------------------------------------------------------
@@ -1259,27 +1216,32 @@ selection is applied, matching the paper's methodology.
 # --------------------------------------------------------------------------
 
 else:
-    page_header("About / Reproducibility", "Repository layout, commands, and honest limitations.", icon="⚙️")
+    page_title("About and reproducibility", "Repository layout, commands, and honest limitations.")
 
-    st.markdown("#### Repository layout")
-    st.code(
-        """
+    tab_layout, tab_cmd, tab_repro, tab_lim = st.tabs(
+        ["Repository layout", "Commands", "Reproducibility", "Known limitations"]
+    )
+
+    with tab_layout:
+        st.code(
+            """
 CipherBench/
 ├── src/            # models, training script, data/metrics utilities
 ├── data/           # 55 CSV datasets (5 multiclass + 50 binary)
 ├── experiments/    # experiment runners + results/
-├── app/            # this Streamlit app
+├── app/            # this Streamlit app (streamlit_app.py + style.css)
+├── .streamlit/     # dark theme config
 ├── tests/          # test suite
 ├── database/       # optional MySQL integration
 ├── api/            # optional Flask REST API
 └── docs/           # PROJECT_REPORT.md, RESULTS.md
-        """,
-        language="text",
-    )
+            """,
+            language="text",
+        )
 
-    st.markdown("#### Commands")
-    st.code(
-        """# Install dependencies
+    with tab_cmd:
+        st.code(
+            """# Install dependencies
 pip install -r requirements.txt
 
 # Run the test suite
@@ -1291,15 +1253,15 @@ python src/train.py --model hknnrf --task multiclass --size 512KB
 # Run the full 330-experiment matrix (long-running)
 python experiments/run_complete_experiments.py --no-db
 
-# Launch this app
+# Launch this app (run from the project root so the theme in .streamlit/ is picked up)
 streamlit run app/streamlit_app.py
-        """,
-        language="bash",
-    )
+            """,
+            language="bash",
+        )
 
-    st.markdown("#### Reproducibility")
-    st.markdown(
-        """
+    with tab_repro:
+        st.markdown(
+            """
 - All train/test splits use `sklearn.model_selection.train_test_split` with
   a fixed `random_state` and `stratify=y`.
 - MLP/CNN additionally call `keras.utils.set_random_seed(seed)` before
@@ -1309,18 +1271,25 @@ streamlit run app/streamlit_app.py
   deep-learning experiments may shift accuracy by a few percentage points
   even with a fixed seed. Classical models (SVM/KNN/RF/HKNNRF) are exactly
   reproducible.
-        """
-    )
+            """
+        )
 
-    st.markdown("#### Known limitations")
-    st.markdown(
-        """
+    with tab_lim:
+        st.markdown(
+            """
 - Deep-learning framework is TensorFlow/Keras, not PyTorch as listed in the
   synopsis (Python-version compatibility constraint).
 - No ciphertext-generation pipeline is included; the project consumes the
   pre-extracted NIST-feature CSV datasets already provided.
 - Multi-seed stability analysis and cross-ciphertext-size generalization
   (train on one size, test on another) are not part of the verified 330-run
-  matrix — see `docs/PROJECT_REPORT.md` §8.
-        """
-    )
+  matrix. See `docs/PROJECT_REPORT.md` §8.
+            """
+        )
+
+
+st.markdown(
+    '<div class="site-footer"><span><b>CipherBench</b> · Block cipher identification with machine learning</span>'
+    "<span>Minor Project · Dept. of Information Technology, MSIT New Delhi</span></div>",
+    unsafe_allow_html=True,
+)

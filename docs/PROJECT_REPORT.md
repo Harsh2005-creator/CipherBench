@@ -18,7 +18,7 @@ CipherBench/
 ├── README.md, requirements.txt, config.yaml, .gitignore
 ├── src/
 │   ├── models/          baseline.py (SVM/KNN/RF), hknnrf.py, mlp.py, cnn.py
-│   ├── utils/            data_loader.py, metrics.py, visualization.py
+│   ├── utils/            data_loader.py, metrics.py
 │   ├── train.py           single-run CLI trainer
 │   └── demo.py             quick classical-models-only demo
 ├── data/                  55 CSV datasets (binary/, multiclass/)
@@ -27,8 +27,8 @@ CipherBench/
 │   ├── run_all_experiments.py        drives the full 330-experiment matrix
 │   ├── run_missing_experiments.py    fills in / refreshes any incomplete rows
 │   └── results/            results_consolidated_*.csv / .json
-├── app/streamlit_app.py    primary UI — reads experiments/results/, no database needed
-├── dashboard/streamlit_app.py  optional MySQL-backed dashboard
+├── app/                    primary UI — streamlit_app.py (logic) + style.css (design), no database needed
+├── .streamlit/config.toml  dark theme (colours, font) picked up when launched from the project root
 ├── api/app.py               optional Flask REST API (MySQL-backed)
 ├── database/                 MySQL schema + connection helpers (optional)
 ├── tests/test_suite.py       test suite
@@ -36,10 +36,10 @@ CipherBench/
 └── archive/                  synopsis and paper reference extracts
 ```
 
-Both Streamlit apps read the same result files; `app/streamlit_app.py` is
-the recommended entry point since it has no external service dependency.
-`dashboard/streamlit_app.py` and `api/app.py` are optional — they show a
-clear message rather than crashing if no MySQL database is configured.
+The Streamlit app reads the result files directly, so it has no external
+service dependency. `api/app.py` and the `database/` package are optional —
+the API returns a clear 503 message rather than crashing if no MySQL
+database is configured.
 
 ## 3. Data pipeline
 
@@ -145,9 +145,9 @@ HKNNRF.
   sizes only.
 - **MLP/CNN determinism**: seeded, but not guaranteed bit-exact across
   different CPU hardware (floating-point non-associativity).
-- **Database/API are optional**: `dashboard/streamlit_app.py` and
-  `api/app.py` require a reachable MySQL instance; both degrade to a clear
-  message instead of crashing when one isn't configured.
+- **Database/API are optional**: `api/app.py` requires a reachable MySQL instance
+  and returns a clear 503 message instead of crashing when one isn't
+  configured.
 
 ## 9. Reproducibility
 
@@ -168,7 +168,6 @@ integration is used:
 ```bash
 export CIPHERBENCH_DB_PASSWORD=your_password
 mysql -u root -p < database/schema.sql
-streamlit run dashboard/streamlit_app.py
 python api/app.py
 ```
 

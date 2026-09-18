@@ -26,8 +26,13 @@ pip install -r requirements.txt
 python tests/test_suite.py
 
 # 3. Explore the project (no database required)
+#    Run from the project root so the dark theme in .streamlit/config.toml is applied
 streamlit run app/streamlit_app.py
 ```
+
+The interface is styled by `app/style.css` (design tokens, cards, tabs, navigation)
+and `.streamlit/config.toml` (base theme). Change colours or spacing there; no Python
+edits are needed.
 
 ## Repository structure
 
@@ -36,8 +41,8 @@ CipherBench/
 ├── src/                      models/, utils/, train.py, demo.py
 ├── data/                     55 CSV datasets (binary/, multiclass/)
 ├── experiments/              experiment runners + results/
-├── app/streamlit_app.py      primary UI (reads experiments/results/, no DB)
-├── dashboard/streamlit_app.py  optional MySQL-backed dashboard
+├── app/                      primary UI: streamlit_app.py + style.css (no DB needed)
+├── .streamlit/config.toml    dark theme for the app
 ├── api/                      optional Flask REST API (MySQL-backed)
 ├── database/                 MySQL schema + connection helpers (optional)
 ├── tests/                    test suite
@@ -68,12 +73,11 @@ streamlit run app/streamlit_app.py
 Available `--model` values: `svm`, `knn`, `rf`, `hknnrf`, `mlp`, `cnn`, `all`.
 Available `--size` values: `1KB`, `8KB`, `64KB`, `256KB`, `512KB`.
 
-### Optional: MySQL-backed dashboard and API
+### Optional: MySQL store and REST API
 
 ```bash
 export CIPHERBENCH_DB_PASSWORD=your_password    # never commit a real password
 mysql -u root -p < database/schema.sql
-streamlit run dashboard/streamlit_app.py
 python api/app.py
 ```
 
