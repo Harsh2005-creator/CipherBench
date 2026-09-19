@@ -16,7 +16,7 @@ Design goals (see docs/PROJECT_REPORT.md):
 - Caches expensive work (dataset loads, live model training) so navigating
   the UI does not repeatedly retrain models.
 
-Presentation lives in app/style.css and .streamlit/config.toml; everything
+Presentation lives in app/style.css, app/effects.js and .streamlit/config.toml; everything
 above the "Presentation" section below is data/model logic and does not
 depend on either.
 """
@@ -109,6 +109,21 @@ def load_css():
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
+JS_FILE = Path(__file__).resolve().parent / "effects.js"
+
+
+def load_effects():
+    """Inject app/effects.js (scroll reveals, nav indicator, ambient field).
+    It runs once per browser session; on Streamlit versions without
+    st.html(unsafe_allow_javascript=...) the app simply stays static."""
+    try:
+        js = JS_FILE.read_text(encoding="utf-8")
+        with st.container(key="fx"):
+            st.html(f"<script>{js}</script>", unsafe_allow_javascript=True)
+    except (OSError, TypeError):
+        return
+
+
 def style_fig(fig, height=360):
     """Dark, transparent Plotly figure that sits on the app's card surface."""
     fig.update_layout(
@@ -152,6 +167,7 @@ def class_names(values):
 
 
 load_css()
+load_effects()
 
 PAPER_MODELS = ["SVM", "KNN", "RF", "HKNNRF"]  # the only 4 models the base paper implements
 
@@ -367,7 +383,7 @@ SECTIONS = [
 # Short labels for the header bar; the page logic keys off the full names above.
 NAV_LABELS = {
     "Home / Overview": "Home",
-    "Dataset Explorer": "Datasets",
+    "Dataset Explorer": "Data",
     "Cipher Identification": "Identify",
     "Model Comparison": "Models",
     "Paper Comparison": "Paper",
@@ -386,10 +402,10 @@ LOCK_SVG = (
 )
 
 with st.container(key="navbar"):
-    nav_brand, nav_links, nav_status = st.columns([1.6, 8, 1.6], vertical_alignment="center")
+    nav_brand, nav_links, nav_status = st.columns([1.75, 8.4, 1.15], vertical_alignment="center")
     nav_brand.markdown(
         f'<div class="brand"><span class="brand-mark">{LOCK_SVG}</span>'
-        '<span class="name">Cipher<b>Bench</b></span></div>',
+        '<span class="brand-word">Cipher<b>Bench</b></span></div>',
         unsafe_allow_html=True,
     )
     section = nav_links.radio(
@@ -397,14 +413,14 @@ with st.container(key="navbar"):
         label_visibility="collapsed", format_func=NAV_LABELS.get,
     )
     if results_df is not None:
-        nav_status.markdown(
-            f'<span class="status-pill"><span class="dot"></span><b>{len(results_df)}</b> results</span>',
-            unsafe_allow_html=True,
-        )
+        _pill = f'<span class="status-pill"><span class="dot"></span><b>{len(results_df)}</b> verified</span>'
     else:
-        nav_status.markdown(
-            '<span class="status-pill">No results file yet</span>', unsafe_allow_html=True
-        )
+        _pill = '<span class="status-pill">No results file yet</span>'
+    nav_status.markdown(
+        f'<div class="nav-right">{_pill}<span class="nav-toggle" role="button" tabindex="0" '
+        'aria-label="Menu"><i></i><i></i><i></i></span></div>',
+        unsafe_allow_html=True,
+    )
 
 
 def go_to(page):
@@ -419,37 +435,48 @@ def go_to(page):
 if section == "Home / Overview":
     n_exp = len(results_df) if results_df is not None else None
 
-    hero_l, hero_r = st.columns([1.15, 1], gap="large", vertical_alignment="center")
+    # ---- 01 · Hero ------------------------------------------------------
+    hero_l, hero_r = st.columns([1.12, 1], gap="large", vertical_alignment="center")
     with hero_l:
         st.markdown(
-            '<div class="hero-tag"><i></i>Block cipher identification with machine learning</div>'
-            '<div class="hero-title">CipherBench</div>'
-            '<div class="hero-sub">Tell which block cipher produced a ciphertext from its statistical '
-            "fingerprint alone: no key, no plaintext, no brute force.</div>",
+            '<div class="hero-tag"><i></i>Block cipher identification</div>'
+            '<div class="hero-title" role="heading" aria-level="1"><span class="ln"><span>Identify the cipher.</span></span>'
+            '<span class="ln"><span class="grad">From the ciphertext alone.</span></span></div>'
+            '<div class="hero-sub">Recognise <b>AES, 3DES, Blowfish, CAST and RC2</b> from the statistical '
+            "fingerprint a ciphertext leaves behind, using ten randomness measurements and machine "
+            "learning. No key, no plaintext.</div>",
             unsafe_allow_html=True,
         )
-        cta1, cta2, _ = st.columns([0.9, 1.1, 0.7])
-        cta1.button("Try the live demo", key="cta_demo", type="primary",
-                    icon=":material/play_arrow:", on_click=go_to, args=("Cipher Identification",))
-        cta2.button("Compare with the paper", key="cta_paper",
-                    on_click=go_to, args=("Paper Comparison",))
+        cta1, cta2, _ = st.columns([1.0, 1.15, 0.5])
+        cta1.button("Try live demo", key="cta_demo", type="primary", on_click=go_to, args=("Cipher Identification",))
+        cta2.button("Compare with the paper", key="cta_paper", on_click=go_to, args=("Paper Comparison",))
     with hero_r:
+        _bars = [0.42, 0.78, 0.31, 0.9, 0.55, 0.2, 0.68, 0.47, 0.83, 0.36]
         st.markdown(
-            '<div class="terminal"><div class="term-bar"><i></i><i></i><i></i>'
+            '<div class="hero-vis"><div class="terminal"><div class="term-bar"><i></i><i></i><i></i>'
             "<span>cipherbench · pipeline</span></div>"
             '<div class="term-body">'
             '<span class="ln l1"><span class="p">$</span>extract <b>10</b> NIST p-values</span>'
             '<span class="ln l2"><span class="p">$</span>train <b>6</b> models · <b>2</b> tasks · <b>5</b> sizes</span>'
-            f'<span class="ln l3"><span class="p">$</span>compare <b>{n_exp if n_exp is not None else "330"}</b> experiments vs. <em>Yuan et al.</em></span>'
+            f'<span class="ln l3"><span class="p">$</span>compare <b>{n_exp if n_exp is not None else "330"}</b> runs vs. <em>Yuan et al.</em></span>'
             '<span class="ln l4"><span class="p">$</span><span class="cursor"></span></span>'
-            "</div></div>",
+            "</div></div>"
+            '<div class="float f-fp"><div class="f-cap">Statistical fingerprint</div><div class="fp-bars">'
+            + "".join(f'<i style="--h:{h};--k:{k}"></i>' for k, h in enumerate(_bars))
+            + '</div><div class="f-foot">10 features · one ciphertext</div></div>'
+            '<div class="float f-cand"><div class="f-cap">Candidates</div><div class="cand-row">'
+            + "".join(
+                f'<span style="color:{ALGO_COLORS[a]};background:{ALGO_COLORS[a]}1f;border:1px solid {ALGO_COLORS[a]}55">{a}</span>'
+                for a in ALGORITHMS
+            )
+            + "</div></div></div>",
             unsafe_allow_html=True,
         )
 
     stat_items = [
-        (len(ALGORITHMS), "Ciphers"),
-        (len(SIZES), "Ciphertext sizes"),
+        (len(ALGORITHMS), "Block ciphers"),
         (len(ALL_MODELS), "Models"),
+        (len(SIZES), "Ciphertext sizes"),
         (n_exp, "Verified experiments"),
     ]
     st.markdown(
@@ -464,65 +491,225 @@ if section == "Home / Overview":
         unsafe_allow_html=True,
     )
 
-    st.markdown(
-        '<div class="section-head"><span class="no">01</span><h3>How it works</h3></div>',
-        unsafe_allow_html=True,
-    )
-    c1, c2, c3 = st.columns(3)
-    c1.markdown(
-        '<div class="card card-accent"><div class="step">01</div><h5>Extract</h5>'
-        "<p>Ten p-values from NIST randomness tests summarise each ciphertext sample.</p></div>",
-        unsafe_allow_html=True,
-    )
-    c2.markdown(
-        '<div class="card card-accent2"><div class="step">02</div><h5>Classify</h5>'
-        "<p>Six models learn to tell AES, 3DES, Blowfish, CAST and RC2 apart, pairwise and all at once.</p></div>",
-        unsafe_allow_html=True,
-    )
-    c3.markdown(
-        '<div class="card card-accent3"><div class="step">03</div><h5>Compare</h5>'
-        "<p>330 experiments are benchmarked against the base paper (Yuan et al., 2022).</p></div>",
-        unsafe_allow_html=True,
-    )
-
-    st.markdown(
-        '<div class="section-head"><span class="no">02</span><h3>Explore</h3></div>',
-        unsafe_allow_html=True,
-    )
-    tab_a, tab_b = st.tabs(["Ciphers & models", "Architecture"])
-    with tab_a:
-        st.markdown("**Supported ciphers**")
-        st.markdown("".join(chip(a, ALGO_COLORS[a]) for a in ALGORITHMS), unsafe_allow_html=True)
-        st.write("")
-        st.markdown("**Model lineup**")
-        st.markdown("".join(chip(m, MODEL_COLORS[m]) for m in ALL_MODELS), unsafe_allow_html=True)
+    # ---- 02 · The problem -----------------------------------------------
+    def story(no, title, sub):
         st.markdown(
-            '<p class="hint">SVM, KNN, RF and HKNNRF come from the base paper. '
-            "MLP and CNN are this project's own extension.</p>",
-            unsafe_allow_html=True,
-        )
-    with tab_b:
-        st.markdown(
-            '<div class="diagram">'
-            "data/ (55 CSVs)  →  data_loader  →  stratified, seeded train/test split\n"
-            "                                        │\n"
-            "            ┌───────────────────────────┼───────────────────────────┐\n"
-            "            ▼                           ▼                           ▼\n"
-            "     SVM / KNN / RF                  HKNNRF                     MLP / CNN\n"
-            "            │                           │                           │\n"
-            "            └───────────────────────────┼───────────────────────────┘\n"
-            "                                        ▼\n"
-            "                 metrics  →  experiments/results/*.csv, *.json\n"
-            "                                        ▼\n"
-            "                        this app  (app/streamlit_app.py)"
-            "</div>",
+            f'<div class="story-head"><div class="s-no">{no}</div><div><h2>{title}</h2><p>{sub}</p></div></div>',
             unsafe_allow_html=True,
         )
 
-    insight(
-        "This app reads straight from the CSV and JSON files in <code>experiments/results/</code> "
-        "and <code>data/</code>. No database connection is required.",
-        "tip",
+    story("02", "A ciphertext carries no label.",
+          "Before an analyst can attack an encryption, they need to know which algorithm produced it.")
+    hexes = (
+        "9f 3a c1 7e 04 b8 5d 22 e6 91 0c 47 ad 68 fb 13 "
+        "5e c9 70 2b 8a d4 16 f0 39 bc 62 07 e5 9d 4a 81 "
+        "c3 1f 76 a8 0e 5b d2 94 3d e7 28 b1 6c f5 0a 4e "
+        "97 d0 33 8c 5f a2 19 e4 7b 06 c8 3e 91 fa 55 2d"
+    ).split()
+    p_l, p_r = st.columns([1.05, 1], gap="large", vertical_alignment="center")
+    with p_l:
+        st.markdown(
+            '<div class="cipher-field"><div class="hexes">'
+            + " ".join(f"<b>{h}</b>" if i % 7 == 0 else h for i, h in enumerate(hexes))
+            + '</div><div class="qmark">?</div><div class="cand-row">'
+            + "".join(
+                f'<span style="color:{ALGO_COLORS[a]};background:{ALGO_COLORS[a]}1f;border:1px solid {ALGO_COLORS[a]}55">{a}</span>'
+                for a in ALGORITHMS
+            )
+            + "</div></div>",
+            unsafe_allow_html=True,
+        )
+    with p_r:
+        st.markdown(
+            '<p class="lead">Good ciphers are built to look random. The question is whether '
+            "<em>how</em> they look random is still a signature.</p>"
+            '<p class="muted-p">CipherBench tests that idea: measure ten NIST randomness statistics on '
+            "each ciphertext and let a classifier decide which of five block ciphers it came from.</p>",
+            unsafe_allow_html=True,
+        )
+
+    # ---- 03 · The fingerprint -------------------------------------------
+    story("03", "Ten measurements. One fingerprint.",
+          "Each ciphertext is reduced to ten NIST p-values. Those ten numbers are all a model ever sees.")
+    _ic = lambda d: (
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        f'stroke-linecap="round" stroke-linejoin="round">{d}</svg>'
+    )
+    flow = [
+        (_ic('<rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+         "Ciphertext", "Raw encrypted sample"),
+        (_ic('<path d="M3 12h3l2-6 4 12 3-9 2 3h4"/>'), "Fingerprint", "NIST randomness tests"),
+        (_ic('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'), "10 features", "One p-value per test"),
+        (_ic('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/>'
+             '<path d="M8 7l3 9M16 7l-3 9M8.5 6h7"/>'), "ML models", "Six classifiers"),
+        (_ic('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
+         "Identification", "Which cipher?"),
+    ]
+    st.markdown(
+        '<div class="flow">'
+        + "".join(f'<div class="flow-node"><div class="ic">{i}</div><b>{t}</b><span>{d}</span></div>' for i, t, d in flow)
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+    feats = [
+        ("Approximate Entropy", "aetPValue", "Regularity of overlapping bit patterns"),
+        ("Cumulative Sums", "custPValue", "Drift of the running sum"),
+        ("Discrete Fourier", "dtfPValue", "Periodic structure in the spectrum"),
+        ("Block Frequency", "fwbtPValue", "Balance of ones inside blocks"),
+        ("Linear Complexity", "lrobPValue", "Shift-register style structure"),
+        ("Monobit", "mtPValue", "Overall balance of ones and zeros"),
+        ("Random Excursions", "retPValue", "Walk visits to fixed states"),
+        ("Excursions Variant", "revtPValue", "Total visits across many states"),
+        ("Runs", "runsPValue", "Length of uninterrupted bit runs"),
+        ("Serial", "stPValue", "Frequency of m-bit patterns"),
+    ]
+    st.markdown(
+        '<div class="feats">'
+        + "".join(
+            f'<div class="feat"><div class="f-n">{i:02d}<i></i></div><div class="f-t">{t}</div>'
+            f'<div class="f-d">{d}</div><code>{c}</code></div>'
+            for i, (t, c, d) in enumerate(feats, 1)
+        )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+    # ---- 04 · The models ------------------------------------------------
+    story("04", "Six models, one question.",
+          "Four classifiers reproduce the base paper. Two neural networks are this project's own extension.")
+    m_ic = {
+        "SVM": '<path d="M4 20 20 4M4 12l8-8M12 20l8-8"/>',
+        "KNN": '<circle cx="12" cy="12" r="2"/><circle cx="5" cy="7" r="1.6"/><circle cx="19" cy="8" r="1.6"/><circle cx="7" cy="18" r="1.6"/><circle cx="18" cy="17" r="1.6"/><path d="M12 12 5 7M12 12l7-4M12 12l-5 6M12 12l6 5"/>',
+        "RF": '<path d="M12 21V11M12 11 6 5M12 11l6-6M12 16 8 12M12 16l4-4"/><circle cx="6" cy="5" r="1.4"/><circle cx="18" cy="5" r="1.4"/>',
+        "HKNNRF": '<circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/>',
+        "MLP": '<circle cx="5" cy="6" r="1.7"/><circle cx="5" cy="18" r="1.7"/><circle cx="12" cy="4" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="20" r="1.7"/><circle cx="19" cy="12" r="1.7"/><path d="M6.5 6.5 10.5 4.5M6.5 6.5l4 5M6.5 18l4-5.5M6.5 18l4 2M13.5 4.5l4 6.5M13.5 12h4M13.5 19.5l4-6.5"/>',
+        "CNN": '<rect x="3" y="4" width="7" height="7" rx="1"/><rect x="7" y="8" width="7" height="7" rx="1"/><rect x="11" y="12" width="7" height="7" rx="1"/>',
+    }
+    m_info = [
+        ("SVM", "Support vector machine", "Separates classes with a maximum-margin boundary.", False),
+        ("KNN", "k-nearest neighbours", "Labels a sample by its closest neighbours in feature space.", False),
+        ("RF", "Random forest", "Votes across many randomised decision trees.", False),
+        ("HKNNRF", "Hybrid KNN + RF", "The paper's method: forest leaves feed a nearest-neighbour vote.", False),
+        ("MLP", "Multi-layer perceptron", "A small feed-forward neural network on the ten features.", True),
+        ("CNN", "1-D convolutional net", "Convolutions slide across the ordered feature vector.", True),
+    ]
+    st.markdown(
+        '<div class="eco-wrap"><span class="eco-node"><i></i>10 NIST features</span>'
+        '<div class="eco-stem"></div><div class="eco-bus"></div><div class="eco-stem"></div></div>'
+        '<div class="models">'
+        + "".join(
+            f'<div class="model-card{" ext" if ext else ""}" style="--mc:{MODEL_COLORS[k]}">'
+            f'<div class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round">{m_ic[k]}</svg></div>'
+            f'<h5>{k}{"<span class=badge-ext>Extension</span>" if ext else "<span class=badge-paper>Paper</span>"}</h5>'
+            f'<div class="m-type">{full}</div><p>{txt}</p></div>'
+            for k, full, txt, ext in m_info
+        )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+    # ---- 05 · The experiment --------------------------------------------
+    story("05", "Every result, verified.",
+          "One seeded run per model, task, ciphertext size and cipher pair. Each square below is one of them.")
+    n_show = n_exp if n_exp is not None else 330
+    st.markdown(
+        f'<div class="big330"><div class="num" style="--to:{n_show}"></div>'
+        '<div class="cap"><b>Verified experiments</b>5 block ciphers · 6 models<br>'
+        "1 five-class task + 10 pairwise tasks · 5 sizes</div></div>"
+        '<div class="facts">'
+        + "".join(
+            f'<div class="fact"><div class="num" style="--to:{v}"></div><div class="lbl">{lbl}</div></div>'
+            for v, lbl in [(6, "Models"), (2, "Task types"), (5, "Ciphertext sizes"), (10, "Cipher pairs")]
+        )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+    if results_df is not None and {"model_name", "task_type"} <= set(results_df.columns):
+        _rows = results_df.sort_values(["task_type", "ciphertext_size", "model_name"]).reset_index(drop=True)
+        cells = "".join(
+            f'<i class="{"bin" if r.task_type != "multiclass" else ""}" '
+            f'style="--c:{MODEL_COLORS.get(r.model_name, ACCENT)};--d:{min(i * 4, 1400)}" '
+            f'title="{r.model_name} · {r.algorithm_pair} · {r.ciphertext_size}"></i>'
+            for i, r in enumerate(_rows.itertuples())
+        )
+        st.markdown(
+            f'<div class="exp-grid">{cells}</div><div class="legend">'
+            + "".join(f'<span style="--c:{c}"><i></i>{m}</span>' for m, c in MODEL_COLORS.items())
+            + "<span>Brighter squares: five-class runs. Dimmer: pairwise runs.</span></div>",
+            unsafe_allow_html=True,
+        )
+
+    # ---- 06 · The evidence ----------------------------------------------
+    story("06", "What the models achieve.",
+          "Mean accuracy per model across every ciphertext size. Pairwise tasks are easier than five-class.")
+    if results_df is not None:
+        _agg = results_df.groupby(["model_name", "task_type"], as_index=False)["accuracy"].mean()
+        _agg["Task"] = _agg["task_type"].map({"multiclass": "Five-class", "binary": "Pairwise"}).fillna(_agg["task_type"])
+        fig_ev = px.bar(
+            _agg, x="model_name", y="accuracy", color="Task", barmode="group",
+            category_orders={"model_name": ALL_MODELS},
+            color_discrete_map={"Five-class": "#f97316", "Pairwise": "#7c6af7"},
+            labels={"model_name": "Model", "accuracy": "Mean accuracy"},
+        )
+        fig_ev.update_yaxes(tickformat=".0%", range=[0, 1])
+        fig_ev.update_traces(marker_line_width=0)
+        fig_ev.update_layout(legend=dict(orientation="h", y=1.1, x=0, title_text=""))
+        st.plotly_chart(style_fig(fig_ev, 380), use_container_width=True, key="home_evidence")
+
+    # ---- 07 · Research comparison ---------------------------------------
+    story("07", "Measured against the paper.",
+          "HKNNRF is the base paper's headline method, so it is the fairest head-to-head. Mean accuracy over all five sizes.")
+
+    def _bar_rows(paper_tbl, task, pair):
+        pv = np.mean([paper_tbl["accuracy"][int(s[:-2])]["HKNNRF"] for s in SIZES])
+        ov = [our_value(results_df, "HKNNRF", task, s, pair, "accuracy") for s in SIZES]
+        ov = [v for v in ov if v is not None]
+        rows = [("Paper", pv, "paper")]
+        if ov:
+            rows.append(("Ours", float(np.mean(ov)), "ours"))
+        return "".join(
+            f'<div class="vs-row"><span>{n}</span><div class="vs-track"><i class="{c}" style="--w:{v * 100:.1f}%"></i></div>'
+            f"<b>{v * 100:.0f}%</b></div>"
+            for n, v, c in rows
+        )
+
+    st.markdown(
+        '<div class="vs"><div class="vs-block"><h5>Five-class identification</h5>'
+        '<div class="vs-sub">HKNNRF · all five ciphers at once</div>'
+        + _bar_rows(PAPER_MULTICLASS, "multiclass", "5-class")
+        + '</div><div class="vs-block"><h5>Binary identification</h5>'
+        '<div class="vs-sub">HKNNRF · AES versus 3DES</div>'
+        + _bar_rows(PAPER_BINARY_AES_3DES, "binary", "AES and 3DES")
+        + "</div></div>",
+        unsafe_allow_html=True,
+    )
+
+    # ---- 08 · Explore ---------------------------------------------------
+    story("08", "Explore it yourself.", "Every page reads from the same verified result set.")
+    _go = lambda d: (
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        f'stroke-linecap="round" stroke-linejoin="round">{d}</svg>'
+    )
+    cards = [
+        ("Identify", "Run a live model", "Train any of six models and identify a cipher.",
+         '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
+        ("Paper", "Paper comparison", "Side-by-side with Yuan et al. (2022).",
+         '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'),
+        ("Matrix", "Experiment matrix", "All 330 runs and their coverage.",
+         '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+        ("Data", "Dataset explorer", "Browse the 55 CSV datasets.",
+         '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>'),
+    ]
+    st.markdown(
+        '<div class="go-grid">'
+        + "".join(
+            f'<a class="go-card" data-go="{k}" role="link" tabindex="0"><div class="g-ic">{_go(ic)}</div>'
+            f"<b>{t}</b><span>{d}</span></a>"
+            for k, t, d, ic in cards
+        )
+        + "</div>",
+        unsafe_allow_html=True,
     )
 
 
@@ -598,69 +785,102 @@ elif section == "Dataset Explorer":
 elif section == "Cipher Identification":
     page_title(
         "Cipher Identification",
-        "Train any of the six models live and see how it does on held-out ciphertext samples.",
+        "Configure a model, run it on held-out ciphertext samples, and inspect what it concludes.",
     )
 
-    col1, col2, col3 = st.columns([1.2, 1, 1])
-    with col1:
-        task = st.radio("Task", ["multiclass", "binary"], horizontal=True)
-    with col2:
-        size = st.selectbox("Ciphertext size", SIZES, index=4, key="ci_size")
-    with col3:
-        model_name = st.selectbox(
-            "Model", ALL_MODELS,
-            help="All 6 models are trainable live. MLP/CNN take longer (~10–20s) "
-                 "since they train a small neural network with early stopping.",
+    with st.container(key="cfg"):
+        st.markdown('<div class="panel-label">Model configuration</div>', unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1.2, 1, 1])
+        with col1:
+            task = st.radio("Task", ["multiclass", "binary"], horizontal=True)
+        with col2:
+            size = st.selectbox("Ciphertext size", SIZES, index=4, key="ci_size")
+        with col3:
+            model_name = st.selectbox(
+                "Model", ALL_MODELS,
+                help="All 6 models are trainable live. MLP/CNN take longer (~10–20s) "
+                     "since they train a small neural network with early stopping.",
+            )
+
+        pair = None
+        if task == "binary":
+            pair = st.selectbox("Algorithm pair", get_all_binary_pairs(), key="ci_pair")
+
+        is_deep = model_name in DEEP_MODELS
+        st.markdown(
+            chip("Neural network · about 10–20 s", MODEL_COLORS[model_name]) if is_deep
+            else chip("Classical model · near-instant", MODEL_COLORS[model_name]),
+            unsafe_allow_html=True,
         )
-
-    pair = None
-    if task == "binary":
-        pair = st.selectbox("Algorithm pair", get_all_binary_pairs(), key="ci_pair")
-
-    is_deep = model_name in DEEP_MODELS
-    st.markdown(
-        chip("Neural network · about 10–20 s", MODEL_COLORS[model_name]) if is_deep
-        else chip("Classical model · near-instant", MODEL_COLORS[model_name]),
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<p class="hint">Uses the same seeded 80/20 split as the verified experiments; '
-        "the test set is only touched for the final prediction.</p>",
-        unsafe_allow_html=True,
-    )
-
-    btn_train, btn_clear, _ = st.columns([1.15, 1, 4])
-    run_clicked = btn_train.button("Train & evaluate", type="primary", icon=":material/play_arrow:")
-    if btn_clear.button("Clear result", key="reset_demo", icon=":material/restart_alt:"):
-        st.session_state.pop("ci_result", None)
-        st.rerun()
+        st.markdown(
+            '<p class="hint">Uses the same seeded 80/20 split as the verified experiments; '
+            "the test set is only touched for the final prediction.</p>",
+            unsafe_allow_html=True,
+        )
+        btn_train, btn_clear, _ = st.columns([1.5, 1, 3])
+        run_clicked = btn_train.button("Run identification", key="run_id", type="primary")
+        if btn_clear.button("Clear result", key="reset_demo", icon=":material/restart_alt:"):
+            st.session_state.pop("ci_result", None)
+            st.rerun()
 
     if run_clicked:
-        steps = (
-            ["Loading dataset…", "Carving out a validation split…", "Training the network…", "Evaluating on the test set…"]
-            if is_deep else
-            ["Loading dataset…", "Fitting the model…", "Evaluating on the test set…"]
+        analysis = st.empty()
+        analysis.markdown(
+            '<div class="analysis"><div class="a-head"><span class="a-ring"></span>Analyzing ciphertext</div>'
+            '<ul class="a-steps">'
+            '<li style="--s:0">Extracting statistical fingerprint</li>'
+            f'<li style="--s:1">Evaluating {model_name}</li>'
+            '<li style="--s:2">Calculating confidence</li>'
+            '<li style="--s:3">Generating prediction</li></ul>'
+            '<div class="a-bar"><i></i></div>'
+            f'<div class="a-note">{"Training a neural network with early stopping. This can take 10 to 20 seconds." if is_deep else "Fitting the model on the training split."}</div></div>',
+            unsafe_allow_html=True,
         )
-        with st.status(f"Training {model_name}…", expanded=True) as status:
-            for s in steps[:-1]:
-                st.write(s)
-            model, X_test, y_test, y_pred, y_proba, metrics, cm = run_live_model(
-                model_name, task, size, pair
-            )
-            st.write(steps[-1])
-            status.update(label=f"{model_name} trained", state="complete", expanded=False)
+        model, X_test, y_test, y_pred, y_proba, metrics, cm = run_live_model(
+            model_name, task, size, pair
+        )
+        analysis.empty()
 
         st.session_state["ci_result"] = (
             model_name, task, size, pair, X_test, y_test, y_pred, y_proba, metrics, cm, model
         )
+        st.session_state["ci_sample"] = 0
 
     if "ci_result" in st.session_state:
         model_name, task, size, pair, X_test, y_test, y_pred, y_proba, metrics, cm, model = st.session_state["ci_result"]
 
-        st.divider()
         st.markdown(
-            f"#### {model_name} · {'five-class' if task == 'multiclass' else pair} · {size}"
+            f'<div class="panel-label" style="margin-top:2rem">Result · {model_name} · '
+            f'{"five-class" if task == "multiclass" else pair} · {size}</div>',
+            unsafe_allow_html=True,
         )
+        sample_idx = st.slider("Test sample to identify", 0, len(X_test) - 1, 0, key="ci_sample")
+        true_val = y_test[sample_idx]
+        pred_val = y_pred[sample_idx]
+        correct = bool(true_val == pred_val)
+        pred_name, true_name = class_names([pred_val])[0], class_names([true_val])[0]
+        vcol = ALGO_COLORS.get(pred_name, ACCENT)
+
+        conf_html = ""
+        proba_row, class_labels = None, None
+        if y_proba is not None:
+            proba_row = y_proba[sample_idx]
+            classes = getattr(model, "classes_", np.unique(np.concatenate([y_test, y_pred])))
+            class_labels = class_names(classes)
+            conf = float(np.max(proba_row))
+            conf_html = (
+                f'<div class="v-conf-top"><span>Model confidence</span><b>{conf:.1%}</b></div>'
+                f'<div class="v-bar"><i style="--w:{conf * 100:.1f}%"></i></div>'
+            )
+        st.markdown(
+            f'<div class="verdict" style="--c:{vcol}"><div class="v-label">Identified cipher</div>'
+            f'<div class="v-name">{pred_name}</div>'
+            f'<div class="v-meta">Sample <b>#{sample_idx}</b> · true label <b>{true_name}</b> · '
+            f'<span class="{"normal-badge" if correct else "anomaly-badge"}">{"Correct" if correct else "Incorrect"}</span></div>'
+            f"{conf_html}</div>",
+            unsafe_allow_html=True,
+        )
+        st.write("")
 
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Accuracy", f"{metrics['accuracy']:.3f}")
@@ -669,7 +889,7 @@ elif section == "Cipher Identification":
         m4.metric("F1-score", f"{metrics['f1_score']:.3f}")
         st.write("")
 
-        tab_cm, tab_conf, tab_pred = st.tabs(["Confusion matrix", "Sample confidence", "Predictions"])
+        tab_cm, tab_conf, tab_pred = st.tabs(["Confusion matrix", "Class probabilities", "Predictions"])
 
         with tab_cm:
             labels = sorted(set(np.unique(y_test)) | set(np.unique(y_pred)))
@@ -682,33 +902,19 @@ elif section == "Cipher Identification":
             st.plotly_chart(style_fig(fig, 400), use_container_width=True)
 
         with tab_conf:
-            sample_idx = st.slider("Sample index", 0, len(X_test) - 1, 0)
-            true_val = y_test[sample_idx]
-            pred_val = y_pred[sample_idx]
-            correct = bool(true_val == pred_val)
-            st.markdown(
-                f'<span class="{"normal-badge" if correct else "anomaly-badge"}">'
-                f'{"Correct" if correct else "Incorrect"}</span>&nbsp;&nbsp;'
-                f"True: <b>{class_names([true_val])[0]}</b> &nbsp;·&nbsp; "
-                f"Predicted: <b>{class_names([pred_val])[0]}</b>",
-                unsafe_allow_html=True,
-            )
-            if y_proba is not None:
-                proba_row = y_proba[sample_idx]
-                classes = getattr(model, "classes_", np.unique(np.concatenate([y_test, y_pred])))
-                class_labels = class_names(classes)
+            if proba_row is not None:
                 order = np.argsort(proba_row)[::-1]
                 fig2 = go.Figure(
                     go.Bar(
                         x=[proba_row[i] for i in order],
                         y=[class_labels[i] for i in order],
                         orientation="h",
-                        marker_color=MODEL_COLORS.get(model_name, ACCENT),
+                        marker_color=[ALGO_COLORS.get(class_labels[i], ACCENT) for i in order],
                         text=[f"{proba_row[i]:.1%}" for i in order],
                         textposition="outside",
                     )
                 )
-                fig2.update_layout(xaxis_range=[0, 1], xaxis_title="Predicted probability")
+                fig2.update_layout(xaxis_range=[0, 1.1], xaxis_title=f"Predicted probability · sample #{sample_idx}")
                 fig2.update_yaxes(autorange="reversed")
                 st.plotly_chart(style_fig(fig2, 340), use_container_width=True)
             else:
@@ -1105,7 +1311,21 @@ elif section == "Experiment Matrix":
     c3.metric("Coverage", f"{len(results_df) / expected_total * 100:.1f}%")
     st.write("")
 
-    tab_cov, tab_q = st.tabs(["Coverage", "Data quality"])
+    tab_map, tab_cov, tab_q = st.tabs(["Accuracy map", "Coverage", "Data quality"])
+
+    with tab_map:
+        st.markdown("#### Mean accuracy per model and ciphertext size")
+        map_task = st.radio("Task", ["multiclass", "binary"], horizontal=True, key="mx_task")
+        sub = results_df[results_df["task_type"] == map_task]
+        acc_pivot = sub.pivot_table(
+            index="model_name", columns="ciphertext_size", values="accuracy", aggfunc="mean"
+        ).reindex(index=[m for m in ALL_MODELS if m in sub["model_name"].unique()])
+        acc_pivot = acc_pivot[[c for c in SIZES if c in acc_pivot.columns]]
+        fig_map = px.imshow(
+            acc_pivot, text_auto=".2f", color_continuous_scale=SCALE_ACCENT, aspect="auto",
+            labels=dict(x="Ciphertext size", y="Model", color="Accuracy"),
+        )
+        st.plotly_chart(style_fig(fig_map, 380), use_container_width=True, key="mx_map")
 
     with tab_cov:
         st.markdown("#### Runs per model and ciphertext size")
@@ -1229,7 +1449,7 @@ CipherBench/
 ├── src/            # models, training script, data/metrics utilities
 ├── data/           # 55 CSV datasets (5 multiclass + 50 binary)
 ├── experiments/    # experiment runners + results/
-├── app/            # this Streamlit app (streamlit_app.py + style.css)
+├── app/            # this Streamlit app (streamlit_app.py + style.css + effects.js)
 ├── .streamlit/     # dark theme config
 ├── tests/          # test suite
 ├── database/       # optional MySQL integration
@@ -1288,8 +1508,23 @@ streamlit run app/streamlit_app.py
         )
 
 
+def _footer_links(items):
+    return "".join(f'<a class="fl" data-go="{k}" role="link" tabindex="0">{t}</a>' for t, k in items)
+
+
 st.markdown(
-    '<div class="site-footer"><span><b>CipherBench</b> · Block cipher identification with machine learning</span>'
-    "<span>Minor Project · Dept. of Information Technology, MSIT New Delhi</span></div>",
+    '<div class="site-footer"><div><div class="f-brand">'
+    f'<span class="brand-mark" style="width:34px;height:34px;border-radius:11px">{LOCK_SVG}</span>'
+    "<span>Cipher<b>Bench</b></span></div>"
+    "<p>Identifying block ciphers from the statistical fingerprint of their ciphertext.</p></div>"
+    "<div><h6>Research</h6>"
+    + _footer_links([("Overview", "Home"), ("Results", "Results"), ("Paper comparison", "Paper")])
+    + "</div><div><h6>Explore</h6>"
+    + _footer_links([("Models", "Models"), ("Experiments", "Matrix"), ("Methodology", "Method")])
+    + '</div><div><h6>Reference</h6><div class="f-fact"><b>Yuan et al. (2022)</b></div>'
+    '<div class="f-fact"><b>330</b> verified experiments</div>'
+    '<div class="f-fact"><b>5</b> block ciphers · <b>6</b> models</div></div>'
+    '<div class="foot-base"><span>Minor Project · Dept. of Information Technology, MSIT New Delhi</span>'
+    "<span>Built with Streamlit and scikit-learn</span></div></div>",
     unsafe_allow_html=True,
 )

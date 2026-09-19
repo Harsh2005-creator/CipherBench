@@ -41,7 +41,7 @@ CipherBench/
 ├── src/                      models/, utils/, train.py, demo.py
 ├── data/                     55 CSV datasets (binary/, multiclass/)
 ├── experiments/              experiment runners + results/
-├── app/                      primary UI: streamlit_app.py + style.css (no DB needed)
+├── app/                      primary UI: streamlit_app.py + style.css + effects.js (no DB needed)
 ├── .streamlit/config.toml    dark theme for the app
 ├── api/                      optional Flask REST API (MySQL-backed)
 ├── database/                 MySQL schema + connection helpers (optional)

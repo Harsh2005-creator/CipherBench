@@ -27,7 +27,7 @@ CipherBench/
 │   ├── run_all_experiments.py        drives the full 330-experiment matrix
 │   ├── run_missing_experiments.py    fills in / refreshes any incomplete rows
 │   └── results/            results_consolidated_*.csv / .json
-├── app/                    primary UI — streamlit_app.py (logic) + style.css (design), no database needed
+├── app/                    primary UI — streamlit_app.py (logic) + style.css + effects.js (design), no database needed
 ├── .streamlit/config.toml  dark theme (colours, font) picked up when launched from the project root
 ├── api/app.py               optional Flask REST API (MySQL-backed)
 ├── database/                 MySQL schema + connection helpers (optional)
