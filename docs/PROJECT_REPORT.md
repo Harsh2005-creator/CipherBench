@@ -7,7 +7,7 @@ RC2) produced a ciphertext, using 10 NIST-randomness-derived statistical
 features of the ciphertext itself — no key or plaintext required. It
 reproduces the **HKNNRF** method of Yuan et al. (2022) and compares it
 against SVM, KNN, and Random Forest baselines, then extends the comparison
-with two deep-learning models (MLP, 1D-CNN). All six models are evaluated
+with two deep-learning models (MLP, 1D-CNN) and an SVM + Naive Bayes ensemble. All seven models are evaluated
 on two tasks — binary (every algorithm pair) and five-class — across five
 ciphertext sizes (1KB–512KB).
 
@@ -17,15 +17,13 @@ ciphertext sizes (1KB–512KB).
 CipherBench/
 ├── README.md, requirements.txt, config.yaml, .gitignore
 ├── src/
-│   ├── models/          baseline.py (SVM/KNN/RF), hknnrf.py, mlp.py, cnn.py
+│   ├── models/          baseline.py (SVM/KNN/RF), hknnrf.py, svmnb.py, mlp.py, cnn.py
 │   ├── utils/            data_loader.py, metrics.py
 │   ├── train.py           single-run CLI trainer
 │   └── demo.py             quick classical-models-only demo
 ├── data/                  55 CSV datasets (binary/, multiclass/)
 ├── experiments/
 │   ├── run_complete_experiments.py   experiment runner (all training logic lives here)
-│   ├── run_all_experiments.py        drives the full 330-experiment matrix
-│   ├── run_missing_experiments.py    fills in / refreshes any incomplete rows
 │   └── results/            results_consolidated_*.csv / .json
 ├── app/                    primary UI — streamlit_app.py (logic) + style.css + effects.js (design), no database needed
 ├── .streamlit/config.toml  dark theme (colours, font) picked up when launched from the project root
@@ -45,7 +43,7 @@ database is configured.
 
 ```
 data/*.csv → src/utils/data_loader.py (stratified, seeded 80/20 split)
-           → model (SVM / KNN / RF / HKNNRF / MLP / CNN)
+           → model (SVM / KNN / RF / HKNNRF / MLP / CNN / SVMNB)
            → src/utils/metrics.py (accuracy, precision, recall, F1, confusion matrix)
            → experiments/results/*.csv, *.json
            → app/streamlit_app.py
@@ -72,6 +70,7 @@ methodology.
 | HKNNRF | `src/models/hknnrf.py` | RF leaf-index features one-hot encoded and **concatenated with the original 10 features**, then classified with KNN (paper Steps 9–12) |
 | MLP | `src/models/mlp.py` | Keras `Sequential`, 2 dense layers [64, 32] + dropout |
 | 1D-CNN | `src/models/cnn.py` | Keras `Sequential`, Conv1D [32, 64] + batch norm + max-pool |
+| SVM + Naive Bayes (SVMNB) | `src/models/svmnb.py` | extension: soft-voting ensemble of a standardised RBF SVM and a Gaussian Naive Bayes model |
 
 **Evaluation protocol** (identical for every model): an 80/20
 train/test split is taken once per experiment; for MLP/CNN, a further
@@ -85,17 +84,15 @@ each model for run-to-run reproducibility.
 ## 5. Experiment matrix
 
 ```
-Multiclass: 5 sizes × 6 models                    =  30 experiments
-Binary:     10 pairs × 5 sizes × 6 models          = 300 experiments
-                                             Total  = 330 experiments
+Multiclass: 5 sizes × 7 models                    =  35 experiments
+Binary:     10 pairs × 5 sizes × 7 models          = 350 experiments
+                                             Total  = 385 experiments
 ```
 
 The current results file, `experiments/results/results_consolidated_*.csv`
-(see `docs/RESULTS.md`), contains all 330 rows, produced by
+(see `docs/RESULTS.md`), contains all 385 rows, produced by
 `experiments/run_complete_experiments.py` with a fixed seed (42) per
-experiment and the evaluation protocol above. `experiments/run_missing_experiments.py`
-independently re-validates the file against the expected 330-row matrix and
-can refresh any row it finds missing.
+experiment and the evaluation protocol above.
 
 ## 6. Synopsis compliance
 
@@ -106,6 +103,7 @@ can refresh any row it finds missing.
 | Internal 80/20 split, further split for HKNNRF's RF/KNN stages | Met |
 | SVM, KNN, RF baselines + HKNNRF reproduction | Met |
 | MLP and 1D-CNN extension | Met |
+| Additional extension: SVM + Naive Bayes ensemble | Added |
 | Accuracy / precision / recall / F1 / confusion matrices | Met |
 | Deep-learning framework: PyTorch | **Deviation** — implemented in TensorFlow/Keras (`tf-nightly`) instead, because PyTorch has no published wheel for the Python version used in this environment |
 | Results stored in MySQL, exposed via Flask API and Streamlit | Met, as optional components — the primary UI works from local result files without a database |
@@ -121,7 +119,7 @@ The HKNNRF pipeline (RF leaf-index feature extraction → one-hot encoding →
 concatenation with the original features → KNN classification) matches the
 paper's Steps 9–12. The paper reports an average binary accuracy of 69.5%
 and a five-class accuracy range of 24–34% for HKNNRF; this project's
-results (`docs/RESULTS.md`) are lower across all six models, including
+results (`docs/RESULTS.md`) are lower across all seven models, including
 HKNNRF. An ANOVA test on the 10 supplied NIST p-value features found none
 of them statistically significant for distinguishing algorithms — this
 project consumes a pre-extracted feature dataset rather than generating its
@@ -156,7 +154,7 @@ pip install -r requirements.txt
 python tests/test_suite.py                        # verify the install
 python src/train.py --model hknnrf --task multiclass --size 512KB
 python src/demo.py                                 # quick classical-models demo
-python experiments/run_complete_experiments.py --no-db   # full 330-experiment matrix
+python experiments/run_complete_experiments.py --no-db   # full 385-experiment matrix
 streamlit run app/streamlit_app.py                 # explore everything, no DB needed
 ```
 
@@ -181,5 +179,5 @@ directory it's launched from or the machine it's cloned to.
 python tests/test_suite.py
 ```
 
-Covers dataset loading and integrity, all 6 models, metrics and confusion
+Covers dataset loading and integrity, all 7 models, metrics and confusion
 matrix computation, train/test leakage checks, and split reproducibility.

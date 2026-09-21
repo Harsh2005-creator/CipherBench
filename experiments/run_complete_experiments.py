@@ -25,6 +25,7 @@ from src.utils.data_loader import (
 )
 from src.utils.metrics import compute_metrics, compute_confusion_matrix
 from src.models.baseline import get_svm_model, get_knn_model, get_random_forest_model
+from src.models.svmnb import get_svmnb_model
 from src.models.hknnrf import HKNNRFClassifier
 from src.models.mlp import MLPClassifier
 from src.models.cnn import CNN1DClassifier
@@ -137,6 +138,11 @@ class ExperimentRunner:
 
                 elif model_name == 'RF':
                     model = get_random_forest_model(**self.config['hyperparameters']['random_forest'])
+                    model.fit(X_train, y_train)
+                    y_pred = model.predict(X_test)
+
+                elif model_name == 'SVMNB':
+                    model = get_svmnb_model(**self.config['hyperparameters']['svmnb'], random_state=seed)
                     model.fit(X_train, y_train)
                     y_pred = model.predict(X_test)
 
@@ -255,6 +261,11 @@ class ExperimentRunner:
                     model.fit(X_train, y_train)
                     y_pred = model.predict(X_test)
 
+                elif model_name == 'SVMNB':
+                    model = get_svmnb_model(**self.config['hyperparameters']['svmnb'], random_state=seed)
+                    model.fit(X_train, y_train)
+                    y_pred = model.predict(X_test)
+
                 elif model_name == 'MLP':
                     model = MLPClassifier(
                         num_classes=5,
@@ -322,7 +333,7 @@ class ExperimentRunner:
             binary_pairs: List of binary pairs (default: all 10)
         """
         if models is None:
-            models = ['SVM', 'KNN', 'RF', 'HKNNRF', 'MLP', 'CNN']
+            models = ['SVM', 'KNN', 'RF', 'HKNNRF', 'MLP', 'CNN', 'SVMNB']
 
         if sizes is None:
             sizes = self.config['ciphertext_sizes']
@@ -451,7 +462,7 @@ def main():
     # Run experiments
     if args.task == 'multiclass':
         print("\n>>> MULTICLASS ONLY")
-        models = args.models or ['SVM', 'KNN', 'RF', 'HKNNRF', 'MLP', 'CNN']
+        models = args.models or ['SVM', 'KNN', 'RF', 'HKNNRF', 'MLP', 'CNN', 'SVMNB']
         sizes = sizes or runner.config['ciphertext_sizes']
         for size in sizes:
             for model in models:
@@ -464,7 +475,7 @@ def main():
 
     elif args.task == 'binary':
         print("\n>>> BINARY ONLY")
-        models = args.models or ['SVM', 'KNN', 'RF', 'HKNNRF', 'MLP', 'CNN']
+        models = args.models or ['SVM', 'KNN', 'RF', 'HKNNRF', 'MLP', 'CNN', 'SVMNB']
         sizes = sizes or runner.config['ciphertext_sizes']
         binary_pairs = binary_pairs or get_all_binary_pairs()
         for size in sizes:

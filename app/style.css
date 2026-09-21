@@ -446,6 +446,23 @@ html:not(.cb-js) .num { --n: var(--to); }
 .badge-ext { font-family: var(--mono); font-size: .58rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; color: #ffb37a; border: 1px dashed rgba(249,115,22,.6); background: rgba(249,115,22,.08); }
 .badge-paper { font-family: var(--mono); font-size: .58rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; color: var(--subtle); border: 1px solid var(--line-strong); }
 .model-card.ext { border-style: dashed; border-color: rgba(249,115,22,.28); }
+.model-card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(220px, .8fr) 2.2fr; gap: 2rem; align-items: center; }
+.model-card.wide:hover { transform: translateY(-3px); }
+.wide-l p { margin-top: .2rem; }
+
+/* SVM + Naive Bayes pipeline diagram (Home model card and Methodology tab) */
+.pipe2 { display: flex; align-items: center; gap: 0; width: 100%; }
+.p2-node { flex: 1 1 0; min-width: 0; padding: .85rem .9rem; border-radius: 14px; border: 1px solid var(--line-strong); background: rgba(255,255,255,.03); text-align: center; }
+.p2-node b, .p2-box b { display: block; font-family: var(--display); font-size: .92rem; letter-spacing: -.02em; color: var(--text); margin-bottom: .2rem; }
+.p2-node span, .p2-box span { display: block; font-size: .72rem; line-height: 1.35; color: var(--muted); }
+.p2-node.vote { border-color: rgba(232,121,249,.5); background: rgba(232,121,249,.08); }
+.p2-node.out { border-color: rgba(34,211,165,.5); background: rgba(34,211,165,.08); }
+.p2-fork { flex: 1.5 1 0; min-width: 0; display: grid; gap: .5rem; }
+.p2-box { padding: .65rem .8rem; border-radius: 12px; border: 1px solid var(--line-strong); background: rgba(255,255,255,.03); text-align: center; }
+.p2-box.a { border-color: rgba(124,106,247,.55); background: rgba(124,106,247,.09); }
+.p2-box.b { border-color: rgba(56,189,248,.55); background: rgba(56,189,248,.08); }
+.p2-arr { flex: 0 0 26px; height: 2px; position: relative; background: linear-gradient(90deg, var(--line-strong), var(--accent)); }
+.p2-arr::after { content: ""; position: absolute; right: -1px; top: -4px; border-left: 7px solid var(--accent); border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
 
 /* the experiment: 330 in one glance */
 .big330 { display: flex; align-items: baseline; gap: 1.4rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
@@ -727,6 +744,7 @@ hr { border-color: var(--line) !important; margin: 1.6rem 0 !important; }
     .st-key-navbar label[data-testid="stRadioOption"][data-selected="true"] { background: rgba(124,106,247,.16) !important; }
     .split, .vs { grid-template-columns: 1fr; gap: 2.2rem; }
     .models { grid-template-columns: repeat(2, 1fr); }
+    .model-card.wide { grid-template-columns: 1fr; gap: 1.2rem; }
     .flow { grid-template-columns: 1fr; gap: 1.6rem; }
     .flow-node { padding: 0 0 0 3.6rem; }
     .flow-node .ic { position: absolute; left: 0; top: 0; margin: 0; }
@@ -745,6 +763,10 @@ hr { border-color: var(--line) !important; margin: 1.6rem 0 !important; }
     .stat, .fact { border-bottom: 1px solid var(--line); }
     .feats { grid-template-columns: repeat(2, 1fr); }
     .models, .go-grid { grid-template-columns: 1fr; }
+    .pipe2 { flex-direction: column; }
+    .p2-node, .p2-fork { width: 100%; flex: none; }
+    .p2-arr { flex: 0 0 22px; width: 2px; height: 22px; background: linear-gradient(180deg, var(--line-strong), var(--accent)); }
+    .p2-arr::after { right: -4px; top: auto; bottom: -1px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid var(--accent); border-bottom: 0; }
     .hero-vis { min-height: 380px; }
     .terminal { width: 100%; }
     .f-fp { width: 62%; } .f-cand { width: 48%; }

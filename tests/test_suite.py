@@ -20,6 +20,7 @@ from src.utils.data_loader import (
 from src.utils.metrics import compute_metrics, compute_confusion_matrix
 from src.models.baseline import get_svm_model, get_knn_model, get_random_forest_model
 from src.models.hknnrf import HKNNRFClassifier
+from src.models.svmnb import get_svmnb_model
 from src.models.mlp import MLPClassifier
 from src.models.cnn import CNN1DClassifier
 
@@ -137,6 +138,24 @@ def test_svm():
 
     assert len(y_pred) == len(y_test), "Prediction length should match test length"
     assert set(y_pred).issubset(set(y_train)), "Predictions should be valid classes"
+
+
+def test_svmnb():
+    """Test the SVM + Naive Bayes ensemble on both tasks."""
+    X_train, X_test, y_train, y_test = load_multiclass_dataset("512KB", random_state=42)
+    model = get_svmnb_model(random_state=42)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    proba = model.predict_proba(X_test)
+
+    assert len(y_pred) == len(y_test), "Prediction length should match test length"
+    assert set(y_pred).issubset(set(y_train)), "Predictions should be valid classes"
+    assert proba.shape == (len(y_test), 5), "Soft voting should give 5 class probabilities"
+    assert np.allclose(proba.sum(axis=1), 1.0), "Probabilities should sum to 1"
+
+    Xb_train, Xb_test, yb_train, yb_test = load_binary_dataset("AES and 3DES", "512kb", random_state=42)
+    bmodel = get_svmnb_model(random_state=42).fit(Xb_train, yb_train)
+    assert bmodel.predict_proba(Xb_test).shape == (len(yb_test), 2), "Binary probabilities should have 2 columns"
 
 
 def test_knn():
@@ -335,6 +354,7 @@ def main():
     # Model tests
     runner.test("SVM Model", test_svm)
     runner.test("KNN Model", test_knn)
+    runner.test("SVM + Naive Bayes Model", test_svmnb)
     runner.test("Random Forest Model", test_rf)
     runner.test("HKNNRF Architecture", test_hknnrf_architecture)
     runner.test("MLP Model", test_mlp)

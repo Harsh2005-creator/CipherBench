@@ -6,7 +6,7 @@ CipherBench identifies which block cipher (AES, 3DES, Blowfish, CAST, or
 RC2) produced a ciphertext, using only 10 NIST-randomness-derived
 statistical features — no key or plaintext required. It reproduces the
 HKNNRF method of Yuan et al. (2022) and extends it with two deep-learning
-baselines (MLP, 1D-CNN), comparing all six models across binary (pairwise)
+baselines (MLP, 1D-CNN) and an SVM + Naive Bayes ensemble, comparing all seven models across binary (pairwise)
 and five-class identification, at five ciphertext sizes (1KB–512KB).
 
 For the full technical writeup — architecture, methodology, synopsis/paper
@@ -60,17 +60,14 @@ python src/train.py --model svm --task binary --size 512KB
 # Quick classical-models-only demo
 python src/demo.py
 
-# Run the full 330-experiment matrix (long-running)
+# Run the full 385-experiment matrix (long-running)
 python experiments/run_complete_experiments.py --no-db
-
-# Verify / refresh the results file against the expected 330-row matrix
-python experiments/run_missing_experiments.py
 
 # Launch the app
 streamlit run app/streamlit_app.py
 ```
 
-Available `--model` values: `svm`, `knn`, `rf`, `hknnrf`, `mlp`, `cnn`, `all`.
+Available `--model` values: `svm`, `knn`, `rf`, `hknnrf`, `mlp`, `cnn`, `svmnb`, `all`.
 Available `--size` values: `1KB`, `8KB`, `64KB`, `256KB`, `512KB`.
 
 ### Optional: MySQL store and REST API
@@ -94,6 +91,7 @@ training/experiment scripts work entirely from local files.
 | HKNNRF | Hybrid | Reproduces Yuan et al. (2022); RF leaf-index features + original features → KNN |
 | MLP | Deep learning | 2 dense layers [64, 32], dropout, early stopping |
 | 1D-CNN | Deep learning | Conv1D [32, 64], batch norm, max-pooling |
+| SVM + Naive Bayes (SVMNB) | Classical ensemble (extension) | RBF SVM on standardised features + Gaussian Naive Bayes, soft-voted; `src/models/svmnb.py` |
 
 Deep-learning framework is **TensorFlow/Keras**, not PyTorch as listed in the
 synopsis — PyTorch has no published wheel for the Python version used in
@@ -106,8 +104,8 @@ development. See [docs/PROJECT_REPORT.md](docs/PROJECT_REPORT.md) §6.
 
 ## Results
 
-The verified experiment matrix (330 experiments: 30 multiclass + 300
-binary, all 6 models) lives in `experiments/results/results_consolidated_*.csv`
+The verified experiment matrix (385 experiments: 35 multiclass + 350
+binary, all 7 models) lives in `experiments/results/results_consolidated_*.csv`
 / `.json`. See [docs/RESULTS.md](docs/RESULTS.md) for headline numbers and
 how to reproduce them.
 
@@ -117,7 +115,7 @@ how to reproduce them.
 python tests/test_suite.py
 ```
 
-Covers dataset loading/integrity, all 6 models, metrics, confusion
+Covers dataset loading/integrity, all 7 models, metrics, confusion
 matrices, data-leakage checks, and split reproducibility.
 
 ## Documentation

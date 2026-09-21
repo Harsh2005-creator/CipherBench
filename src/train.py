@@ -20,6 +20,7 @@ from src.utils.data_loader import (
 )
 from src.utils.metrics import compute_metrics, compute_confusion_matrix
 from src.models.baseline import get_svm_model, get_knn_model, get_random_forest_model
+from src.models.svmnb import get_svmnb_model
 from src.models.hknnrf import HKNNRFClassifier
 from src.models.mlp import MLPClassifier
 from src.models.cnn import CNN1DClassifier
@@ -216,7 +217,7 @@ def train_deep_model(ModelClass, model_name: str, X_train, y_train, X_test, y_te
 def main():
     parser = argparse.ArgumentParser(description='Train CipherBench models')
     parser.add_argument('--model', type=str, default='all',
-                       choices=['all', 'svm', 'knn', 'rf', 'hknnrf', 'mlp', 'cnn'],
+                       choices=['all', 'svm', 'knn', 'rf', 'hknnrf', 'mlp', 'cnn', 'svmnb'],
                        help='Model to train')
     parser.add_argument('--task', type=str, default='multiclass',
                        choices=['all', 'binary', 'multiclass'],
@@ -257,6 +258,11 @@ def main():
                     train_baseline_model(model, 'KNN', X_train, y_train, X_test, y_test,
                                         'multiclass', '5-class', size, db)
 
+                if args.model in ['all', 'svmnb']:
+                    model = get_svmnb_model(**config['hyperparameters']['svmnb'])
+                    train_baseline_model(model, 'SVMNB', X_train, y_train, X_test, y_test,
+                                        'multiclass', '5-class', size, db)
+
                 if args.model in ['all', 'rf']:
                     model = get_random_forest_model(**config['hyperparameters']['random_forest'])
                     train_baseline_model(model, 'RF', X_train, y_train, X_test, y_test,
@@ -286,7 +292,7 @@ def main():
                         # Convert size format (1KB -> 1kb for binary folder names)
                         size_folder = size.lower().replace('kb', 'kb')
 
-                        if args.model in ['all', 'svm', 'knn', 'rf']:
+                        if args.model in ['all', 'svm', 'knn', 'rf', 'svmnb']:
                             # Load standard binary data for baseline models
                             X_train, X_test, y_train, y_test = load_binary_dataset(pair, size_folder)
 
@@ -298,6 +304,11 @@ def main():
                             if args.model in ['all', 'knn']:
                                 model = get_knn_model(**config['hyperparameters']['knn'])
                                 train_baseline_model(model, 'KNN', X_train, y_train, X_test, y_test,
+                                                    'binary', pair, size, db)
+
+                            if args.model in ['all', 'svmnb']:
+                                model = get_svmnb_model(**config['hyperparameters']['svmnb'])
+                                train_baseline_model(model, 'SVMNB', X_train, y_train, X_test, y_test,
                                                     'binary', pair, size, db)
 
                             if args.model in ['all', 'rf']:

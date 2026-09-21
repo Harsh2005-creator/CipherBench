@@ -2,8 +2,8 @@
 CipherBench Streamlit Application.
 
 Demonstrates the full project end-to-end: dataset exploration, live cipher
-identification (all 6 models, including MLP/CNN), model comparison,
-verified experiment results, the 330-run experiment matrix, methodology,
+identification (all 7 models, including the MLP/CNN/SVM+NB extensions), model
+comparison, verified experiment results, the 385-run experiment matrix, methodology,
 and reproducibility notes.
 
 Design goals (see docs/PROJECT_REPORT.md):
@@ -51,6 +51,7 @@ from src.models.baseline import get_svm_model, get_knn_model, get_random_forest_
 from src.models.hknnrf import HKNNRFClassifier  # noqa: E402
 from src.models.mlp import MLPClassifier  # noqa: E402
 from src.models.cnn import CNN1DClassifier  # noqa: E402
+from src.models.svmnb import get_svmnb_model  # noqa: E402
 
 st.set_page_config(
     page_title="CipherBench · Block Cipher Identification",
@@ -61,8 +62,9 @@ st.set_page_config(
 
 SIZES = ["1KB", "8KB", "64KB", "256KB", "512KB"]
 ALGORITHMS = ["AES", "3DES", "Blowfish", "CAST", "RC2"]
-ALL_MODELS = ["SVM", "KNN", "RF", "HKNNRF", "MLP", "CNN"]
+ALL_MODELS = ["SVM", "KNN", "RF", "HKNNRF", "MLP", "CNN", "SVMNB"]
 DEEP_MODELS = {"MLP", "CNN"}
+EXTENSION_MODELS = ["MLP", "CNN", "SVMNB"]  # this project's additions; not in the base paper
 
 # --------------------------------------------------------------------------
 # Presentation — palette and helpers (purely visual; no data logic)
@@ -81,6 +83,7 @@ MODEL_COLORS = {
     "HKNNRF": "#f97316",
     "MLP": "#f43f5e",
     "CNN": "#facc15",
+    "SVMNB": "#e879f9",
 }
 ALGO_COLORS = {
     "AES": "#7c6af7",
@@ -164,6 +167,25 @@ def class_names(values):
     """Turn numeric class labels (0-4) into cipher names for display only."""
     label_map = load_config()["algorithms"]["label_mapping"]
     return [label_map.get(int(v), str(v)) for v in values]
+
+
+
+def svmnb_diagram():
+    """Pipeline diagram of the SVM + Naive Bayes extension (HTML/CSS only)."""
+    return (
+        '<div class="pipe2">'
+        '<div class="p2-node"><b>10 NIST</b><span>features per sample</span></div>'
+        '<div class="p2-arr"></div>'
+        '<div class="p2-fork">'
+        '<div class="p2-box a"><b>Standardise, then RBF SVM</b><span>margin-based, calibrated probabilities</span></div>'
+        '<div class="p2-box b"><b>Gaussian Naive Bayes</b><span>per-feature likelihoods</span></div>'
+        '</div>'
+        '<div class="p2-arr"></div>'
+        '<div class="p2-node vote"><b>Soft vote</b><span>average the two probability vectors</span></div>'
+        '<div class="p2-arr"></div>'
+        '<div class="p2-node out"><b>Identified cipher</b><span>arg-max of the mean probabilities</span></div>'
+        '</div>'
+    )
 
 
 load_css()
@@ -287,22 +309,23 @@ def load_results_df():
 
 
 @st.cache_data
-def load_dataset_cached(task, size, pair=None):
+def load_dataset_cached(task, size, pair=None, seed=42):
+    # seed 42 = the split used for the verified results, so live runs are comparable
     if task == "multiclass":
-        X_train, X_test, y_train, y_test = load_multiclass_dataset(size)
+        X_train, X_test, y_train, y_test = load_multiclass_dataset(size, random_state=seed)
     else:
         size_folder = size.lower()
-        X_train, X_test, y_train, y_test = load_binary_dataset(pair, size_folder)
+        X_train, X_test, y_train, y_test = load_binary_dataset(pair, size_folder, random_state=seed)
     return X_train, X_test, y_train, y_test
 
 
 @st.cache_resource(show_spinner=False)
 def run_live_model(model_name, task, size, pair=None, seed=42):
     """
-    Train any of the 6 models live for demonstration purposes and evaluate
+    Train any of the 7 models live for demonstration purposes and evaluate
     on the held-out test split.
 
-    Classical models (SVM/KNN/RF) train directly on the 80% training split.
+    Classical models (SVM/KNN/RF/SVMNB) train directly on the 80% training split.
     HKNNRF uses its own RF/KNN sub-split. MLP/CNN carve an additional
     stratified validation split out of the *training* portion only (never
     the test set) for early stopping, exactly matching the protocol used
@@ -326,7 +349,7 @@ def run_live_model(model_name, task, size, pair=None, seed=42):
         X_test_out, y_test_out = X_test, y_test
 
     elif model_name in DEEP_MODELS:
-        X_train, X_test, y_train, y_test = load_dataset_cached(task, size, pair)
+        X_train, X_test, y_train, y_test = load_dataset_cached(task, size, pair, seed)
         X_fit, X_val, y_fit, y_val = train_test_split(
             X_train, y_train, test_size=0.2, random_state=seed, stratify=y_train
         )
@@ -344,13 +367,15 @@ def run_live_model(model_name, task, size, pair=None, seed=42):
         X_test_out, y_test_out = X_test, y_test
 
     else:
-        X_train, X_test, y_train, y_test = load_dataset_cached(task, size, pair)
+        X_train, X_test, y_train, y_test = load_dataset_cached(task, size, pair, seed)
         if model_name == "SVM":
             model = get_svm_model(**config["hyperparameters"]["svm"])
         elif model_name == "KNN":
             model = get_knn_model(**config["hyperparameters"]["knn"])
         elif model_name == "RF":
             model = get_random_forest_model(**config["hyperparameters"]["random_forest"])
+        elif model_name == "SVMNB":
+            model = get_svmnb_model(**config["hyperparameters"]["svmnb"], random_state=seed)
         else:
             raise ValueError(f"Unknown model: {model_name}")
         model.fit(X_train, y_train)
@@ -457,8 +482,8 @@ if section == "Home / Overview":
             "<span>cipherbench · pipeline</span></div>"
             '<div class="term-body">'
             '<span class="ln l1"><span class="p">$</span>extract <b>10</b> NIST p-values</span>'
-            '<span class="ln l2"><span class="p">$</span>train <b>6</b> models · <b>2</b> tasks · <b>5</b> sizes</span>'
-            f'<span class="ln l3"><span class="p">$</span>compare <b>{n_exp if n_exp is not None else "330"}</b> runs vs. <em>Yuan et al.</em></span>'
+            f'<span class="ln l2"><span class="p">$</span>train <b>{len(ALL_MODELS)}</b> models · <b>2</b> tasks · <b>5</b> sizes</span>'
+            f'<span class="ln l3"><span class="p">$</span>compare <b>{n_exp if n_exp is not None else "385"}</b> runs vs. <em>Yuan et al.</em></span>'
             '<span class="ln l4"><span class="p">$</span><span class="cursor"></span></span>'
             "</div></div>"
             '<div class="float f-fp"><div class="f-cap">Statistical fingerprint</div><div class="fp-bars">'
@@ -541,7 +566,7 @@ if section == "Home / Overview":
         (_ic('<path d="M3 12h3l2-6 4 12 3-9 2 3h4"/>'), "Fingerprint", "NIST randomness tests"),
         (_ic('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'), "10 features", "One p-value per test"),
         (_ic('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/>'
-             '<path d="M8 7l3 9M16 7l-3 9M8.5 6h7"/>'), "ML models", "Six classifiers"),
+             '<path d="M8 7l3 9M16 7l-3 9M8.5 6h7"/>'), "ML models", "Seven classifiers"),
         (_ic('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
          "Identification", "Which cipher?"),
     ]
@@ -575,8 +600,8 @@ if section == "Home / Overview":
     )
 
     # ---- 04 · The models ------------------------------------------------
-    story("04", "Six models, one question.",
-          "Four classifiers reproduce the base paper. Two neural networks are this project's own extension.")
+    story("04", "Seven models, one question.",
+          "Four classifiers reproduce the base paper. MLP, CNN and SVM + Naive Bayes are this project's own extensions.")
     m_ic = {
         "SVM": '<path d="M4 20 20 4M4 12l8-8M12 20l8-8"/>',
         "KNN": '<circle cx="12" cy="12" r="2"/><circle cx="5" cy="7" r="1.6"/><circle cx="19" cy="8" r="1.6"/><circle cx="7" cy="18" r="1.6"/><circle cx="18" cy="17" r="1.6"/><path d="M12 12 5 7M12 12l7-4M12 12l-5 6M12 12l6 5"/>',
@@ -584,6 +609,7 @@ if section == "Home / Overview":
         "HKNNRF": '<circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/>',
         "MLP": '<circle cx="5" cy="6" r="1.7"/><circle cx="5" cy="18" r="1.7"/><circle cx="12" cy="4" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="20" r="1.7"/><circle cx="19" cy="12" r="1.7"/><path d="M6.5 6.5 10.5 4.5M6.5 6.5l4 5M6.5 18l4-5.5M6.5 18l4 2M13.5 4.5l4 6.5M13.5 12h4M13.5 19.5l4-6.5"/>',
         "CNN": '<rect x="3" y="4" width="7" height="7" rx="1"/><rect x="7" y="8" width="7" height="7" rx="1"/><rect x="11" y="12" width="7" height="7" rx="1"/>',
+        "SVMNB": '<path d="M5 4v6a4 4 0 0 0 4 4h6M19 4v6a4 4 0 0 1-4 4M12 14v6"/>',
     }
     m_info = [
         ("SVM", "Support vector machine", "Separates classes with a maximum-margin boundary.", False),
@@ -605,6 +631,14 @@ if section == "Home / Overview":
             f'<div class="m-type">{full}</div><p>{txt}</p></div>'
             for k, full, txt, ext in m_info
         )
+        + '<div class="model-card ext wide" style="--mc:' + MODEL_COLORS["SVMNB"] + '">'
+        '<div class="wide-l"><div class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round">' + m_ic["SVMNB"] + '</svg></div>'
+        '<h5>SVMNB<span class=badge-ext>Extension</span></h5>'
+        '<div class="m-type">SVM + Naive Bayes ensemble</div>'
+        '<p>Two complementary classical learners vote on the same ten features: a margin-based SVM and a '
+        'probabilistic Naive Bayes model.</p></div>'
+        '<div class="wide-r">' + svmnb_diagram() + '</div></div>'
         + "</div>",
         unsafe_allow_html=True,
     )
@@ -612,15 +646,15 @@ if section == "Home / Overview":
     # ---- 05 · The experiment --------------------------------------------
     story("05", "Every result, verified.",
           "One seeded run per model, task, ciphertext size and cipher pair. Each square below is one of them.")
-    n_show = n_exp if n_exp is not None else 330
+    n_show = n_exp if n_exp is not None else 385
     st.markdown(
         f'<div class="big330"><div class="num" style="--to:{n_show}"></div>'
-        '<div class="cap"><b>Verified experiments</b>5 block ciphers · 6 models<br>'
+        f'<div class="cap"><b>Verified experiments</b>5 block ciphers · {len(ALL_MODELS)} models<br>'
         "1 five-class task + 10 pairwise tasks · 5 sizes</div></div>"
         '<div class="facts">'
         + "".join(
             f'<div class="fact"><div class="num" style="--to:{v}"></div><div class="lbl">{lbl}</div></div>'
-            for v, lbl in [(6, "Models"), (2, "Task types"), (5, "Ciphertext sizes"), (10, "Cipher pairs")]
+            for v, lbl in [(len(ALL_MODELS), "Models"), (2, "Task types"), (5, "Ciphertext sizes"), (10, "Cipher pairs")]
         )
         + "</div>",
         unsafe_allow_html=True,
@@ -692,11 +726,11 @@ if section == "Home / Overview":
         f'stroke-linecap="round" stroke-linejoin="round">{d}</svg>'
     )
     cards = [
-        ("Identify", "Run a live model", "Train any of six models and identify a cipher.",
+        ("Identify", "Run a live model", "Train any of seven models and identify a cipher.",
          '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
         ("Paper", "Paper comparison", "Side-by-side with Yuan et al. (2022).",
          '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'),
-        ("Matrix", "Experiment matrix", "All 330 runs and their coverage.",
+        ("Matrix", "Experiment matrix", "All 385 runs and their coverage.",
          '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
         ("Data", "Dataset explorer", "Browse the 55 CSV datasets.",
          '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>'),
@@ -798,7 +832,7 @@ elif section == "Cipher Identification":
         with col3:
             model_name = st.selectbox(
                 "Model", ALL_MODELS,
-                help="All 6 models are trainable live. MLP/CNN take longer (~10–20s) "
+                help="All 7 models are trainable live. MLP/CNN take longer (~10–20s) "
                      "since they train a small neural network with early stopping.",
             )
 
@@ -943,7 +977,7 @@ elif section == "Cipher Identification":
 # --------------------------------------------------------------------------
 
 elif section == "Model Comparison":
-    page_title("Model Comparison", "How all six models stack up on the same task and ciphertext size.")
+    page_title("Model Comparison", "How all seven models stack up on the same task and ciphertext size.")
 
     if results_df is None:
         st.warning("No results file found. Run `python experiments/run_complete_experiments.py` first.")
@@ -1050,9 +1084,9 @@ elif section == "Paper Comparison":
         unsafe_allow_html=True,
     )
     col2.markdown(
-        '<div class="card card-accent"><h5>Our extension, not in the paper</h5>'
-        "<p>MLP and 1D-CNN. The paper has no neural-network baseline, so there is no paper "
-        "number to place next to them. They are shown on their own under the identical "
+        '<div class="card card-accent"><h5>Our extensions, not in the paper</h5>'
+        "<p>MLP, 1D-CNN and an SVM + Naive Bayes ensemble. The paper tested none of them, so there is "
+        "no paper number to place next to them. They are shown on their own under the identical "
         "evaluation protocol.</p></div>",
         unsafe_allow_html=True,
     )
@@ -1095,14 +1129,14 @@ elif section == "Paper Comparison":
     def extension_bar(task, size_labels_by_kb, pair):
         ext_records = []
         for kb, size_label in size_labels_by_kb.items():
-            for model in ["MLP", "CNN"]:
+            for model in EXTENSION_MODELS:
                 ext_records.append(
                     {"Size": f"{kb}KB", "Model": model,
                      "Value": our_value(results_df, model, task, size_label, pair, metric)}
                 )
         fig = px.bar(
             pd.DataFrame(ext_records), x="Size", y="Value", color="Model", barmode="group",
-            color_discrete_map={"MLP": MODEL_COLORS["MLP"], "CNN": MODEL_COLORS["CNN"]},
+            color_discrete_map={m: MODEL_COLORS[m] for m in EXTENSION_MODELS},
             category_orders={"Size": ["1KB", "8KB", "64KB", "256KB", "512KB"]},
         )
         fig.update_layout(yaxis_title=metric.capitalize())
@@ -1137,11 +1171,11 @@ elif section == "Paper Comparison":
         st.markdown("#### Full comparison table")
         st.dataframe(gap_table(long_df, 0.15), use_container_width=True, height=420, hide_index=True)
 
-        st.markdown("#### Our extension beyond the paper: MLP and 1D-CNN")
+        st.markdown("#### Our extensions beyond the paper: MLP, 1D-CNN and SVM + Naive Bayes")
         st.plotly_chart(extension_bar("multiclass", size_map_upper, "5-class"),
                         use_container_width=True, key="pc_mc_ext")
         st.markdown(
-            '<p class="hint">No paper bar here by design: the paper never tested a neural network on this task.</p>',
+            '<p class="hint">No paper bar here by design: the paper never tested these models on this task.</p>',
             unsafe_allow_html=True,
         )
 
@@ -1155,11 +1189,11 @@ elif section == "Paper Comparison":
         st.markdown("#### Full comparison table")
         st.dataframe(gap_table(long_df, 0.3), use_container_width=True, height=420, hide_index=True)
 
-        st.markdown("#### Our extension beyond the paper: MLP and 1D-CNN")
+        st.markdown("#### Our extensions beyond the paper: MLP, 1D-CNN and SVM + Naive Bayes")
         st.plotly_chart(extension_bar("binary", size_map_lower, "AES and 3DES"),
                         use_container_width=True, key="pc_bin_ext")
         st.markdown(
-            '<p class="hint">No paper bar here by design: the paper never tested a neural network on this task.</p>',
+            '<p class="hint">No paper bar here by design: the paper never tested these models on this task.</p>',
             unsafe_allow_html=True,
         )
 
@@ -1201,8 +1235,8 @@ elif section == "Paper Comparison":
                         zmin=-0.3, zmax=0.3, aspect="auto")
         st.plotly_chart(style_fig(fig, 420), use_container_width=True, key="pc_pairs_gap")
 
-        st.markdown("#### Our extension beyond the paper: MLP and CNN, all 10 pairs")
-        ext_model = st.selectbox("Model", ["MLP", "CNN"], key="hknnrf_ext_model")
+        st.markdown("#### Our extensions beyond the paper, all 10 pairs")
+        ext_model = st.selectbox("Model", EXTENSION_MODELS, key="hknnrf_ext_model")
         ext_matrix = pd.DataFrame(
             {
                 f"{kb}KB": [
@@ -1219,8 +1253,8 @@ elif section == "Paper Comparison":
     insight(
         "<b>Why the gap?</b> An ANOVA test on these 10 NIST p-value features found none "
         "statistically significant for telling the ciphers apart. The feature set carries less "
-        "signal than whatever the paper's authors used, and every model (HKNNRF, MLP and CNN "
-        "included) shows the same ceiling. Full discussion in <code>docs/PROJECT_REPORT.md</code> §7.",
+        "signal than whatever the paper's authors used, and every model (HKNNRF, MLP, CNN "
+        "and SVM+NB included) shows the same ceiling. Full discussion in <code>docs/PROJECT_REPORT.md</code> §7.",
         "tip",
     )
 
@@ -1230,7 +1264,7 @@ elif section == "Paper Comparison":
 # --------------------------------------------------------------------------
 
 elif section == "Results":
-    page_title("Verified results", "Every one of the 330 experiments, filterable and downloadable.")
+    page_title("Verified results", "Every one of the 385 experiments, filterable and downloadable.")
 
     if results_df is None:
         st.warning("No results file found.")
@@ -1295,7 +1329,7 @@ elif section == "Results":
 # --------------------------------------------------------------------------
 
 elif section == "Experiment Matrix":
-    page_title("Experiment matrix", "330 experiments: 6 models across 2 tasks and 5 ciphertext sizes.")
+    page_title("Experiment matrix", "385 experiments: 7 models across 2 tasks and 5 ciphertext sizes.")
 
     if results_df is None:
         st.warning("No results file found.")
@@ -1357,8 +1391,8 @@ elif section == "Experiment Matrix":
 elif section == "Research / Methodology":
     page_title("Research and methodology", "The paper, the pipeline, and how evaluation stays honest.")
 
-    tab_paper, tab_feat, tab_hk, tab_dl, tab_eval = st.tabs(
-        ["Base paper", "Features", "HKNNRF", "Deep learning", "Evaluation"]
+    tab_paper, tab_feat, tab_hk, tab_dl, tab_svmnb, tab_eval = st.tabs(
+        ["Base paper", "Features", "HKNNRF", "Deep learning", "SVM + Naive Bayes", "Evaluation"]
     )
 
     with tab_paper:
@@ -1418,6 +1452,26 @@ Not in the original paper:
             """
         )
 
+    with tab_svmnb:
+        st.markdown(svmnb_diagram(), unsafe_allow_html=True)
+        st.markdown(
+            """
+Implemented in `src/models/svmnb.py` as a scikit-learn soft-voting ensemble:
+
+- **SVM branch**: features are standardised, then an RBF-kernel SVM (C = 1)
+  with probability calibration produces class probabilities.
+- **Naive Bayes branch**: a Gaussian Naive Bayes model estimates a
+  per-feature likelihood for each cipher.
+- **Soft vote**: the two probability vectors are averaged and the class with
+  the highest mean probability is the prediction.
+- Chosen because the two learners make different assumptions (a margin
+  boundary versus independent per-feature likelihoods), so they can
+  complement each other on weak features.
+- It is trained on the same seeded 80/20 split as every other model and is
+  an extension: the base paper has no counterpart to compare it with.
+            """
+        )
+
     with tab_eval:
         st.markdown(
             """
@@ -1470,7 +1524,7 @@ python tests/test_suite.py
 # Train one model on one task/size
 python src/train.py --model hknnrf --task multiclass --size 512KB
 
-# Run the full 330-experiment matrix (long-running)
+# Run the full 385-experiment matrix (long-running)
 python experiments/run_complete_experiments.py --no-db
 
 # Launch this app (run from the project root so the theme in .streamlit/ is picked up)
@@ -1502,7 +1556,7 @@ streamlit run app/streamlit_app.py
 - No ciphertext-generation pipeline is included; the project consumes the
   pre-extracted NIST-feature CSV datasets already provided.
 - Multi-seed stability analysis and cross-ciphertext-size generalization
-  (train on one size, test on another) are not part of the verified 330-run
+  (train on one size, test on another) are not part of the verified 385-run
   matrix. See `docs/PROJECT_REPORT.md` §8.
             """
         )
@@ -1522,8 +1576,8 @@ st.markdown(
     + "</div><div><h6>Explore</h6>"
     + _footer_links([("Models", "Models"), ("Experiments", "Matrix"), ("Methodology", "Method")])
     + '</div><div><h6>Reference</h6><div class="f-fact"><b>Yuan et al. (2022)</b></div>'
-    '<div class="f-fact"><b>330</b> verified experiments</div>'
-    '<div class="f-fact"><b>5</b> block ciphers · <b>6</b> models</div></div>'
+    '<div class="f-fact"><b>385</b> verified experiments</div>'
+    '<div class="f-fact"><b>5</b> block ciphers · <b>7</b> models</div></div>'
     '<div class="foot-base"><span>Minor Project · Dept. of Information Technology, MSIT New Delhi</span>'
     "<span>Built with Streamlit and scikit-learn</span></div></div>",
     unsafe_allow_html=True,

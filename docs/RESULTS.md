@@ -1,16 +1,16 @@
 # Results
 
 **Source**: `experiments/results/results_consolidated_20260918_002852.csv`
-(+ matching `.json` with full confusion matrices) — 330 experiments: 30
-five-class + 300 binary (10 pairs × 5 sizes), for all 6 models. Regenerate
+(+ matching `.json` with full confusion matrices) — 385 experiments: 35
+five-class + 350 binary (10 pairs × 5 sizes), for all 7 models. Regenerate
 with `python experiments/run_complete_experiments.py --no-db`.
 
 ## Coverage
 
 | | Multiclass | Binary | Total |
 |---|---|---|---|
-| Expected | 30 | 300 | 330 |
-| Present | 30 | 300 | 330 |
+| Expected | 35 | 350 | 385 |
+| Present | 35 | 350 | 385 |
 
 Every model has exactly 55 rows (5 multiclass + 50 binary).
 
@@ -19,6 +19,7 @@ Every model has exactly 55 rows (5 multiclass + 50 binary).
 | Model | Mean accuracy |
 |---|---|
 | KNN | 0.210 |
+| SVMNB | 0.204 |
 | RF | 0.202 |
 | MLP | 0.186 |
 | CNN | 0.182 |
@@ -31,6 +32,14 @@ paper's own reported range for the baselines (KNN 21%, RF 22%, SVM 23%,
 HKNNRF 24–34%) — see `docs/PROJECT_REPORT.md` §7 for the feature-quality
 discussion behind why the ceiling sits well under 100%.
 
+### SVM + Naive Bayes (extension)
+
+SVMNB, an RBF SVM and Gaussian Naive Bayes soft-voted on the same ten
+features, scores 0.204 five-class (second to KNN's 0.210, level with RF's
+0.202) and 0.486 binary (the lowest binary mean of the seven, within noise of
+chance). It is included as an extension; it does not outperform the other
+models on this split.
+
 ## Binary, mean accuracy across all 10 pairs × 5 sizes
 
 | Model | Mean accuracy |
@@ -41,8 +50,9 @@ discussion behind why the ceiling sits well under 100%.
 | KNN | 0.505 |
 | RF | 0.505 |
 | SVM | 0.498 |
+| SVMNB | 0.486 |
 
-All six models cluster around 50% (chance level for a balanced 2-class
+All seven models cluster around 50% (chance level for a balanced 2-class
 problem). HKNNRF has the highest mean, consistent with it being the paper's
 proposed method, though the margin over the other models here is modest.
 
@@ -58,6 +68,7 @@ The paper's headline pair. Across all five sizes:
 | HKNNRF | 0.475 | 0.525 | 0.525 | 0.500 | 0.475 |
 | MLP | 0.350 | 0.450 | 0.525 | 0.500 | 0.600 |
 | CNN | 0.525 | 0.475 | 0.525 | 0.500 | 0.550 |
+| SVMNB | 0.500 | 0.550 | 0.600 | 0.500 | 0.575 |
 
 ## Reproducing these numbers
 
@@ -65,7 +76,8 @@ The paper's headline pair. Across all five sizes:
 python experiments/run_complete_experiments.py --no-db
 ```
 
-Classical models (SVM/KNN/RF/HKNNRF) reproduce exactly given the fixed
-seed. MLP/CNN numbers may shift by a few points run-to-run on different
-hardware (see `docs/PROJECT_REPORT.md` §9) but stay within the bands shown
-above.
+Each experiment uses one seeded, stratified 80/20 split. With 100 (five-class)
+or 40 (binary) test samples, one sample moves accuracy by 1 to 2.5 points, so
+differences of that size between models are not meaningful. MLP/CNN numbers
+may also shift run-to-run on different hardware (see
+`docs/PROJECT_REPORT.md` §9).

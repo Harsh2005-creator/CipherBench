@@ -22,6 +22,9 @@ hyperparameters:
     kernel: linear
     gamma: 0.001
 
+  svmnb:
+    C: 1.0
+
   knn:
     n_neighbors: 3
 
